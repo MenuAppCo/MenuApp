@@ -1,0 +1,134 @@
+# 🧾 Proyecto: SaaS de Menú Digital estilo Menüpp
+
+## 🎯 Objetivo
+
+Desarrollar un sistema SaaS donde cada restaurante pueda:
+- Registrarse y acceder a su panel privado.
+- Crear y administrar su menú digital (productos y categorías).
+- Subir imágenes por plato, gestionar visibilidad y reemplazos.
+- Elegir si mostrar o no los precios de cada plato.
+- Tener una URL pública (con QR) accesible desde dispositivos móviles.
+- **Personalizar el diseño y tema de su menú.**
+- **Ver analytics y estadísticas de visitas.**
+- **Sistema de suscripciones y pagos.**
+- **Múltiples idiomas (Español, Inglés).**
+
+---
+
+## 🔧 Tecnologías
+
+### Frontend
+- React + Vite
+- Tailwind CSS
+- React Router
+- Axios
+- **React Query (para cache y estado)**
+- **Framer Motion (animaciones)**
+- **React Hook Form (formularios)**
+- **Zustand (estado global)**
+
+### Backend
+- Node.js
+- Express
+- JWT (auth)
+- bcrypt (hash de contraseñas)
+- Multer (manejo de imágenes)
+- Prisma (ORM)
+- PostgreSQL (autoalojado en contenedor)
+- **Stripe (pagos)**
+- **Redis (cache y sesiones)**
+- **Bull Queue (tareas en background)**
+- **Joi (validación)**
+- **Helmet (seguridad)**
+
+### Infraestructura
+- Docker + Docker Compose
+- Nginx (para servir backend, frontend e imágenes)
+- **AWS EC2 (Ubuntu Server)**
+- **AWS RDS (PostgreSQL)**
+- **AWS S3 (imágenes)**
+- **AWS CloudFront (CDN)**
+- **AWS Route 53 (DNS)**
+- **AWS SES (emails)**
+- **AWS ElastiCache (Redis)**
+- **Certbot (HTTPS)**
+- **PM2 (procesos)**
+- **Nginx (reverse proxy)**
+
+### Monitoreo y Analytics
+- **AWS CloudWatch (logs y métricas)**
+- **Sentry (error tracking)**
+- **Google Analytics 4**
+- **Hotjar (user behavior)**
+
+---
+
+## 💰 Modelo de Negocio
+
+### Planes de Suscripción
+- **Gratuito**: 1 menú, 10 productos, sin analytics
+- **Básico ($19/mes)**: 1 menú, productos ilimitados, analytics básicos
+- **Profesional ($39/mes)**: 3 menús, personalización avanzada, analytics completos
+- **Empresarial ($79/mes)**: Menús ilimitados, API, soporte prioritario
+
+### Características por Plan
+- **QR personalizado**
+- **Temas y colores**
+- **Analytics de visitas**
+- **Múltiples idiomas**
+- **Backup automático**
+- **Soporte técnico**
+
+---
+
+## 🚀 Roadmap de Desarrollo
+
+### Fase 1 (MVP - 4 semanas)
+- [x] Autenticación de restaurantes
+- [x] CRUD de productos y categorías
+- [x] Menú público con QR
+- [x] Subida de imágenes
+- [x] Control de visibilidad de precios
+
+### Fase 2 (Mejoras - 3 semanas)
+- [ ] Sistema de suscripciones con Stripe
+- [ ] Temas personalizables
+- [ ] Analytics básicos
+- [ ] Múltiples idiomas
+- [ ] Optimización de imágenes
+
+### Fase 3 (Avanzado - 4 semanas)
+- [ ] Analytics avanzados
+- [ ] API pública
+- [ ] Dashboard mejorado
+- [ ] Optimización de performance
+
+### Fase 4 (Escalabilidad - 3 semanas)
+- [ ] CDN con CloudFront
+- [ ] Cache con Redis
+- [ ] Monitoreo y alertas
+- [ ] Backup automático
+- [ ] Optimización de performance
+
+---
+
+## 🔒 Seguridad y Compliance
+
+- **HTTPS obligatorio**
+- **Rate limiting**
+- **CORS configurado**
+- **Validación de inputs**
+- **Sanitización de datos**
+- **Backup automático**
+- **GDPR compliance**
+- **Logs de auditoría**
+
+---
+
+## 📊 Métricas de Éxito
+
+- **Tiempo de carga < 2s**
+- **Uptime > 99.9%**
+- **Conversión de trial > 15%**
+- **Churn rate < 5%**
+- **NPS > 50**

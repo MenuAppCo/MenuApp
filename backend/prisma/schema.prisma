@@ -1,0 +1,168 @@
+// Configuración de la base de datos
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de usuario (propietario de restaurante)
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  password    String
+  name        String
+  restaurants Restaurant[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+// Modelo principal del restaurante
+model Restaurant {
+  id              Int           @id @default(autoincrement())
+  userId          Int
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name            String
+  email           String        @unique
+  password        String
+  slug            String        @unique
+  showPrices      Boolean       @default(true)
+  isActive        Boolean       @default(true)
+  phone           String?
+  address         String?
+  description     String?
+  logoUrl         String?
+  website         String?
+  googleMapsUrl   String?       // Link de Google Maps
+  
+  // Configuración de tema
+  theme           String        @default("DEFAULT")
+  primaryColor    String        @default("#1f2937")
+  secondaryColor  String        @default("#f59e0b")
+  fontFamily      String        @default("Inter")
+  
+  // Configuración JSON (almacenado como string)
+  settings        String?
+  
+  // Redes sociales
+  socialMedia     String?       // JSON con redes sociales y su configuración
+  
+  // Suscripción
+  subscriptionId  String?       @unique
+  planType        String        @default("FREE")
+  planExpiresAt   DateTime?
+  stripeCustomerId String?
+  
+  // Relaciones
+  menus           Menu[]
+  categories      Category[]
+  products        Product[]
+  analytics       Analytics[]
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("restaurants")
+}
+
+// Menús del restaurante
+model Menu {
+  id              Int           @id @default(autoincrement())
+  name            String
+  nameEn          String?       // Nombre en inglés
+  description     String?
+  descriptionEn   String?
+  type            String        @default("FOOD") // FOOD, DRINKS, etc.
+  isActive        Boolean       @default(true)
+  order           Int           @default(0)
+  
+  restaurantId    Int
+  restaurant      Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  categories      Category[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("menus")
+}
+
+// Categorías de productos
+model Category {
+  id              Int           @id @default(autoincrement())
+  name            String
+  nameEn          String?       // Nombre en inglés
+  description     String?
+  descriptionEn   String?
+  order           Int
+  isVisible       Boolean       @default(true)
+  imageUrl        String?
+  
+  restaurantId    Int
+  menuId          Int
+  restaurant      Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  menu            Menu          @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  products        Product[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("categories")
+}
+
+// Productos
+model Product {
+  id              Int           @id @default(autoincrement())
+  name            String
+  nameEn          String?       // Nombre en inglés
+  description     String?
+  descriptionEn   String?
+  price           Float
+  currency        String        @default("COP")
+  visible         Boolean       @default(true)
+  featured        Boolean       @default(false)
+  
+  // Imágenes
+  imageUrl        String?
+  imageVisible    Boolean       @default(true)
+  
+  // Relaciones
+  restaurantId    Int
+  categoryId      Int
+  restaurant      Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  category        Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("products")
+}
+
+// Analytics y estadísticas
+model Analytics {
+  id              Int           @id @default(autoincrement())
+  restaurantId    Int
+  restaurant      Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  // Datos de visita
+  pageViews       Int           @default(0)
+  uniqueVisitors  Int           @default(0)
+  sessionDuration Int?          // en segundos
+  
+  // Datos del visitante
+  userAgent       String?
+  ipAddress       String?
+  country         String?
+  city            String?
+  deviceType      String?
+  
+  // Timestamp
+  date            DateTime      @default(now())
+  
+  @@map("analytics")
+}
+
+ 
