@@ -83,7 +83,7 @@ const useAuthStore = create(
           const response = await authService.getCurrentUser()
           const restaurant = response.data // El endpoint devuelve directamente el restaurante
           
-          set((state) => ({
+          set((_) => ({
             user: restaurant
           }))
           

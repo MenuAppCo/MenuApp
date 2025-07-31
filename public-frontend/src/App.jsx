@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import ErrorBoundary from './components/ErrorBoundary'
-import Layout from './components/Layout'
 import PublicMenu from './pages/public/PublicMenu'
 import PublicRestaurant from './pages/public/PublicRestaurant'
 import PublicMenus from './pages/public/PublicMenus'

@@ -147,7 +147,7 @@ const Menus = () => {
       await deleteMenuMutation.mutateAsync(deletingMenu.id)
       toast.success('Menú eliminado exitosamente')
       refetch()
-    } catch (error) {
+    } catch (_) {
       toast.error('Error al eliminar el menú')
     } finally {
       setIsConfirmModalOpen(false)
@@ -176,7 +176,7 @@ const Menus = () => {
         await reorderMenusMutation.mutateAsync({ menuIds })
         toast.success('Orden actualizado')
         refetch()
-      } catch (error) {
+      } catch (_) {
         toast.error('Error al actualizar el orden')
       }
     }

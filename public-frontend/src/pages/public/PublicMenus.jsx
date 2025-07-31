@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useRestaurantInfo, useRestaurantMenus } from '../../hooks/usePublicMenu'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { ArrowLeft, Menu, Instagram, Facebook, Star, ExternalLink, Store } from 'lucide-react'
+import { ArrowLeft, Instagram, Facebook, Star, ExternalLink } from 'lucide-react'
 import ImageWithFallback from '../../components/ImageWithFallback'
 import MobileMenuContainer from '../../components/MobileMenuContainer'
 

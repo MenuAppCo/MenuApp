@@ -140,7 +140,7 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
       let productId
 
       if (isEditing) {
-        const result = await updateProductMutation.mutateAsync({
+        const _ = await updateProductMutation.mutateAsync({
           id: product.id,
           data
         })
