@@ -16,3 +16,4 @@ jobs:
     with:
       frontend-path: 'public-frontend'
       node-version: '20'
+      env-vars: '{"NODE_ENV": "production"}'
