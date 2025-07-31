@@ -10,7 +10,7 @@ const PublicMenus = () => {
   const { data: restaurantData, isLoading: restaurantLoading, error: restaurantError } = useRestaurantInfo(slug)
   const { data: menusData, isLoading: menusLoading, error: menusError } = useRestaurantMenus(slug)
 
-  // Actualizar título de la página con el nombre del restaurante
+  // TODO Actualizar título de la página con el nombre del restaurante
   const restaurantName = restaurantData?.data?.restaurant?.name
   usePageTitle(restaurantName ? `${restaurantName} - Menús` : 'Menús')
 
