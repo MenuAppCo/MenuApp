@@ -1,0 +1,17 @@
+name: CI Admin frontend terraform 
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'iac/admin-frontend/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'iac/admin-frontend/**'
+
+jobs:
+  ci-admin-frontend-terraform:
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/admin-frontend'

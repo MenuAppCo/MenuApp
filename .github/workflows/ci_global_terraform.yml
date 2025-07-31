@@ -1,0 +1,17 @@
+name: CI Global terraform 
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'iac/global/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'iac/global/**'
+
+jobs:
+  ci-route53-terraform:
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/global/route53'

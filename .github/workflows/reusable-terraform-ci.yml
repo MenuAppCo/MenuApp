@@ -1,0 +1,39 @@
+name: Reusable Terraform CI
+
+on:
+  workflow_call:
+    inputs:
+      terraform-path:
+        description: 'Path to the frontend directory'
+        required: true
+        type: string
+      env-vars:
+        required: false
+        description: 'json file of key pairs env vars'
+        type: string
+        default: ''
+
+jobs:
+  ci-terraform:
+    name: ci-terraform
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.7.0"
+
+    - name: Terraform Format
+      run: terraform fmt -check -recursive
+      working-directory: ${{ inputs.frontend-path }}
+
+    - name: Terraform Init
+      run: terraform init -backend=false
+      working-directory: ${{ inputs.frontend-path }}
+
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: ${{ inputs.frontend-path }}

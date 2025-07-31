@@ -1,0 +1,17 @@
+name: CI Public frontend terraform 
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'iac/public-frontend/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'iac/public-frontend/**'
+
+jobs:
+  ci-public-frontend-terraform:
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/public-frontend'
