@@ -12,11 +12,6 @@ on:
         required: false
         type: string
         default: '20'
-      env-vars:
-        description: 'JSON object of environment variables to set'
-        required: false
-        type: string
-        default: '{"NODE_ENV": "production"}'
 
 jobs:
   ci-frontend:
@@ -40,14 +35,11 @@ jobs:
     - name: lint
       run: npm run lint
       working-directory: ${{ inputs.frontend-path }}
-      env: ${{ fromJSON(inputs.env-vars) }}
     
     - name: tests
       run: npm run tests
       working-directory: ${{ inputs.frontend-path }}
-      env: ${{ fromJSON(inputs.env-vars) }}
 
     - name: Build
       run: npm run build
       working-directory: ${{ inputs.frontend-path }}
-      env: ${{ fromJSON(inputs.env-vars) }} 
