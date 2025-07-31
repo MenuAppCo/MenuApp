@@ -6,7 +6,6 @@ import { useProducts } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import QRCodeComponent from '../../components/QRCode'
-import { getImageUrl } from '../../utils/imageUtils'
 import axios from 'axios'
 
 const Dashboard = () => {
@@ -46,7 +45,7 @@ const Dashboard = () => {
           headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
         })
         setRecentActivity(Array.isArray(res.data.data) ? res.data.data : [])
-      } catch (err) {
+      } catch (_) {
         setErrorActivity('No se pudo cargar la actividad reciente')
       } finally {
         setLoadingActivity(false)

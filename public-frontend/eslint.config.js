@@ -29,6 +29,7 @@ export default defineConfig([
         "argsIgnorePattern": "^_", 
         "varsIgnorePattern": "^_",
         "ignoreRestSiblings": true,
+        "caughtErrorsIgnorePattern": "^_",
         "args": "after-used"
       }],
       'react/jsx-uses-react': 'off',

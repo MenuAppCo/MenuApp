@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Settings as SettingsIcon, Palette, Globe, Bell, Shield, Upload, Trash2, Instagram, Facebook } from 'lucide-react'
 import { useRestaurant, useRestaurantSettings, useUpdateRestaurant, useUpdateRestaurantSettings, useUploadRestaurantLogo, useRestaurantSocialMedia, useUpdateRestaurantSocialMedia } from '../../hooks/useRestaurant'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useTheme } from '../../hooks/useTheme'
 import { usePageTitle } from '../../hooks/usePageTitle'
 
 const SOCIAL_PLATFORMS = [
@@ -319,7 +319,7 @@ const Settings = () => {
             </p>
           </div>
           <form onSubmit={handleSocialSubmit} className="space-y-4">
-            {SOCIAL_PLATFORMS.map(({ key, label, icon: Icon, placeholder }) => (
+            {SOCIAL_PLATFORMS.map(({ key, _, icon: Icon, placeholder }) => (
               <div key={key} className="flex items-center gap-3">
                 <Icon className="h-5 w-5 text-gray-500" />
                 <input

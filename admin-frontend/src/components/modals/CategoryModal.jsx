@@ -97,7 +97,7 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
       let categoryId
 
       if (isEditing) {
-        const result = await updateCategoryMutation.mutateAsync({
+        const _ = await updateCategoryMutation.mutateAsync({
           id: category.id,
           data: {
             ...data,
