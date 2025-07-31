@@ -14,7 +14,7 @@ function App() {
           <Route path="/restaurant/:slug/menus" element={<PublicMenus />} />
           <Route path="/menu/:slug/:menuType" element={<PublicMenu />} />
         </Routes>
-        {/* Notificaciones */}
+        {/* TODO Notificaciones */}
         <Toaster 
           position="top-right"
           toastOptions={{
