@@ -2,11 +2,11 @@ name: CI Terraform
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'iac/**'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'iac/**'
 
