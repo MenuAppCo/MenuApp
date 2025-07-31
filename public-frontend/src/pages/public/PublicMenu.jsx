@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { usePublicMenu } from '../../hooks/usePublicMenu'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { Phone, MapPin, Globe, Star, Clock, ArrowLeft } from 'lucide-react'
+import { Phone, MapPin, Globe, Star, ArrowLeft } from 'lucide-react'
 import ImageWithFallback from '../../components/ImageWithFallback'
 import ProductViewModal from '../../components/modals/ProductViewModal'
 import MobileMenuContainer from '../../components/MobileMenuContainer'
@@ -42,7 +42,10 @@ const PublicMenu = () => {
     }
   }
 
-  // Función para detectar la categoría visible durante el scroll
+
+
+  useEffect(() => {
+      // Función para detectar la categoría visible durante el scroll
   const handleScroll = () => {
     if (!scrollContainerRef.current) return
     
@@ -70,7 +73,6 @@ const PublicMenu = () => {
     }
   }
 
-  useEffect(() => {
     const container = scrollContainerRef.current
     if (container) {
       container.addEventListener('scroll', handleScroll)

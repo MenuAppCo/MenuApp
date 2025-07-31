@@ -1,15 +1,14 @@
 import { useParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRestaurantInfo } from '../../hooks/usePublicMenu'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { Phone, MapPin, Globe, Star, Clock, Menu, Calendar, MessageSquare, ThumbsUp, Instagram, Facebook, ExternalLink } from 'lucide-react'
+import { Phone, MapPin,  Calendar,  ThumbsUp, Instagram, Facebook, ExternalLink } from 'lucide-react'
 import ImageWithFallback from '../../components/ImageWithFallback'
 import MobileMenuContainer from '../../components/MobileMenuContainer'
 
 const PublicRestaurant = () => {
   const { slug } = useParams()
   const { data, isLoading, error } = useRestaurantInfo(slug)
-  const [activeSocialMedia, setActiveSocialMedia] = useState(null)
   const [showAddressModal, setShowAddressModal] = useState(false)
 
   // Actualizar título de la página con el nombre del restaurante
@@ -80,14 +79,16 @@ const PublicRestaurant = () => {
         }
         break
       case 'rating':
-        // Si existe Tripadvisor, abrir ese enlace, sino mostrar mensaje
-        const tripadvisorUrl = restaurant.socialMedia?.tripadvisor?.url
-        if (tripadvisorUrl && tripadvisorUrl.trim() !== '') {
-          window.open(tripadvisorUrl, '_blank')
-        } else {
-          alert('Función de calificaciones próximamente disponible')
+        {
+          // Si existe Tripadvisor, abrir ese enlace, sino mostrar mensaje
+          const tripadvisorUrl = restaurant.socialMedia?.tripadvisor?.url
+          if (tripadvisorUrl && tripadvisorUrl.trim() !== '') {
+            window.open(tripadvisorUrl, '_blank')
+          } else {
+            alert('Función de calificaciones próximamente disponible')
+          }
+          break
         }
-        break
       default:
         break
     }
@@ -225,7 +226,7 @@ const PublicRestaurant = () => {
           {activeSocialMediaList.length > 0 && (
             <div className="rounded-lg p-4">
               <div className="flex justify-center space-x-4">
-                {activeSocialMediaList.map(({ platform, url, active }) => (
+                {activeSocialMediaList.map(({ platform, url }) => (
                   <button
                     key={platform}
                     onClick={() => handleSocialMediaClick(platform, url)}
