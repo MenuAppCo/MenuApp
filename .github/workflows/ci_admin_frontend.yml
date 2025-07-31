@@ -2,11 +2,11 @@ name: CI Admin frontend
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'admin-frontend/**'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'admin-frontend/**'
 

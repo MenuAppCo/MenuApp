@@ -2,11 +2,11 @@ name: CI Public frontend
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'public-frontend/**'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'public-frontend/**'
 
