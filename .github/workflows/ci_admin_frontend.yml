@@ -1,0 +1,19 @@
+name: CI Admin frontend 
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'admin-frontend/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'admin-frontend/**'
+
+jobs:
+  ci-admin-frontend:
+    uses: ./.github/workflows/reusable-frontend-ci.yml
+    with:
+      frontend-path: 'admin-frontend'
+      node-version: '20'
+      env-vars: '{"NODE_ENV": "production"}' 

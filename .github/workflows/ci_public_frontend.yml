@@ -1,0 +1,19 @@
+name: CI Public frontend 
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'public-frontend/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'public-frontend/**'
+
+jobs:
+  ci-public-frontend:
+    uses: ./.github/workflows/reusable-frontend-ci.yml
+    with:
+      frontend-path: 'public-frontend'
+      node-version: '20'
+      env-vars: '{"NODE_ENV": "production"}'
