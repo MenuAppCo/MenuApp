@@ -16,7 +16,7 @@ on:
         required: false
         description: 'json file of key pairs env vars'
         type: string
-        default: '{"NODE_ENV": "production"}'
+        default: ''
 
 jobs:
   ci-frontend:
