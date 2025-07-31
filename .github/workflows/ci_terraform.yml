@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - '**/*.tf'
+      - 'iac'
   pull_request:
     branches: [ main ]
     paths:
-      - '**/*.tf'
+      - 'iac'
 
 jobs:
   ci-terraform:
