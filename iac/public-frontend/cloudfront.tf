@@ -64,7 +64,7 @@ resource "aws_cloudfront_distribution" "frontend" {
 }
 
 resource "aws_cloudfront_origin_access_control" "frontend" {
-  name                              = "frontend-oac"
+  name                              = "public-frontend-oac"
   description                       = "Origin Access Control for frontend S3 Bucket"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
