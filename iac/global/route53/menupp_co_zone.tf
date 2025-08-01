@@ -20,11 +20,12 @@ resource "aws_route53_record" "menapp_cert_validation" {
     }
   }
 
-  zone_id = aws_route53_zone.menapp.zone_id
-  name    = each.value.name
-  type    = each.value.type
-  ttl     = 300
-  records = [each.value.value]
+  zone_id         = aws_route53_zone.menapp.zone_id
+  name            = each.value.name
+  type            = each.value.type
+  ttl             = 300
+  records         = [each.value.value]
+  allow_overwrite = true
 }
 
 resource "aws_acm_certificate" "menapp" {
