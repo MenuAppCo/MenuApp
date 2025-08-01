@@ -25,3 +25,18 @@ jobs:
     with:
       branch-name: ${{ github.ref_name }}
       terraform-path: 'iac/global/route53'
+
+  ci-route53-records-terraform:
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/global/route53Records'
+
+  cd-route53-records-terraform:
+    needs: ci-route53-records-terraform
+    permissions:
+      id-token: write
+      contents: read
+    uses: ./.github/workflows/reusable-terraform-cd.yml
+    with:
+      branch-name: ${{ github.ref_name }}
+      terraform-path: 'iac/global/route53Records'
