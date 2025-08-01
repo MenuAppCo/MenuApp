@@ -11,5 +11,4 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
-      terraform-path: 'iac/global/route53'
-      node-version: '20'
+      branch-name: ${{ github.ref_name }}

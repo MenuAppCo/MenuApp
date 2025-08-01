@@ -12,11 +12,19 @@ on:
         description: 'json file of key pairs env vars'
         type: string
         default: ''
-      
+      branch-name:
+        required: true
+        description: 'current branch name'
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
-  ci-terraform:
-    name: ci-terraform
+  cd-terraform:
+    if: inputs.branch-name == 'master' 
+    name: cd-terraform
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -25,7 +33,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::297202223870:role/githubpipeline
+        role-to-assume: arn:aws:iam::084519756118:role/GithubActions
         aws-region: us-east-1
         audience: "sts.amazonaws.com"
 
@@ -43,11 +51,9 @@ jobs:
       working-directory: ${{ inputs.terraform-path }}
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/master'
       run: terraform apply -auto-approve
       working-directory: ${{ inputs.terraform-path }}
 
     - name: Terraform Output
-      if: github.ref == 'refs/heads/master'
       run: terraform output -json
       working-directory: ${{ inputs.terraform-path }}
