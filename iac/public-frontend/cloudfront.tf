@@ -5,8 +5,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   price_class         = "PriceClass_100"
 
   aliases = [
-    "menapp.co",
-    "www.menapp.co"
+    "*.menapp.co"
   ]
 
   viewer_certificate {
