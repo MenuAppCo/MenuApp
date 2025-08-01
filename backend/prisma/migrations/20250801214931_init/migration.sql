@@ -35,7 +35,7 @@ CREATE TABLE "restaurants" (
     "subscriptionId" TEXT,
     "planType" TEXT NOT NULL DEFAULT 'FREE',
     "planExpiresAt" TIMESTAMP(3),
-    "stripeCustomerId" TEXT,
+    "CustomerId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -98,23 +98,6 @@ CREATE TABLE "products" (
     CONSTRAINT "products_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "analytics" (
-    "id" SERIAL NOT NULL,
-    "restaurantId" INTEGER NOT NULL,
-    "pageViews" INTEGER NOT NULL DEFAULT 0,
-    "uniqueVisitors" INTEGER NOT NULL DEFAULT 0,
-    "sessionDuration" INTEGER,
-    "userAgent" TEXT,
-    "ipAddress" TEXT,
-    "country" TEXT,
-    "city" TEXT,
-    "deviceType" TEXT,
-    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "analytics_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -144,6 +127,3 @@ ALTER TABLE "products" ADD CONSTRAINT "products_restaurantId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "analytics" ADD CONSTRAINT "analytics_restaurantId_fkey" FOREIGN KEY ("restaurantId") REFERENCES "restaurants"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -84,8 +84,6 @@ const PublicRestaurant = () => {
           const tripadvisorUrl = restaurant.socialMedia?.tripadvisor?.url
           if (tripadvisorUrl && tripadvisorUrl.trim() !== '') {
             window.open(tripadvisorUrl, '_blank')
-          } else {
-            alert('Función de calificaciones próximamente disponible')
           }
           break
         }

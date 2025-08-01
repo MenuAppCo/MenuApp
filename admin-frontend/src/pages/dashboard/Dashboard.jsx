@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react'
-import { Users, Package, FolderOpen, Eye, TrendingUp, QrCode } from 'lucide-react'
+import { Users, Package, FolderOpen, Eye, QrCode } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useProducts } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import QRCodeComponent from '../../components/QRCode'
-import axios from 'axios'
 
 const Dashboard = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { data: productsData, isLoading: productsLoading, error: productsError } = useProducts({ limit: 1000 })
   const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useCategories({ limit: 1000 })
-  
+
   // Actualizar título de la página
   usePageTitle('Admin - MenuApp')
 
@@ -25,39 +23,10 @@ const Dashboard = () => {
     navigate('/categories')
   }
 
-  // Estado para actividad reciente
-  const [recentActivity, setRecentActivity] = useState([])
-  const [loadingActivity, setLoadingActivity] = useState(true)
-  const [errorActivity, setErrorActivity] = useState(null)
-
-  useEffect(() => {
-    const fetchActivity = async () => {
-      setLoadingActivity(true)
-      setErrorActivity(null)
-      try {
-        const token = localStorage.getItem('auth-storage')
-        let authToken = null
-        if (token) {
-          const parsed = JSON.parse(token)
-          authToken = parsed.state?.token
-        }
-        const res = await axios.get('/api/activity/recent', {
-          headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
-        })
-        setRecentActivity(Array.isArray(res.data.data) ? res.data.data : [])
-      } catch (_) {
-        setErrorActivity('No se pudo cargar la actividad reciente')
-      } finally {
-        setLoadingActivity(false)
-      }
-    }
-    fetchActivity()
-  }, [])
-  
   // Asegurar que data sea un array
   const products = productsData?.data || []
   const categories = categoriesData?.data || []
-  
+
   const totalProducts = productsData?.meta?.total || products.length || 0
   const totalCategories = categoriesData?.meta?.total || categories.length || 0
   const visibleProducts = Array.isArray(products) ? products.filter(p => p.visible)?.length || 0 : 0
@@ -67,29 +36,21 @@ const Dashboard = () => {
     {
       name: 'Total Productos',
       value: totalProducts.toString(),
-      change: '+12%',
-      changeType: 'positive',
       icon: Package,
     },
     {
       name: 'Categorías',
       value: totalCategories.toString(),
-      change: '+2',
-      changeType: 'positive',
       icon: FolderOpen,
     },
     {
       name: 'Productos Visibles',
       value: visibleProducts.toString(),
-      change: '+23%',
-      changeType: 'positive',
       icon: Eye,
     },
     {
       name: 'Productos Destacados',
       value: featuredProducts.toString(),
-      change: '+15%',
-      changeType: 'positive',
       icon: Users,
     },
   ]
@@ -145,7 +106,7 @@ const Dashboard = () => {
           ¡Bienvenido, {user?.name || 'Restaurante'}!
         </h1>
         <p className="text-gray-600">
-          Aquí tienes un resumen de tu actividad reciente
+          Aquí tienes un resumen de tu restaurante
         </p>
       </div>
 
@@ -162,49 +123,8 @@ const Dashboard = () => {
                 <p className="text-2xl font-semibold text-gray-900">{stat.value}</p>
               </div>
             </div>
-            <div className="mt-4">
-              <span className={`inline-flex items-center text-sm font-medium ${
-                stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-              }`}>
-                <TrendingUp className="h-4 w-4 mr-1" />
-                {stat.change}
-              </span>
-              <span className="text-sm text-gray-500 ml-2">vs mes anterior</span>
-            </div>
           </div>
         ))}
-      </div>
-
-      {/* Recent Activity */}
-      <div className="card">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Actividad Reciente
-        </h3>
-        <div className="space-y-4">
-          {loadingActivity ? (
-            <div className="text-gray-500 text-sm">Cargando actividad...</div>
-          ) : errorActivity ? (
-            <div className="text-red-500 text-sm">{errorActivity}</div>
-          ) : recentActivity.length === 0 ? (
-            <div className="text-gray-400 text-sm">Sin actividad reciente</div>
-          ) : (
-            recentActivity.map((activity, idx) => (
-              <div key={activity.type + '-' + activity.id + '-' + idx} className="flex items-center space-x-3">
-                <div className="flex-shrink-0">
-                  {activity.type === 'product' && <Package className="h-4 w-4 text-primary-600" />}
-                  {activity.type === 'category' && <FolderOpen className="h-4 w-4 text-blue-600" />}
-                  {activity.type === 'menu' && <Eye className="h-4 w-4 text-green-600" />}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-900">
-                    <span className="font-semibold capitalize">{activity.type === 'product' ? 'Producto' : activity.type === 'category' ? 'Categoría' : 'Menú'}</span> <span className="font-medium">{activity.name}</span> <span className="text-xs text-gray-500">{activity.action}</span>
-                  </p>
-                  <p className="text-xs text-gray-500">{new Date(activity.date).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
       </div>
 
       {/* Quick Actions and QR Code */}
@@ -214,19 +134,19 @@ const Dashboard = () => {
             Acciones Rápidas
           </h3>
           <div className="space-y-3">
-            <button 
+            <button
               onClick={handleAddProduct}
               className="w-full btn-primary"
             >
               Agregar Producto
             </button>
-            <button 
+            <button
               onClick={handleCreateCategory}
               className="w-full btn-outline"
             >
               Crear Categoría
             </button>
-            <a 
+            <a
               href={publicMenuUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -243,7 +163,7 @@ const Dashboard = () => {
             Código QR del Menú
           </h3>
           <div className="text-center">
-            <QRCodeComponent 
+            <QRCodeComponent
               url={publicMenuUrl}
               size={150}
               className="mx-auto"
@@ -287,4 +207,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard 
+export default Dashboard

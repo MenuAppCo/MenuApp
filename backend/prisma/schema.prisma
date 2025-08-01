@@ -53,13 +53,12 @@ model Restaurant {
   subscriptionId  String?       @unique
   planType        String        @default("FREE")
   planExpiresAt   DateTime?
-  stripeCustomerId String?
+  CustomerId String?
   
   // Relaciones
   menus           Menu[]
   categories      Category[]
   products        Product[]
-  analytics       Analytics[]
   
   // Timestamps
   createdAt       DateTime      @default(now())
@@ -139,30 +138,6 @@ model Product {
   updatedAt       DateTime      @updatedAt
   
   @@map("products")
-}
-
-// Analytics y estadísticas
-model Analytics {
-  id              Int           @id @default(autoincrement())
-  restaurantId    Int
-  restaurant      Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  
-  // Datos de visita
-  pageViews       Int           @default(0)
-  uniqueVisitors  Int           @default(0)
-  sessionDuration Int?          // en segundos
-  
-  // Datos del visitante
-  userAgent       String?
-  ipAddress       String?
-  country         String?
-  city            String?
-  deviceType      String?
-  
-  // Timestamp
-  date            DateTime      @default(now())
-  
-  @@map("analytics")
 }
 
  
