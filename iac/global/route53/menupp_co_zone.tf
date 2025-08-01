@@ -33,7 +33,10 @@ resource "aws_acm_certificate" "menapp" {
 
   subject_alternative_names = [
     "www.menapp.co",
-    "api.menapp.co"
+    "api.menapp.co",
+    "admin.menapp.co",
+    "app.menapp.co",
+    "*.menapp.co"
   ]
 
   tags = {
@@ -52,5 +55,9 @@ resource "aws_acm_certificate_validation" "menapp" {
 
 output "menapp_certificate_validation" {
   value = aws_acm_certificate_validation.menapp
+}
+
+output "menapp_zone" {
+  value = aws_route53_zone.menapp
 }
 
