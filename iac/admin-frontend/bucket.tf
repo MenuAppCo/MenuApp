@@ -1,5 +1,5 @@
 locals {
-  bucket_name = "${var.environment}-menupp-admin-frontend"
+  bucket_name = "${var.environment}-menapp-admin-frontend"
 }
 
 resource "aws_s3_bucket" "frontend" {
