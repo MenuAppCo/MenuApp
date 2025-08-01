@@ -1,33 +1,33 @@
-name: CI & CD Public frontend 
+name: CI & CD Admin frontend 
 
 on:
   push:
     branches: [ master ]
     paths:
-      - 'public-frontend/**'
+      - 'admin-frontend/**'
   pull_request:
     branches: [ master ]
     paths:
-      - 'public-frontend/**'
+      - 'admin-frontend/**'
 
 jobs:
-  ci-public-frontend:
+  ci-admin-frontend:
     uses: ./.github/workflows/reusable-frontend-ci.yml
     with:
-      frontend-path: 'public-frontend'
+      frontend-path: 'admin-frontend'
       node-version: '20'
   
-  cd-public-frontend:
+  cd-admin-frontend:
     permissions:
       id-token: write
       contents: read
-    needs: ci-public-frontend
+    needs: ci-admin-frontend
     uses: ./.github/workflows/reusable-frontend-cd.yml
     with:
-      frontend-path: 'public-frontend'
+      frontend-path: 'admin-frontend'
       node-version: '20'
-      cloudfront-distribution-id: 'E3PVFAZHMLAOA3'
-      s3-bucket-url: 's3://production-menapp-public-frontend'
+      cloudfront-distribution-id: 'E2Q2BA3Q2EDJ7'
+      s3-bucket-url: 's3://production-menapp-admin-frontend'
       branch-name: ${{ github.ref_name }}
 
   
