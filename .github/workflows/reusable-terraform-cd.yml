@@ -1,0 +1,53 @@
+name: Reusable Terraform CD
+
+on:
+  workflow_call:
+    inputs:
+      terraform-path:
+        description: 'Path to the frontend directory'
+        required: true
+        type: string
+      env-vars:
+        required: false
+        description: 'json file of key pairs env vars'
+        type: string
+        default: ''
+      
+
+jobs:
+  ci-terraform:
+    name: ci-terraform
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::297202223870:role/githubpipeline
+        aws-region: us-east-1
+        audience: "sts.amazonaws.com"
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.7.0"
+
+    - name: Terraform Init
+      run: terraform init -backend=false
+      working-directory: ${{ inputs.terraform-path }}
+
+    - name: Terraform Plan
+      run: terraform plan 
+      working-directory: ${{ inputs.terraform-path }}
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/master'
+      run: terraform apply -auto-approve
+      working-directory: ${{ inputs.terraform-path }}
+
+    - name: Terraform Output
+      if: github.ref == 'refs/heads/master'
+      run: terraform output -json
+      working-directory: ${{ inputs.terraform-path }}
