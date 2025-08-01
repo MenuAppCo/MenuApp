@@ -5,7 +5,7 @@ variable "environment" {
 }
 
 variable "app" {
-  description = "Application name "
+  description = "Application name"
   type        = string
   default     = "menupp"
 }
