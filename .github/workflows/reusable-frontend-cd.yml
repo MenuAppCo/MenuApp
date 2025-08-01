@@ -16,6 +16,10 @@ on:
         description: 'cloudfront distribution identifier to invalidate'
         required: true
         type: string
+      branch-name:
+        description: 'currente branch name'
+        required: true
+        type: string
       s3-bucket-url:
         description: 's3 bucket url to save files to'
         required: true

@@ -28,5 +28,6 @@ jobs:
       node-version: '20'
       cloudfront-distribution-id: 'E3PVFAZHMLAOA3'
       s3-bucket-url: 's3://production-menupp-public-frontend'
+      branch-name: ${{ github.ref_name }}
 
   
