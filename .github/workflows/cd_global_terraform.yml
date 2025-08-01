@@ -12,3 +12,4 @@ jobs:
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
       branch-name: ${{ github.ref_name }}
+      terraform-path: 'iac/global/route53'
