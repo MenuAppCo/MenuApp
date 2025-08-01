@@ -16,15 +16,15 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   origin {
-    domain_name              = aws_s3_bucket.dashboard.bucket_regional_domain_name
-    origin_access_control_id = aws_cloudfront_origin_access_control.dashboard.id
-    origin_id                = "S3-${aws_s3_bucket.dashboard.id}"
+    domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.frontend.id
+    origin_id                = "S3-${aws_s3_bucket.frontend.id}"
   }
 
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "S3-${aws_s3_bucket.dashboard.id}"
+    target_origin_id       = "S3-${aws_s3_bucket.frontend.id}"
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
 
