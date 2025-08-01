@@ -5,13 +5,13 @@ resource "aws_cloudfront_distribution" "frontend" {
   price_class         = "PriceClass_100"
 
   aliases = [
-    "*.menapp.co"
+    "www.menapp.co"
   ]
 
   viewer_certificate {
-    acm_certificate_arn      = data.terraform_remote_state.route53.outputs.menapp_certificate_validation.certificate_arn
-    ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.2_2021"
+    cloudfront_default_certificate = true
+    ssl_support_method             = "sni-only"
+    minimum_protocol_version       = "TLSv1.2_2021"
   }
 
   origin {
