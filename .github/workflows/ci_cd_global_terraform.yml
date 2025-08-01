@@ -27,6 +27,7 @@ jobs:
       terraform-path: 'iac/global/route53'
 
   ci-route53-records-terraform:
+    needs: cd-route53-terraform
     uses: ./.github/workflows/reusable-terraform-ci.yml
     with:
       terraform-path: 'iac/global/route53Records'
