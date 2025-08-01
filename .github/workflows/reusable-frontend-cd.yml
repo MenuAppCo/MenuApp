@@ -1,0 +1,79 @@
+name: Reusable Frontend CD
+
+on:
+  workflow_call:
+    inputs:
+      frontend-path:
+        description: 'Path to the frontend directory'
+        required: true
+        type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        type: string
+        default: '20'
+      cloudfront-distribution-id:
+        description: 'cloudfront distribution identifier to invalidate'
+        required: true
+        type: string
+      s3-bucket-url:
+        description: 's3 bucket url to save files to'
+        required: true
+        type: string
+      env-vars:
+        required: false
+        description: 'json file of key pairs env vars'
+        type: string
+        default: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
+
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  cd-frontend:
+    if: inputs.branch-name == 'master' 
+    name: cd-frontend
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: ${{ inputs.frontend-path }}/package-lock.json
+
+    - name: Parse env-vars JSON into $GITHUB_ENV
+      if: inputs.env-vars != ''
+      run: |
+        echo '${{ inputs.env-vars }}' > tmp-env.json
+        for key in $(jq -r 'keys[]' tmp-env.json); do
+          value=$(jq -r ".\"$key\"" tmp-env.json)
+          echo "$key=$value" >> $GITHUB_ENV
+        done
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ${{ inputs.frontend-path }}
+
+    - name: Build
+      run: npm run build
+      working-directory: ${{ inputs.frontend-path }}
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::084519756118:role/GithubActions
+        aws-region: us-east-1
+        audience: "sts.amazonaws.com"
+
+    - name: Deploy to S3
+      working-directory: ${{ inputs.frontend-path }}/dist
+      run: |
+        aws s3 sync . ${{ inputs.s3-bucket-url }} --delete
+
+    - name: Invalidate CloudFront
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{ inputs.cloudfront-distribution-id }} --paths "/*"
