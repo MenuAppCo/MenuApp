@@ -1,17 +1,14 @@
 name: CD Global Terraform
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - 'iac/global/**'
-  pull_request:
-    branches: [ master ]
-    paths:
-      - 'iac/global/**'
+  workflow_run:
+    workflows: ["CI Global terraform"]
+    types:
+      - completed
 
 jobs:
   cd-global-terraform:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
       terraform-path: 'iac/global/route53'
