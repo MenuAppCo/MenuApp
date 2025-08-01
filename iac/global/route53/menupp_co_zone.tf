@@ -47,10 +47,10 @@ resource "aws_acm_certificate" "menapp" {
 
 resource "aws_acm_certificate_validation" "menapp" {
   certificate_arn         = aws_acm_certificate.menapp.arn
-  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.menapp_cert_validation : record.fqdn]
 }
 
 output "cert_validation" {
-  value = aws_acm_certificate_validation.cert
+  value = aws_acm_certificate_validation.menapp
 }
 
