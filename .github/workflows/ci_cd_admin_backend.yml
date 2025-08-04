@@ -18,7 +18,13 @@ jobs:
       backend-path: 'backend'
       node-version: '20'
 
-  cd-terraform-admin-backend:
+  ci-admin-backend-terraform:
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/backend'
+
+  cd-admin-backend-terraform:
+    needs: ci-admin-backend-terraform:
     permissions:
       id-token: write
       contents: read
