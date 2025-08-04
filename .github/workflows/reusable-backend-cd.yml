@@ -1,0 +1,83 @@
+name: Reusable Backend CD
+
+on:
+  workflow_call:
+    inputs:
+      backend-path:
+        description: 'Path to the backend directory'
+        required: true
+        type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        type: string
+        default: '20'
+      branch-name:
+        description: 'currente branch name'
+        required: true
+        type: string
+      s3-bucket-url:
+        description: 's3 bucket url to save zip to'
+        required: true
+        type: string
+      lambda-zip-path:
+        description: 'lambda zip path'
+        required: true
+        type: string
+      env-vars:
+        required: false
+        description: 'json file of key pairs env vars'
+        type: string
+        default: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
+
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  cd-backend:
+    if: inputs.branch-name == 'master' 
+    name: cd-backend
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: ${{ inputs.backend-path }}/package-lock.json
+
+    - name: Parse env-vars JSON into $GITHUB_ENV
+      if: inputs.env-vars != ''
+      run: |
+        echo '${{ inputs.env-vars }}' > tmp-env.json
+        for key in $(jq -r 'keys[]' tmp-env.json); do
+          value=$(jq -r ".\"$key\"" tmp-env.json)
+          echo "$key=$value" >> $GITHUB_ENV
+        done
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ${{ inputs.backend-path }}
+
+    - name: Build
+      run: npm run build
+      working-directory: ${{ inputs.backend-path }}
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::084519756118:role/GithubActions
+        aws-region: us-east-1
+        audience: "sts.amazonaws.com"
+
+    - name: Zip Lambda
+      working-directory: ${{ inputs.backend-path }}/dist
+      run: zip -r lambda.zip .
+
+    - name: Upload to S3
+      working-directory: ${{ inputs.backend-path }}/dist
+      run: |
+        aws s3 cp lambda.zip ${{ inputs.s3-bucket-url }}/${{ inputs.lambda-zip-path }}/function.zip

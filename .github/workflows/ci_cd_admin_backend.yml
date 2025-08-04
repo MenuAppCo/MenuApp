@@ -18,4 +18,14 @@ jobs:
       backend-path: 'backend'
       node-version: '20'
 
-  
+  cd-terraform-admin-backend:
+    permissions:
+      id-token: write
+      contents: read
+    uses: ./.github/workflows/reusable-terraform-cd.yml
+    with:
+      terraform-path: 'iac/backend'
+      env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false", "TF_VAR_DATABASE_URL": "${{ secrets.DATABASE_URL }}"}'
+      branch-name: ${{ github.ref_name }}
+      lambda-api-zip-path: 'admin-api-lambda'
+      
