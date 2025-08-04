@@ -32,3 +32,21 @@ jobs:
       lambda-zip-path: 'admin-api-lambda'
       env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
 
+  ci-admin-backend-terraform:
+    needs: cd-admin-backend
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/backend'
+
+  cd-admin-backend-terraform:
+    needs: ci-admin-backend-terraform
+    permissions:
+      id-token: write
+      contents: read
+    uses: ./.github/workflows/reusable-terraform-cd.yml
+    with:
+      terraform-path: 'iac/backend'
+      env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
+      branch-name: ${{ github.ref_name }}
+    secrets:
+      TF_VAR_DATABASE_URL: ${{ secrets.DATABASE_URL }}
