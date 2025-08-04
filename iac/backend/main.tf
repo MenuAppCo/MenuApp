@@ -16,7 +16,7 @@ module "iam" {
   source                       = "./iam"
   environment                  = var.environment
   app                          = var.app
-  lambda_deployment_bucket_arn = module.s3.lambda_deployment_bucket_arn
+  lambda_deployment_bucket_arn = data.terraform_remote_state.global_s3.outputs.lambda_deployment_bucket_arn
 }
 
 module "lambda" {
