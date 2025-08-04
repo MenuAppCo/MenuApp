@@ -32,3 +32,10 @@ variable "s3" {
     lambda_deployment_bucket_id = string
   })
 } 
+
+variable "ecr" {
+  description = "ecr module outputs"
+  type = object({
+    admin_api_lambda_ecr_url = string
+  })
+} 

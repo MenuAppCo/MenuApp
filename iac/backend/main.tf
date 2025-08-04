@@ -12,6 +12,13 @@ provider "aws" {
 }
 
 
+module "ecr" {
+  source      = "./ecr"
+  environment = var.environment
+  app         = var.app
+}
+
+
 module "iam" {
   source                       = "./iam"
   environment                  = var.environment
@@ -20,11 +27,12 @@ module "iam" {
 }
 
 module "lambda" {
-  source       = "./lambda"
-  environment  = var.environment
-  app          = var.app
-  iam          = module.iam
-  s3           = data.terraform_remote_state.global_s3.outputs
-  database_url = var.DATABASE_URL #
+  source                   = "./lambda"
+  environment              = var.environment
+  app                      = var.app
+  iam                      = module.iam
+  s3                       = data.terraform_remote_state.global_s3.outputs
+  database_url             = var.DATABASE_URL
+  admin_api_lambda_ecr_url = module.ecr.outputs
 }
 
