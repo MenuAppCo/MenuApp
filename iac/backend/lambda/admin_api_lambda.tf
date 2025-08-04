@@ -1,0 +1,34 @@
+resource "aws_lambda_function" "admin_api_lambda" {
+  function_name = "admin-api-lambda"
+  role          = var.iam.roles.admin_api_lambda.arn
+  handler       = "index.handler"
+  runtime       = "nodejs20.x"
+  timeout       = 30
+  memory_size   = 256
+  architectures = ["arm64"]
+
+  s3_bucket = var.s3.lambda_deployment_bucket_id
+  s3_key    = "admin-api-lambda"
+
+  environment {
+    variables = {
+      SERVICE_NAME = "admin-api-lambda"
+      DATABASE_URL = var.database_url
+    }
+  }
+
+  tags = {
+    Environment = var.environment
+    App         = var.app
+  }
+}
+
+resource "aws_cloudwatch_log_group" "lambda_logs" {
+  name              = "/aws/lambda/${aws_lambda_function.admin_api_lambda.function_name}"
+  retention_in_days = 14
+
+  tags = {
+    Environment = var.environment
+    App         = var.app
+  }
+}
