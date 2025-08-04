@@ -18,21 +18,17 @@ jobs:
       backend-path: 'backend'
       node-version: '20'
 
-  ci-admin-backend-terraform:
-    uses: ./.github/workflows/reusable-terraform-ci.yml
-    with:
-      terraform-path: 'iac/backend'
-
-  cd-admin-backend-terraform:
-    needs: ci-admin-backend-terraform
+  cd-admin-backend:
+    needs: ci-admin-backend
     permissions:
       id-token: write
       contents: read
-    uses: ./.github/workflows/reusable-terraform-cd.yml
+    uses: ./.github/workflows/reusable-backend-cd.yml
     with:
-      terraform-path: 'iac/backend'
-      env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
+      backend-path: 'backend'
+      node-version: '20'
       branch-name: ${{ github.ref_name }}
+      s3-bucket-url: 's3://menupp-production-lambda-deployment'
       lambda-zip-path: 'admin-api-lambda'
-    secrets:
-      TF_VAR_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
+
