@@ -24,7 +24,7 @@ jobs:
       terraform-path: 'iac/backend'
 
   cd-admin-backend-terraform:
-    needs: ci-admin-backend-terraform:
+    needs: ci-admin-backend-terraform
     permissions:
       id-token: write
       contents: read
