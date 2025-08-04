@@ -1,0 +1,59 @@
+name: Reusable Backend CI
+
+on:
+  workflow_call:
+    inputs:
+      backend-path:
+        description: 'Path to the backend directory'
+        required: true
+        type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        type: string
+        default: '20'
+      env-vars:
+        required: false
+        description: 'json file of key pairs env vars'
+        type: string
+        default: ''
+
+jobs:
+  ci-backend:
+    name: ci-backend
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: ${{ inputs.backend-path }}/package-lock.json
+
+    - name: Parse env-vars JSON into $GITHUB_ENV
+      if: inputs.env-vars != ''
+      run: |
+        echo '${{ inputs.env-vars }}' > tmp-env.json
+        for key in $(jq -r 'keys[]' tmp-env.json); do
+          value=$(jq -r ".\"$key\"" tmp-env.json)
+          echo "$key=$value" >> $GITHUB_ENV
+        done
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ${{ inputs.backend-path }}
+    
+    - name: lint
+      run: npm run lint
+      working-directory: ${{ inputs.backend-path }}
+    
+    - name: tests
+      run: npm run tests
+      working-directory: ${{ inputs.backend-path }}
+
+    - name: Build
+      run: npm run build
+      working-directory: ${{ inputs.backend-path }}

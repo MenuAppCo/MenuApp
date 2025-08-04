@@ -1,0 +1,21 @@
+name: CI & CD Admin backend 
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'backend/**'
+      - 'iac/backend/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'backend/**'
+      - 'iac/backend/**'
+jobs:
+  ci-admin-backend:
+    uses: ./.github/workflows/reusable-backend-ci.yml
+    with:
+      backend-path: 'backend'
+      node-version: '20'
+
+  
