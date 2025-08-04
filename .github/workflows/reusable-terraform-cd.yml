@@ -16,7 +16,10 @@ on:
         required: true
         description: 'current branch name'
         type: string
-
+    secrets:
+      TF_VAR_DATABASE_URL:
+        required: false
+        description: 'database url'
 permissions:
   id-token: write
   contents: read
@@ -45,14 +48,20 @@ jobs:
     - name: Terraform Init
       run: terraform init
       working-directory: ${{ inputs.terraform-path }}
+      env:
+        TF_VAR_DATABASE_URL: ${{ secrets.TF_VAR_DATABASE_URL }}
 
     - name: Terraform Plan
       run: terraform plan 
       working-directory: ${{ inputs.terraform-path }}
+      env:
+        TF_VAR_DATABASE_URL: ${{ secrets.TF_VAR_DATABASE_URL }}
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
       working-directory: ${{ inputs.terraform-path }}
+      env:
+        TF_VAR_DATABASE_URL: ${{ secrets.TF_VAR_DATABASE_URL }}
 
     - name: Terraform Output
       run: terraform output -json
