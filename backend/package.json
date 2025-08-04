@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "cross-env nodemon src/index.js",
     "build": "echo 'No build step required'",
-    "test": "echo TODO jest", 
+    "tests": "echo TODO jest", 
     "lint": "echo TODO",
     "migrate": "cross-env prisma migrate dev",
     "migrate:deploy": "cross-env prisma migrate deploy",
