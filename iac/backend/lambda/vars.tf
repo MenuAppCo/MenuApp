@@ -31,7 +31,7 @@ variable "s3" {
   type = object({
     lambda_deployment_bucket_id = string
   })
-} 
+}
 
 variable "ecr" {
   description = "ecr module outputs"

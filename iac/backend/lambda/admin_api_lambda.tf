@@ -7,7 +7,7 @@ resource "aws_lambda_function" "admin_api_lambda" {
   memory_size   = 256
   architectures = ["arm64"]
 
-  image_uri     = "${var.ecr.admin_api_lambda_ecr_url}:latest"
+  image_uri = "${var.ecr.admin_api_lambda_ecr_url}:latest"
 
   environment {
     variables = {
