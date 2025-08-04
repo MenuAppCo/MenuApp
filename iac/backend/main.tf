@@ -31,6 +31,6 @@ module "lambda" {
   app          = var.app
   iam          = module.iam
   s3           = module.s3
-  database_url = var.DATABASE_URL
+  database_url = var.DATABASE_URL #
 }
 
