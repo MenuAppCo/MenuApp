@@ -74,10 +74,10 @@ jobs:
         audience: "sts.amazonaws.com"
 
     - name: Zip Lambda
-      working-directory: ${{ inputs.backend-path }}/dist
+      working-directory: ${{ inputs.backend-path }}
       run: zip -r lambda.zip .
 
     - name: Upload to S3
-      working-directory: ${{ inputs.backend-path }}/dist
+      working-directory: ${{ inputs.backend-path }}
       run: |
         aws s3 cp lambda.zip ${{ inputs.s3-bucket-url }}/${{ inputs.lambda-zip-path }}/function.zip
