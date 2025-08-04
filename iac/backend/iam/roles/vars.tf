@@ -1,7 +1,6 @@
 variable "policies" {
   description = "Policies"
   type        = map(any)
-  required    = true
 }
 
 variable "environment" {
