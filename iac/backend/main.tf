@@ -12,12 +12,6 @@ provider "aws" {
 }
 
 
-module "s3" {
-  source      = "./s3"
-  environment = var.environment
-  app         = var.app
-}
-
 module "iam" {
   source                       = "./iam"
   environment                  = var.environment
@@ -30,7 +24,7 @@ module "lambda" {
   environment  = var.environment
   app          = var.app
   iam          = module.iam
-  s3           = module.s3
+  s3           = data.terraform_remote_state.global_s3.outputs
   database_url = var.DATABASE_URL #
 }
 

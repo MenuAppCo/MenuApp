@@ -8,7 +8,7 @@ resource "aws_lambda_function" "admin_api_lambda" {
   architectures = ["arm64"]
 
   s3_bucket = var.s3.lambda_deployment_bucket_id
-  s3_key    = "admin-api-lambda"
+  s3_key    = "admin-api-lambda/function.zip"
 
   environment {
     variables = {
