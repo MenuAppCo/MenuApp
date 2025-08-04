@@ -33,6 +33,6 @@ jobs:
       terraform-path: 'iac/backend'
       env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
       branch-name: ${{ github.ref_name }}
-      lambda-api-zip-path: 'admin-api-lambda'
+      lambda-zip-path: 'admin-api-lambda'
     secrets:
       TF_VAR_DATABASE_URL: ${{ secrets.DATABASE_URL }}
