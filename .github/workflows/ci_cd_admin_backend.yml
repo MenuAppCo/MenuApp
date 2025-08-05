@@ -38,7 +38,7 @@ jobs:
       - name: Debug image_tag output
         run: |
           echo "cd-admin-backend.outputs:"
-          echo '${{ toJSON(needs["cd-admin-backend"].outputs) }}'
+          echo '${{ toJSON(needs.cd-admin-backend.outputs) }}'
 
 
   ci-admin-backend-terraform:
