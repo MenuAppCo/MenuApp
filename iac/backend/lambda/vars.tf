@@ -26,13 +26,6 @@ variable "database_url" {
   sensitive   = true
 }
 
-variable "s3" {
-  description = "S3 module outputs"
-  type = object({
-    lambda_deployment_bucket_id = string
-  })
-}
-
 variable "ecr" {
   description = "ecr module outputs"
   type = object({
