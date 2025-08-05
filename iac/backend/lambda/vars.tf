@@ -39,3 +39,8 @@ variable "ecr" {
     admin_api_lambda_ecr_url = string
   })
 } 
+variable "admin_api_lambda_image_tag" {
+  description = "admin api lambda image tag"
+  type        = string
+}
+

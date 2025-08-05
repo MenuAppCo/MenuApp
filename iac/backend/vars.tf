@@ -15,3 +15,10 @@ variable "DATABASE_URL" {
   type        = string
   sensitive   = true
 }
+
+
+variable "ADMIN_BACKEND_IMAGE_TAG" {
+  description = "Admin backend image tag"
+  type        = string
+  sensitive   = false
+}
