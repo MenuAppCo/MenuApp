@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken } = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth');
 const {
   getMenus,
   createMenu,
@@ -11,7 +11,7 @@ const {
 } = require('../controllers/menuController');
 
 // Todas las rutas requieren autenticación
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 // Obtener todos los menús del restaurante
 router.get('/', getMenus);

@@ -80,6 +80,16 @@
   }
 }
 
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.float-animation {
+  animation: float 2s ease-in-out infinite;
+}
+
 @layer components {
   .btn-primary {
     background-color: var(--color-primary-600);

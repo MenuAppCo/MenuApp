@@ -1,53 +1,31 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+});
 
-// Interceptor para agregar token automáticamente
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('auth-storage')
-    console.log('API Request:', config.method?.toUpperCase(), config.url, 'Token:', !!token)
-    
-    if (token) {
-      try {
-        const authData = JSON.parse(token)
-        if (authData.state?.token) {
-          config.headers.Authorization = `Bearer ${authData.state.token}`
-          console.log('Token added to request')
-        }
-      } catch (error) {
-        console.error('Error parsing auth token:', error)
-      }
-    }
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
+// Función para establecer el token JWT en las cabeceras de Axios
+export const setAuthToken = (token) => {
+  if (token) {
+    // Aplicar el token de autorización a cada petición si el usuario está logueado
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    // Eliminar el header si no hay token (logout)
+    delete api.defaults.headers.common['Authorization'];
   }
-)
+};
 
-// Interceptor para manejar errores de respuesta
+// Puedes añadir interceptores para manejar errores de forma global si quieres
 api.interceptors.response.use(
-  (response) => {
-    console.log('API Response:', response.config.url, response.status, response.data)
-    return response
-  },
-  (error) => {
-    console.error('API Error:', error.config?.url, error.response?.status, error.response?.data)
-    
+  response => response,
+  error => {
     if (error.response?.status === 401) {
-      // Token expirado o inválido
-      localStorage.removeItem('auth-storage')
-      window.location.href = '/login'
+      // Opcional: Manejar la expiración del token, por ejemplo, deslogueando al usuario.
+      // Esto es menos común con Supabase ya que la librería gestiona la renovación del token.
+      console.error("Unauthorized request - token might be expired.");
     }
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
-export default api 
+export default api;

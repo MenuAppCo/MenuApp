@@ -8,7 +8,7 @@ import QRCodeComponent from '../../components/QRCode'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, restaurantData } = useAuth()
   const { data: productsData, isLoading: productsLoading, error: productsError } = useProducts({ limit: 1000 })
   const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useCategories({ limit: 1000 })
 
@@ -56,7 +56,7 @@ const Dashboard = () => {
   ]
 
   // URL del menú público en el frontend público
-  const publicMenuUrl = user?.slug ? `http://localhost:5174/restaurant/${user.slug}` : ''
+  const publicMenuUrl = restaurantData?.slug ? `http://localhost:5174/restaurant/${restaurantData.slug}` : ''
 
   // Mostrar loading si están cargando los datos
   if (productsLoading || categoriesLoading) {
