@@ -25,11 +25,9 @@ jobs:
       contents: read
     uses: ./.github/workflows/reusable-backend-cd.yml
     with:
-      backend-path: 'backend'
-      node-version: '20'
+      image-path: 'backend'
+      image-uri: '084519756118.dkr.ecr.us-east-1.amazonaws.com/admin-api-lambda'
       branch-name: ${{ github.ref_name }}
-      s3-bucket-url: 's3://menupp-production-lambda-deployment'
-      lambda-zip-path: 'admin-api-lambda'
       env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
 
   ci-admin-backend-terraform:
@@ -46,7 +44,12 @@ jobs:
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
       terraform-path: 'iac/backend'
-      env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
+      env-vars: >
+      {
+        "TF_VAR_DATABASE_URL": "${{ secrets.MY_SECRET }}",
+        "ENV":"production",
+        "REGION":"us-east-1",
+        "TF_VAR_ADMIN_API_IMAGE_TAG": "${{ needs.cd-admin-backend.outputs.image-tag }}"
+        "DEBUG":"false"
+      } 
       branch-name: ${{ github.ref_name }}
-    secrets:
-      TF_VAR_DATABASE_URL: ${{ secrets.DATABASE_URL }}

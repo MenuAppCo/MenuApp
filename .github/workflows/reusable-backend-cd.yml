@@ -3,25 +3,16 @@ name: Reusable Backend CD
 on:
   workflow_call:
     inputs:
-      backend-path:
-        description: 'Path to the backend directory'
+      image-path:
+        description: 'image path'
         required: true
         type: string
-      node-version:
-        description: 'Node.js version to use'
-        required: false
+      image-uri:
+        description: 'image uri to upload ecr'
+        required: true
         type: string
-        default: '20'
       branch-name:
         description: 'currente branch name'
-        required: true
-        type: string
-      s3-bucket-url:
-        description: 's3 bucket url to save zip to'
-        required: true
-        type: string
-      lambda-zip-path:
-        description: 'lambda zip path'
         required: true
         type: string
       env-vars:
@@ -29,7 +20,10 @@ on:
         description: 'json file of key pairs env vars'
         type: string
         default: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
-
+    outputs:
+      image-tag:
+        description: "Generated image tag"
+        value: ${{ jobs.cd-backend.outputs.image-tag }}
 permissions:
   id-token: write
   contents: read
@@ -42,13 +36,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ inputs.node-version }}
-        cache: 'npm'
-        cache-dependency-path: ${{ inputs.backend-path }}/package-lock.json
-
     - name: Parse env-vars JSON into $GITHUB_ENV
       if: inputs.env-vars != ''
       run: |
@@ -58,26 +45,32 @@ jobs:
           echo "$key=$value" >> $GITHUB_ENV
         done
 
-    - name: Install dependencies
-      run: npm ci --omit=dev
-      working-directory: ${{ inputs.backend-path }}
-
-    - name: Build
-      run: npm run build
-      working-directory: ${{ inputs.backend-path }}
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::084519756118:role/GithubActions
         aws-region: us-east-1
         audience: "sts.amazonaws.com"
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Zip Lambda
-      working-directory: ${{ inputs.backend-path }}
-      run: zip -r lambda.zip .
-
-    - name: Upload to S3
-      working-directory: ${{ inputs.backend-path }}
+    - name: Extract short SHA and set image URI
+      id: prep
       run: |
-        aws s3 cp lambda.zip ${{ inputs.s3-bucket-url }}/${{ inputs.lambda-zip-path }}/function.zip
+        SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-8)
+        IMAGE_TAG="$SHORT_SHA"
+        IMAGE_URI_WITH_TAG="${{ inputs.image-uri }}:$IMAGE_TAG"
+        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+        echo "IMAGE_URI_WITH_TAG=$IMAGE_URI_WITH_TAG" >> $GITHUB_ENV
+   
+    - name: Export image tag (SHA)
+      id: export-tag
+      run: echo "image_tag=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+
+    - name: Build Docker image
+      run: docker build -t $IMAGE_URI_WITH_TAG ${{ inputs.image-path }}
+
+    - name: Push Docker image to ECR
+      run: docker push $IMAGE_URI_WITH_TAG

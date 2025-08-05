@@ -1,13 +1,11 @@
 resource "aws_lambda_function" "admin_api_lambda" {
   function_name = "admin-api-lambda"
   role          = var.iam.roles.admin_api_lambda.arn
-  handler       = "index.handler"
-  runtime       = "nodejs20.x"
   timeout       = 30
   memory_size   = 256
   architectures = ["arm64"]
-
-  image_uri = "${var.ecr.admin_api_lambda_ecr_url}:latest"
+  package_type  = "Image"
+  image_uri     = "${var.ecr.admin_api_lambda_ecr_url}:latest"
 
   environment {
     variables = {
