@@ -44,7 +44,7 @@ jobs:
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
       terraform-path: 'iac/backend'
-      env-vars: >-
+      env-vars: |
         {
           "TF_VAR_DATABASE_URL": "${{ secrets.MY_SECRET }}",
           "ENV":"production",
