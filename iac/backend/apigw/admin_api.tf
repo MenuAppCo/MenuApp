@@ -25,7 +25,7 @@ resource "aws_api_gateway_deployment" "admin_api_deployment" {
 }
 
 resource "aws_api_gateway_stage" "admin_api_production" {
-  stage_name    =  "admin-api-${var.environment}"
+  stage_name    = "admin-api-${var.environment}"
   rest_api_id   = aws_api_gateway_rest_api.admin_api.id
   deployment_id = aws_api_gateway_deployment.admin_api_deployment.id
 }
