@@ -23,7 +23,7 @@ on:
     outputs:
       image-tag:
         description: "Generated image tag"
-        value: ${{ jobs.cd-backend.outputs.image-tag }}
+        value: ${{ jobs.cd-backend.outputs.image_tag }}
 permissions:
   id-token: write
   contents: read
@@ -33,7 +33,7 @@ jobs:
     name: cd-backend
     runs-on: ubuntu-latest
     outputs:
-        image-tag: ${{ steps.export-tag.outputs.image-tag }}
+      image_tag: ${{ steps.export-tag.outputs.image_tag }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
