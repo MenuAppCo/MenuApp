@@ -58,7 +58,7 @@ resource "aws_api_gateway_domain_name" "admin_api_domain" {
   }
 }
 
-resource "aws_api_gateway_base_path_mapping" "mapping" {
+resource "aws_api_gateway_base_path_mapping" "admin_api_mapping" {
   api_id      = aws_api_gateway_rest_api.admin_api.id
   stage_name  = aws_api_gateway_stage.admin_api_production.stage_name
   domain_name = aws_api_gateway_domain_name.admin_api_domain.domain_name
