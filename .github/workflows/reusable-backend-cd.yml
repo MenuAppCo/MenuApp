@@ -33,7 +33,7 @@ jobs:
     name: cd-backend
     runs-on: ubuntu-latest
     outputs:
-        image_tag: ${{ steps.export-tag.outputs.image_tag }}
+        image-tag: ${{ steps.export-tag.outputs.image-tag }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
