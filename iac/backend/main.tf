@@ -20,10 +20,9 @@ module "ecr" {
 
 
 module "iam" {
-  source                       = "./iam"
-  environment                  = var.environment
-  app                          = var.app
-  lambda_deployment_bucket_arn = data.terraform_remote_state.global_s3.outputs.lambda_deployment_bucket_arn
+  source      = "./iam"
+  environment = var.environment
+  app         = var.app
 }
 
 module "lambda" {

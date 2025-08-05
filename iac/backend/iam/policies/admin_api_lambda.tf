@@ -13,14 +13,6 @@ resource "aws_iam_policy" "admin_api_lambda" {
           "logs:PutLogEvents"
         ]
         Resource = "arn:aws:logs:*:*:*"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "s3:GetObject",
-          "s3:GetObjectVersion"
-        ]
-        Resource = "${var.lambda_deployment_bucket_arn}/*"
       }
     ]
   })

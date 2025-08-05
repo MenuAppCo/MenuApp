@@ -3,7 +3,6 @@ module "policies" {
 
   environment                  = var.environment
   app                          = var.app
-  lambda_deployment_bucket_arn = var.lambda_deployment_bucket_arn
 }
 
 module "roles" {
