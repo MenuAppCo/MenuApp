@@ -1,8 +1,8 @@
 module "policies" {
   source = "./policies"
 
-  environment                  = var.environment
-  app                          = var.app
+  environment = var.environment
+  app         = var.app
 }
 
 module "roles" {
