@@ -2,12 +2,14 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, token } = useAuth()
+  const { user } = useAuth(); // Usamos el objeto user directamente
 
-  if (!isAuthenticated || !token) {
+  // Si no hay usuario, redirigimos a la página de login.
+  if (!user) {
     return <Navigate to="/login" replace />
   }
 
+  // Si hay usuario, renderizamos el contenido protegido.
   return children
 }
 

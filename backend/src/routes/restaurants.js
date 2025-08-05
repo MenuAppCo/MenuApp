@@ -1,13 +1,17 @@
 const express = require('express')
 const router = express.Router()
-const { authenticateToken } = require('../middleware/auth')
+const authMiddleware = require('../middleware/auth')
+
 const restaurantController = require('../controllers/restaurantController')
 
 // Log para debuggear
 console.log('🔧 Registrando rutas de restaurantes...')
 
-// Rutas protegidas - requieren autenticación
-router.use(authenticateToken)
+// IMPORTANTE: Esta ruta va primero y está protegida individualmente.
+router.post('/initialize', authMiddleware, restaurantController.initializeRestaurant);
+
+// El resto de las rutas también usan el middleware.
+router.use(authMiddleware)
 
 // Obtener información del restaurante del usuario autenticado
 router.get('/me', restaurantController.getMyRestaurant)
@@ -29,4 +33,4 @@ router.put('/me/social-media', restaurantController.updateMySocialMedia)
 
 console.log('✅ Rutas de restaurantes registradas')
 
-module.exports = router 
+module.exports = router

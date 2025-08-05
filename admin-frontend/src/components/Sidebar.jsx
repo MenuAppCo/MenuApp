@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { 
   Home, 
   Package, 
@@ -11,7 +11,13 @@ import {
 import { useAuth } from '../hooks/useAuth'
 
 const Sidebar = () => {
-  const { logout } = useAuth()
+  const { signOut } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await signOut()
+    navigate('/login', { replace: true }) // Redirigir al login
+  }
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
@@ -58,7 +64,7 @@ const Sidebar = () => {
           {/* Logout */}
           <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
             <button
-              onClick={logout}
+              onClick={handleLogout} // Corregido: usar el nuevo manejador
               className="flex items-center w-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
             >
               <LogOut className="mr-3 h-5 w-5" />

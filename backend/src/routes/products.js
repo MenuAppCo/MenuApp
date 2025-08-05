@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken } = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth');
 const {
   getProducts,
   getProduct,
@@ -12,7 +12,7 @@ const {
 } = require('../controllers/productController');
 
 // Todas las rutas requieren autenticación
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 // Obtener todos los productos
 router.get('/', getProducts);

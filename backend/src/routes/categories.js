@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken } = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth');
 const {
   getCategories,
   getCategory,
@@ -11,7 +11,7 @@ const {
 } = require('../controllers/categoryController');
 
 // Todas las rutas requieren autenticación
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 // Obtener todas las categorías
 router.get('/', getCategories);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken } = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth');
 const { uploadProductImage, uploadCategoryImage, uploadRestaurantLogo } = require('../middleware/upload');
 const {
   uploadProductImage: uploadProductImageController,
@@ -10,7 +10,7 @@ const {
 } = require('../controllers/uploadController');
 
 // Todas las rutas requieren autenticación
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 // Subir imagen de producto
 router.post('/products/:productId', uploadProductImage, uploadProductImageController);

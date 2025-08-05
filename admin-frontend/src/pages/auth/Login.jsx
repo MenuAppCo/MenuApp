@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -14,7 +14,9 @@ const loginSchema = z.object({
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { login } = useAuth()
+  const [error, setError] = useState(null)
+  const { signIn } = useAuth()
+  const navigate = useNavigate()
 
   const {
     register,
@@ -26,8 +28,15 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true)
+    setError(null)
     try {
-      await login(data.email, data.password)
+      const { error } = await signIn({ email: data.email, password: data.password })
+      if (error) {
+        throw new Error(error.message || 'Error al iniciar sesión')
+      }
+      navigate('/') // Redirige al dashboard tras el login exitoso
+    } catch (err) {
+      setError(err.message)
     } finally {
       setIsLoading(false)
     }
@@ -48,6 +57,13 @@ const Login = () => {
           </p>
         </div>
         
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Error: </strong>
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div>
