@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/nodejs:20-arm64
+FROM public.ecr.aws/lambda/nodejs:20
 
 WORKDIR /var/task
 
