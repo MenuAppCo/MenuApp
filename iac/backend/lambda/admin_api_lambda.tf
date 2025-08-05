@@ -3,7 +3,7 @@ resource "aws_lambda_function" "admin_api_lambda" {
   role          = var.iam.roles.admin_api_lambda.arn
   timeout       = 30
   memory_size   = 256
-  architectures = ["arm64"]
+  architectures = ["x86_64"]
   package_type  = "Image"
   image_uri     = "${var.ecr.admin_api_lambda_ecr_url}:${var.admin_api_lambda_image_tag}"
 
