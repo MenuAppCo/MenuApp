@@ -36,3 +36,12 @@ module "lambda" {
   admin_api_lambda_image_tag = var.ADMIN_BACKEND_IMAGE_TAG
 }
 
+
+module "apigw" {
+  source      = "./apigw"
+  environment = var.environment
+  app         = var.app
+  lambdas     = module.lambda
+
+  menapp_certificate_arn = data.terraform_remote_state.route53.outputs.menapp_certificate_validation.certificate_arn
+}
