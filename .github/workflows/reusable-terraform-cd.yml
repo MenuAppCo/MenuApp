@@ -22,9 +22,7 @@ on:
         type: string
     secrets:
       database-url:
-        description: 'database url'
         required: false
-        type: string
 permissions:
   id-token: write
   contents: read
