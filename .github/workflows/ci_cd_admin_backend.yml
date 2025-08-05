@@ -51,6 +51,8 @@ jobs:
           "REGION":"us-east-1",
           "DEBUG":"false"
         } 
-      database-url: ${{ secrets.DATABASE_URL }}
       admin-backend-image-tag: ${{ needs.cd-admin-backend.outputs.image-tag }}
       branch-name: ${{ github.ref_name }}
+    secrets:
+      database-url: ${{ secrets.DATABASE_URL }}
+

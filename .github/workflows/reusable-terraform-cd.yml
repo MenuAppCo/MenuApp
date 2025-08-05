@@ -16,12 +16,13 @@ on:
         required: true
         description: 'current branch name'
         type: string
-      database-url:
-        description: 'database url'
-        required: false
-        type: string
       admin-backend-image-tag:
         description: 'admin backend image tag'
+        required: false
+        type: string
+    secrets:
+      database-url:
+        description: 'database url'
         required: false
         type: string
 permissions:
@@ -52,21 +53,21 @@ jobs:
       run: terraform init
       working-directory: ${{ inputs.terraform-path }}
       env:
-        TF_VAR_DATABASE_URL: ${{ inputs.database-url }}
+        TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
         TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
 
     - name: Terraform Plan
       run: terraform plan 
       working-directory: ${{ inputs.terraform-path }}
       env:
-        TF_VAR_DATABASE_URL: ${{ inputs.database-url }}
+        TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
         TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
       working-directory: ${{ inputs.terraform-path }}
       env:
-        TF_VAR_DATABASE_URL: ${{ inputs.database-url }}
+        TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
         TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
 
     - name: Terraform Output
