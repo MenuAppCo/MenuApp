@@ -44,12 +44,12 @@ jobs:
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
       terraform-path: 'iac/backend'
-      env-vars: >
-      {
-        "TF_VAR_DATABASE_URL": "${{ secrets.MY_SECRET }}",
-        "ENV":"production",
-        "REGION":"us-east-1",
-        "TF_VAR_ADMIN_API_IMAGE_TAG": "${{ needs.cd-admin-backend.outputs.image-tag }}"
-        "DEBUG":"false"
-      } 
+      env-vars: >-
+        {
+          "TF_VAR_DATABASE_URL": "${{ secrets.MY_SECRET }}",
+          "ENV":"production",
+          "REGION":"us-east-1",
+          "TF_VAR_ADMIN_API_IMAGE_TAG": "${{ needs.cd-admin-backend.outputs.image-tag }}",
+          "DEBUG":"false"
+        } 
       branch-name: ${{ github.ref_name }}
