@@ -31,6 +31,13 @@ jobs:
       branch-name: ${{ github.ref_name }}
       env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
 
+  debug-output:
+    needs: cd-admin-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug image_tag output
+        run: echo "cd-admin-backend.outputs: ${{ toJSON(needs.cd-admin-backend.outputs) }}"
+
   ci-admin-backend-terraform:
     needs: cd-admin-backend
     uses: ./.github/workflows/reusable-terraform-ci.yml
