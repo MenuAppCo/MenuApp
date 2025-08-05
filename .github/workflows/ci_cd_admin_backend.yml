@@ -36,7 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug image_tag output
-        run: echo "cd-admin-backend.outputs: ${{ toJSON(needs.cd-admin-backend.outputs) }}"
+        run: |
+          echo "cd-admin-backend.outputs:"
+          echo '${{ toJSON(needs["cd-admin-backend"].outputs) }}'
+
 
   ci-admin-backend-terraform:
     needs: cd-admin-backend
