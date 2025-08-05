@@ -32,6 +32,8 @@ jobs:
     if: inputs.branch-name == 'master' 
     name: cd-backend
     runs-on: ubuntu-latest
+    outputs:
+        image_tag: ${{ steps.export-tag.outputs.image_tag }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
