@@ -13,9 +13,7 @@
     "migrate:deploy": "cross-env prisma migrate deploy",
     "db:seed": "cross-env node prisma/seed.js",
     "db:studio": "cross-env prisma studio",
-    "db:generate": "cross-env prisma generate",
-    "fix-slugs": "node scripts/fix-restaurant-slugs.js",
-    "migrate-to-postgresql": "node scripts/migrate-to-postgresql.js"
+    "db:generate": "cross-env prisma generate"
   },
   "keywords": [
     "menu",
