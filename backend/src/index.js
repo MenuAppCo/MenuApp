@@ -37,13 +37,13 @@ app.use(cors({
 }));
 
 
-let morgan = morgan('combined')
+let morganMiddleware = morgan('combined')
 
 if (process.env.NODE_ENV === 'development') {
-  morgan = morgan('dev')
+  morganMiddleware = morgan('dev')
 }
 
-app.use(morgan('combined'));
+app.use(morganMiddleware);
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
