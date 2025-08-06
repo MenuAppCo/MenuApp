@@ -16,6 +16,17 @@ variable "DATABASE_URL" {
   sensitive   = true
 }
 
+variable "SUPABASE_URL" {
+  description = "Supabase URL"
+  type        = string
+  sensitive   = true
+}
+
+variable "SUPABASE_SERVICE_KEY" {
+  description = "Supabase service key"
+  type        = string
+  sensitive   = true
+}
 
 variable "ADMIN_BACKEND_IMAGE_TAG" {
   description = "Admin backend image tag"

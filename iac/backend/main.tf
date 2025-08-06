@@ -26,12 +26,14 @@ module "iam" {
 }
 
 module "lambda" {
-  source       = "./lambda"
-  environment  = var.environment
-  app          = var.app
-  iam          = module.iam
-  database_url = var.DATABASE_URL
-  ecr          = module.ecr
+  source               = "./lambda"
+  environment          = var.environment
+  app                  = var.app
+  iam                  = module.iam
+  database_url         = var.DATABASE_URL
+  supabase_url         = SUPABASE_URL
+  supabase_service_key = SUPABASE_SERVICE_KEY
+  ecr                  = module.ecr
 
   admin_api_lambda_image_tag = var.ADMIN_BACKEND_IMAGE_TAG
 }

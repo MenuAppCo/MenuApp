@@ -23,12 +23,21 @@ on:
     secrets:
       database-url:
         required: false
+      supabase-url:
+        required: false
+      supabase-service-key:
+        required: false
 permissions:
   id-token: write
   contents: read
 jobs:
   cd-terraform:
     if: inputs.branch-name == 'master' 
+    env:
+      TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
+      TF_VAR_SUPABASE_URL: ${{ secrets.supabase-url }}
+      TF_VAR_SUPABASE_SERVICE_KEY: ${{ secrets.supabase-service-key }}
+      TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
     name: cd-terraform
     runs-on: ubuntu-latest
     steps:
@@ -50,23 +59,14 @@ jobs:
     - name: Terraform Init
       run: terraform init
       working-directory: ${{ inputs.terraform-path }}
-      env:
-        TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
-        TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
-
+     
     - name: Terraform Plan
       run: terraform plan 
       working-directory: ${{ inputs.terraform-path }}
-      env:
-        TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
-        TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
-
+      
     - name: Terraform Apply
       run: terraform apply -auto-approve
       working-directory: ${{ inputs.terraform-path }}
-      env:
-        TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
-        TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
 
     - name: Terraform Output
       run: terraform output -json
