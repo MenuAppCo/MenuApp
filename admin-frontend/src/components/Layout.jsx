@@ -3,6 +3,8 @@ import Sidebar from './Sidebar'
 import Header from './Header'
 
 const Layout = () => {
+  console.log('[Layout] Renderizando layout');
+  
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}

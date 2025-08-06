@@ -1,19 +1,46 @@
 import { Users, Package, FolderOpen, Eye, QrCode } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { useProducts } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import QRCodeComponent from '../../components/QRCode'
+import { buildPublicMenuUrl } from '../../config/env'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { user, restaurantData } = useAuth()
+  const { user, userData, restaurantData } = useAuth()
   const { data: productsData, isLoading: productsLoading, error: productsError } = useProducts({ limit: 1000 })
   const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useCategories({ limit: 1000 })
+  const [forceRender, setForceRender] = useState(false)
 
   // Actualizar título de la página
   usePageTitle('Admin - MenuApp')
+
+  // Forzar renderización después de 3 segundos si aún está cargando
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (productsLoading || categoriesLoading) {
+        console.log('[Dashboard] Forzando renderización después de timeout');
+        setForceRender(true);
+      }
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [productsLoading, categoriesLoading]);
+
+  console.log('[Dashboard] Renderizando dashboard:', {
+    user: user ? 'Presente' : 'Ausente',
+    userData: userData ? 'Presente' : 'Ausente',
+    userDataDetails: userData,
+    restaurantData: restaurantData ? 'Presente' : 'Ausente',
+    restaurantDataDetails: restaurantData,
+    productsLoading,
+    categoriesLoading,
+    productsError: productsError ? 'Error' : 'OK',
+    categoriesError: categoriesError ? 'Error' : 'OK',
+    forceRender
+  });
 
   // Funciones de navegación
   const handleAddProduct = () => {
@@ -31,6 +58,13 @@ const Dashboard = () => {
   const totalCategories = categoriesData?.meta?.total || categories.length || 0
   const visibleProducts = Array.isArray(products) ? products.filter(p => p.visible)?.length || 0 : 0
   const featuredProducts = Array.isArray(products) ? products.filter(p => p.featured)?.length || 0 : 0
+
+  console.log('[Dashboard] Datos procesados:', {
+    productsCount: products.length,
+    categoriesCount: categories.length,
+    totalProducts,
+    totalCategories
+  });
 
   const stats = [
     {
@@ -56,15 +90,15 @@ const Dashboard = () => {
   ]
 
   // URL del menú público en el frontend público
-  const publicMenuUrl = restaurantData?.slug ? `http://localhost:5174/restaurant/${restaurantData.slug}` : ''
+  const publicMenuUrl = buildPublicMenuUrl(restaurantData?.slug)
 
-  // Mostrar loading si están cargando los datos
-  if (productsLoading || categoriesLoading) {
+  // Mostrar loading si están cargando los datos y no se ha forzado el render
+  if ((productsLoading || categoriesLoading) && !forceRender) {
     return (
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            ¡Bienvenido, {user?.name || 'Restaurante'}!
+            ¡Bienvenido, {restaurantData?.name || 'Restaurante'}!
           </h1>
           <p className="text-gray-600">
             Cargando datos...
@@ -84,6 +118,7 @@ const Dashboard = () => {
 
   // Mostrar error si hay problemas
   if (productsError || categoriesError) {
+    console.error('[Dashboard] Error cargando datos:', { productsError, categoriesError });
     return (
       <div className="space-y-6">
         <div>
@@ -93,6 +128,12 @@ const Dashboard = () => {
           <p className="text-red-600">
             Error al cargar los datos del dashboard
           </p>
+          <div className="mt-4 p-4 bg-red-50 rounded-lg">
+            <p className="text-sm text-red-700">
+              {productsError && `Error productos: ${productsError.message}`}
+              {categoriesError && `Error categorías: ${categoriesError.message}`}
+            </p>
+          </div>
         </div>
       </div>
     )
@@ -103,7 +144,7 @@ const Dashboard = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
-          ¡Bienvenido, {user?.name || 'Restaurante'}!
+          ¡Bienvenido, {restaurantData?.name || 'Restaurante'}!
         </h1>
         <p className="text-gray-600">
           Aquí tienes un resumen de tu restaurante
@@ -199,7 +240,7 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-600">Restaurante</span>
-            <span className="text-sm text-gray-900">{user?.name || 'Sin nombre'}</span>
+            <span className="text-sm text-gray-900">{restaurantData?.name || 'Sin nombre'}</span>
           </div>
         </div>
       </div>

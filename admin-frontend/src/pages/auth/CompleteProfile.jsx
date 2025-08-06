@@ -1,9 +1,10 @@
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import api from '../../services/api';
 
 const profileSchema = z.object({
@@ -14,8 +15,22 @@ const profileSchema = z.object({
 const CompleteProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [forceRender, setForceRender] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(profileSchema) });
+  const { profileExists, user } = useAuth();
+
+  console.log('[CompleteProfile] Renderizando componente');
+
+  // Forzar renderización después de 1 segundo si aún no se ha renderizado
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!forceRender) {
+        console.log('[CompleteProfile] Forzando renderización después de timeout');
+        setForceRender(true);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [forceRender]);
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -31,7 +46,28 @@ const CompleteProfile = () => {
     }
   };
 
-  return (
+    // Si el usuario ya tiene perfil, redirigir al dashboard
+    if (profileExists === true) {
+      console.log('[CompleteProfile] Usuario ya tiene perfil, redirigiendo al dashboard');
+      return <Navigate to="/" replace />;
+    }
+
+    // Mostrar loading si no se ha forzado el render
+    if (!forceRender) {
+      console.log('[CompleteProfile] Mostrando loading, forceRender:', forceRender);
+      return (
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Cargando formulario...</p>
+          </div>
+        </div>
+      );
+    }
+
+    console.log('[CompleteProfile] Renderizando formulario, forceRender:', forceRender);
+
+    return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="max-w-md w-full space-y-6">
         <h2 className="text-center text-3xl font-bold">Completa tu Perfil</h2>

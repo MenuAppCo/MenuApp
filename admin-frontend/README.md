@@ -1,12 +1,46 @@
-# React + Vite
+# MenuApp - Frontend de Administración
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es el frontend de administración para MenuApp, una aplicación de gestión de menús para restaurantes.
 
-Currently, two official plugins are available:
+## Configuración de Variables de Entorno
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Desarrollo Local
 
-## Expanding the ESLint configuration
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.ss
+```bash
+# URL del frontend público (menú para clientes)
+VITE_PUBLIC_FRONTEND_URL=http://localhost:5174
+
+# URL del backend API
+VITE_API_URL=http://localhost:3000
+```
+
+### Producción
+
+En producción, configura las siguientes variables de entorno:
+
+```bash
+# URL del frontend público (menú para clientes)
+VITE_PUBLIC_FRONTEND_URL=https://tu-dominio.com
+
+# URL del backend API
+VITE_API_URL=https://api.tu-dominio.com
+```
+
+## Scripts Disponibles
+
+- `npm run dev` - Inicia el servidor de desarrollo
+- `npm run build` - Construye la aplicación para producción
+- `npm run preview` - Previsualiza la build de producción
+- `npm run lint` - Ejecuta el linter
+
+## Tecnologías Utilizadas
+
+- React 18
+- Vite
+- Tailwind CSS
+- Lucide React (iconos)
+- React Router DOM
+- React Hook Form
+- Zod (validación)
