@@ -9,8 +9,10 @@ resource "aws_lambda_function" "admin_api_lambda" {
 
   environment {
     variables = {
-      SERVICE_NAME = "admin-api-lambda"
-      DATABASE_URL = var.database_url
+      SERVICE_NAME         = "admin-api-lambda"
+      DATABASE_URL         = var.database_url
+      SUPABASE_URL         = var.supabase_url
+      SUPABASE_SERVICE_KEY = var.supabase_service_key
     }
   }
 

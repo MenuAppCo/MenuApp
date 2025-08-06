@@ -4,7 +4,186 @@ const fs = require('fs').promises;
 const { UPLOAD } = require('../utils/constants');
 
 class ImageService {
-  // Procesar y optimizar imagen
+  // Procesar y optimizar imagen usando buffer
+  static async processImageBuffer(buffer, options = {}) {
+    try {
+      const {
+        width = 800,
+        height = 800,
+        quality = 80,
+        format = 'webp',
+        filename = 'image'
+      } = options;
+
+      console.log(`🖼️ Procesando imagen desde buffer: ${filename}`);
+      
+      const image = sharp(buffer);
+      const metadata = await image.metadata();
+      
+      console.log(`📊 Metadatos de imagen:`, {
+        format: metadata.format,
+        width: metadata.width,
+        height: metadata.height,
+        size: metadata.size
+      });
+
+      // Redimensionar manteniendo proporción
+      const resizedImage = image.resize(width, height, {
+        fit: 'inside',
+        withoutEnlargement: true
+      });
+
+      // Convertir a formato especificado
+      let processedBuffer;
+      switch (format) {
+        case 'webp':
+          processedBuffer = await resizedImage.webp({ 
+            quality,
+            effort: 6, // Mejor compresión
+            nearLossless: false
+          }).toBuffer();
+          break;
+        case 'jpeg':
+        case 'jpg':
+          processedBuffer = await resizedImage.jpeg({ 
+            quality,
+            progressive: true,
+            mozjpeg: true
+          }).toBuffer();
+          break;
+        case 'png':
+          processedBuffer = await resizedImage.png({ 
+            quality,
+            progressive: true,
+            compressionLevel: 9
+          }).toBuffer();
+          break;
+        default:
+          processedBuffer = await resizedImage.webp({ 
+            quality,
+            effort: 6
+          }).toBuffer();
+      }
+
+      // Generar URL virtual (para Lambda, no guardamos en disco)
+      const baseName = path.basename(filename, path.extname(filename));
+      const virtualUrl = `/uploads/processed/${baseName}-processed.${format}`;
+
+      console.log(`💾 Imagen procesada en memoria: ${virtualUrl}`);
+
+      return {
+        buffer: processedBuffer,
+        url: virtualUrl,
+        metadata: {
+          width: metadata.width,
+          height: metadata.height,
+          format: metadata.format,
+          size: metadata.size
+        }
+      };
+    } catch (error) {
+      console.error('❌ Error procesando imagen desde buffer:', error);
+      console.error('🔧 Opciones:', options);
+      throw new Error(`Error al procesar la imagen: ${error.message}`);
+    }
+  }
+
+  // Crear múltiples tamaños de imagen desde buffer
+  static async createImageSizesFromBuffer(buffer, filename, sizes = UPLOAD.IMAGE_SIZES) {
+    try {
+      console.log(`🖼️ Creando múltiples tamaños desde buffer para: ${filename}`);
+      
+      const results = {};
+      const baseName = path.basename(filename, path.extname(filename));
+
+      // Usar Sharp con buffer
+      const image = sharp(buffer);
+
+      for (const [sizeName, dimensions] of Object.entries(sizes)) {
+        console.log(`📏 Creando tamaño ${sizeName}: ${dimensions.width}x${dimensions.height}`);
+        
+        try {
+          const sizeBuffer = await image
+            .clone() // Clonar para evitar conflictos
+            .resize(dimensions.width, dimensions.height, {
+              fit: 'cover',
+              position: 'center'
+            })
+            .webp({ 
+              quality: 80,
+              effort: 6,
+              nearLossless: false
+            })
+            .toBuffer();
+
+          const virtualUrl = `/uploads/sizes/${baseName}-${sizeName}.webp`;
+
+          results[sizeName] = {
+            buffer: sizeBuffer,
+            url: virtualUrl,
+            width: dimensions.width,
+            height: dimensions.height
+          };
+          
+          console.log(`✅ Tamaño ${sizeName} creado: ${virtualUrl}`);
+        } catch (sizeError) {
+          console.error(`❌ Error creando tamaño ${sizeName}:`, sizeError);
+          // Continuar con otros tamaños
+        }
+      }
+
+      console.log(`🎉 Todos los tamaños creados exitosamente`);
+      return results;
+    } catch (error) {
+      console.error('❌ Error creando tamaños de imagen desde buffer:', error);
+      throw new Error(`Error al crear tamaños de imagen: ${error.message}`);
+    }
+  }
+
+  // Validar imagen desde buffer
+  static async validateImageBuffer(buffer) {
+    try {
+      console.log(`🔍 Validando imagen desde buffer`);
+      
+      const metadata = await sharp(buffer).metadata();
+      
+      console.log(`📊 Metadatos de validación:`, {
+        format: metadata.format,
+        width: metadata.width,
+        height: metadata.height,
+        size: metadata.size,
+        channels: metadata.channels,
+        hasAlpha: metadata.hasAlpha
+      });
+      
+      // Verificar dimensiones mínimas
+      if (metadata.width < 100 || metadata.height < 100) {
+        throw new Error(`La imagen debe tener al menos 100x100 píxeles. Actual: ${metadata.width}x${metadata.height}`);
+      }
+
+      // Verificar formato
+      const allowedFormats = ['jpeg', 'jpg', 'png', 'webp'];
+      if (!allowedFormats.includes(metadata.format)) {
+        throw new Error(`Formato de imagen no soportado: ${metadata.format}. Formatos permitidos: ${allowedFormats.join(', ')}`);
+      }
+
+      // Verificar que la imagen se puede leer correctamente
+      await sharp(buffer).metadata();
+      
+      console.log(`✅ Imagen válida: ${metadata.format} ${metadata.width}x${metadata.height}`);
+      return metadata;
+    } catch (error) {
+      console.error('❌ Error validando imagen desde buffer:', error);
+      
+      if (error.message.includes('Input buffer contains unsupported image format')) {
+        throw new Error('Formato de imagen no soportado o archivo corrupto');
+      }
+      
+      throw new Error(`Imagen inválida: ${error.message}`);
+    }
+  }
+
+  // Procesar y optimizar imagen (método original para compatibilidad)
   static async processImage(filePath, options = {}) {
     try {
       const {
@@ -106,7 +285,7 @@ class ImageService {
     }
   }
 
-  // Crear múltiples tamaños de imagen
+  // Crear múltiples tamaños de imagen (método original para compatibilidad)
   static async createImageSizes(filePath, sizes = UPLOAD.IMAGE_SIZES) {
     try {
       console.log(`🖼️ Creando múltiples tamaños para: ${filePath}`);
@@ -207,7 +386,7 @@ class ImageService {
     }
   }
 
-  // Validar imagen
+  // Validar imagen (método original para compatibilidad)
   static async validateImage(filePath) {
     try {
       console.log(`🔍 Validando imagen: ${filePath}`);

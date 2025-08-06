@@ -55,4 +55,6 @@ jobs:
       branch-name: ${{ github.ref_name }}
     secrets:
       database-url: ${{ secrets.DATABASE_URL }}
+      supabase-url: ${{ secrets.SUPABASE_URL }}
+      supabase-service-key: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
