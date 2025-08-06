@@ -3,10 +3,13 @@ FROM public.ecr.aws/lambda/nodejs:20
 WORKDIR /var/task
 
 COPY package*.json ./
-RUN npm install --production
+
+RUN npm install
+
+COPY . .
 
 RUN npx prisma generate
 
-COPY . .
+RUN npm prune --production
 
 CMD ["src/index.handler"]
