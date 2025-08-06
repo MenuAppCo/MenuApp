@@ -1,4 +1,4 @@
-module.exports.middlewareErrors = (error, _, res, _) => { 
+module.exports.middlewareErrors = (error, _, res, _a) => { 
     res.status(error.status || 500).json({
       success: false,
       error: {

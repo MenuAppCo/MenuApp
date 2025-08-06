@@ -5,7 +5,7 @@ info:
   version: "1.0"
 
 paths:
-  /ping:
+  /health:
     options:
       summary: CORS preflight
       responses:
@@ -40,7 +40,7 @@ paths:
 
     get:
       summary: Health check
-      operationId: ping
+      operationId: health
       responses:
         '200':
           description: OK
