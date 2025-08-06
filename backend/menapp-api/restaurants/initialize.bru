@@ -1,11 +1,11 @@
 meta {
-  name: health
+  name: initialize
   type: http
-  seq: 1
+  seq: 2
 }
 
 get {
-  url: {{API_URL}}/health
+  url: {{API_URL}}/api/v1/restaurants/initialize
   body: none
   auth: inherit
 }

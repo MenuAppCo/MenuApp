@@ -18,6 +18,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     // 1. Validar el token con Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    console.error("error", authError)
     if (authError || !user) {
       return res.status(401).json({ message: 'Token inválido o expirado.' });
     }
