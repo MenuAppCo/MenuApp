@@ -9,6 +9,10 @@ data "template_file" "admin_openapi_rendered" {
 resource "aws_api_gateway_rest_api" "admin_api" {
   name = local.admin_api_name
   body = data.template_file.admin_openapi_rendered.rendered
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_deployment" "admin_api_deployment" {
