@@ -10,7 +10,7 @@ import { buildPublicMenuUrl } from '../../config/env'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { user, userData, restaurantData } = useAuth()
+  const { user, restaurantData } = useAuth()
   const { data: productsData, isLoading: productsLoading, error: productsError } = useProducts({ limit: 1000 })
   const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useCategories({ limit: 1000 })
   const [forceRender, setForceRender] = useState(false)
@@ -22,25 +22,11 @@ const Dashboard = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (productsLoading || categoriesLoading) {
-        console.log('[Dashboard] Forzando renderización después de timeout');
         setForceRender(true);
       }
     }, 3000);
     return () => clearTimeout(timer);
   }, [productsLoading, categoriesLoading]);
-
-  console.log('[Dashboard] Renderizando dashboard:', {
-    user: user ? 'Presente' : 'Ausente',
-    userData: userData ? 'Presente' : 'Ausente',
-    userDataDetails: userData,
-    restaurantData: restaurantData ? 'Presente' : 'Ausente',
-    restaurantDataDetails: restaurantData,
-    productsLoading,
-    categoriesLoading,
-    productsError: productsError ? 'Error' : 'OK',
-    categoriesError: categoriesError ? 'Error' : 'OK',
-    forceRender
-  });
 
   // Funciones de navegación
   const handleAddProduct = () => {
@@ -58,13 +44,6 @@ const Dashboard = () => {
   const totalCategories = categoriesData?.meta?.total || categories.length || 0
   const visibleProducts = Array.isArray(products) ? products.filter(p => p.visible)?.length || 0 : 0
   const featuredProducts = Array.isArray(products) ? products.filter(p => p.featured)?.length || 0 : 0
-
-  console.log('[Dashboard] Datos procesados:', {
-    productsCount: products.length,
-    categoriesCount: categories.length,
-    totalProducts,
-    totalCategories
-  });
 
   const stats = [
     {

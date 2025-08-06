@@ -17,15 +17,12 @@ const CompleteProfile = () => {
   const [error, setError] = useState(null);
   const [forceRender, setForceRender] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(profileSchema) });
-  const { profileExists, user } = useAuth();
-
-  console.log('[CompleteProfile] Renderizando componente');
+  const { profileExists } = useAuth();
 
   // Forzar renderización después de 1 segundo si aún no se ha renderizado
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!forceRender) {
-        console.log('[CompleteProfile] Forzando renderización después de timeout');
         setForceRender(true);
       }
     }, 1000);
@@ -48,13 +45,11 @@ const CompleteProfile = () => {
 
     // Si el usuario ya tiene perfil, redirigir al dashboard
     if (profileExists === true) {
-      console.log('[CompleteProfile] Usuario ya tiene perfil, redirigiendo al dashboard');
       return <Navigate to="/" replace />;
     }
 
     // Mostrar loading si no se ha forzado el render
     if (!forceRender) {
-      console.log('[CompleteProfile] Mostrando loading, forceRender:', forceRender);
       return (
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -64,8 +59,6 @@ const CompleteProfile = () => {
         </div>
       );
     }
-
-    console.log('[CompleteProfile] Renderizando formulario, forceRender:', forceRender);
 
     return (
     <div className="min-h-screen flex items-center justify-center">

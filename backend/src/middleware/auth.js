@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 const authMiddleware = async (req, res, next) => {
-  console.log(`\n[Auth Middleware] Verificando token para la ruta: ${req.method} ${req.path}`);
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -25,7 +24,6 @@ const authMiddleware = async (req, res, next) => {
 
     // 2. Adjuntar el usuario de Supabase a la petición
     req.user = user;
-    console.log(`[Auth Middleware] Usuario autenticado: ${user.email}`);
 
     // 3. Buscar el restaurante asociado en nuestra base de datos Prisma
     const restaurant = await prisma.restaurant.findFirst({
@@ -33,11 +31,7 @@ const authMiddleware = async (req, res, next) => {
     });
 
     // Si la ruta no es para crear el perfil, un restaurante debe existir
-    if (!restaurant && req.path !== '/me/profile') {
-        // Esto es normal si el usuario acaba de registrarse
-        console.log(`[Auth Middleware] Usuario ${user.email} autenticado pero sin perfil de restaurante.`);
-    } else if (restaurant) {
-        console.log(`[Auth Middleware] Restaurante encontrado: ${restaurant.name} (ID: ${restaurant.id})`);
+    if (restaurant) {
         req.restaurant = restaurant; // Adjuntar el restaurante a la petición
     }
 

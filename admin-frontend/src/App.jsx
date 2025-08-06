@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { ThemeProvider } from './contexts/ThemeContext'; // <-- AÑADIDO
 
@@ -15,7 +15,7 @@ import Menus from './pages/menus/Menus';
 import Products from './pages/products/Products';
 import Categories from './pages/categories/Categories';
 import Settings from './pages/settings/Settings';
-import DebugApp from './components/DebugApp';
+
 import ErrorBoundary from './components/ErrorBoundary';
 
 
@@ -29,7 +29,6 @@ function App() {
   return (
     <>
       <ErrorBoundary>
-        <DebugApp />
         <Routes>
         {/* Rutas públicas (solo para usuarios no logueados) */}
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />

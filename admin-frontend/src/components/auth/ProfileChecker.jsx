@@ -10,18 +10,9 @@ const ProfileChecker = () => {
   const { profileExists, loading, user } = useAuth();
   const [isReady, setIsReady] = useState(false);
 
-  console.log('[ProfileChecker] Estado actual:', {
-    profileExists,
-    loading,
-    user: user ? 'Presente' : 'Ausente',
-    isReady,
-    currentPath: window.location.pathname
-  });
-
   // Delay para asegurar que todos los contextos estén listos
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log('[ProfileChecker] ✅ Listo para renderizar');
       setIsReady(true);
     }, 200);
     return () => clearTimeout(timer);
@@ -30,7 +21,6 @@ const ProfileChecker = () => {
   // Forzar re-render cuando profileExists cambie
   useEffect(() => {
     if (profileExists === true && !loading) {
-      console.log('[ProfileChecker] 🔄 ProfileExists cambió a true, forzando re-render');
       // Pequeño delay para asegurar que el estado esté completamente actualizado
       setTimeout(() => {
         // En lugar de reload, forzar un re-render del componente
@@ -42,7 +32,6 @@ const ProfileChecker = () => {
 
   // Si está cargando o no está listo, mostrar loading
   if (loading || !isReady) {
-    console.log('[ProfileChecker] 🔄 Mostrando loading:', { loading, isReady });
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
@@ -60,23 +49,19 @@ const ProfileChecker = () => {
 
   // Si profileExists es false, redirigir a complete-profile
   if (profileExists === false) {
-    console.log('[ProfileChecker] 🔄 profileExists es false, redirigiendo a /complete-profile');
     return <Navigate to="/complete-profile" replace />;
   }
 
   // Si profileExists es true, mostrar el contenido protegido
   if (profileExists === true) {
-    console.log('[ProfileChecker] ✅ Renderizando contenido protegido');
     // Si estamos en /complete-profile pero el perfil existe, redirigir a la página principal
     if (window.location.pathname === '/complete-profile') {
-      console.log('[ProfileChecker] 🔄 Redirigiendo de /complete-profile a /');
       return <Navigate to="/" replace />;
     }
     return <Outlet />;
   }
 
   // Si profileExists es undefined/null, seguir cargando
-  console.log('[ProfileChecker] 🔄 profileExists es null/undefined, mostrando loading');
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="text-center">

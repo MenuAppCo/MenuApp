@@ -13,66 +13,45 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const handleSession = async (session) => {
-      console.log('\n[AuthContext] Manejando sesión...');
-      console.log('[AuthContext] Session data:', session);
-      
       setUser(session?.user ?? null);
       setAuthToken(session?.access_token ?? null);
 
       let profileFound = false;
-      let currentRestaurantData = null; // Variable local para los datos del restaurante
+      let currentRestaurantData = null;
 
       if (session) {
-        console.log('[AuthContext] Sesión activa. Verificando perfil en nuestro backend...');
-        console.log('[AuthContext] Token:', session?.access_token ? 'Presente' : 'Ausente');
-        
         // Pequeño delay para asegurar que el token esté configurado
         await new Promise(resolve => setTimeout(resolve, 200));
         
         try {
           const response = await api.get('/users/me/profile');
-          console.log('[AuthContext] ✅ Perfil encontrado. Datos completos:', response.data);
           profileFound = true;
           
           // Guardar los datos del usuario de la base de datos
           setUserData(response.data);
-          console.log('[AuthContext] ✅ Datos del usuario cargados:', response.data);
           
           // Asegurarse de que el restaurante exista y adjuntarlo
           if (response.data && response.data.restaurants && response.data.restaurants.length > 0) {
             currentRestaurantData = response.data.restaurants[0];
-            console.log('[AuthContext] ✅ Datos del restaurante cargados:', currentRestaurantData);
-          } else {
-            console.log('[AuthContext] ⚠️ Perfil de usuario encontrado, pero sin datos de restaurante.');
           }
         } catch (error) {
-          console.log('[AuthContext] Error completo:', error);
-          console.log('[AuthContext] Error response:', error.response);
-          console.log('[AuthContext] Error status:', error.response?.status);
-          
           if (error.response?.status === 404) {
-            console.log('[AuthContext] ❌ Perfil no encontrado (404). Se requiere completar el registro.');
             profileFound = false;
           } else {
-            console.error('[AuthContext] ❌ Error al verificar el perfil:', error);
+            console.error('[AuthContext] Error al verificar el perfil:', error);
             profileFound = false;
           }
         }
       } else {
-        console.log('[AuthContext] No hay sesión activa.');
         profileFound = false;
-        currentRestaurantData = null; // Limpiar datos del restaurante si no hay sesión
+        currentRestaurantData = null;
       }
 
       setProfileExists(profileFound);
-      setRestaurantData(currentRestaurantData); // Actualizar el estado del restaurante
-      console.log(`[AuthContext] ✅ Verificación completada:`);
-      console.log(`[AuthContext] - profileExists: ${profileFound}`);
-      console.log(`[AuthContext] - restaurantData:`, currentRestaurantData);
+      setRestaurantData(currentRestaurantData);
       
       // Delay adicional para asegurar que todos los componentes estén listos
       setTimeout(() => {
-        console.log(`[AuthContext] - loading: false (después del delay)`);
         setLoading(false);
       }, 300);
     };
