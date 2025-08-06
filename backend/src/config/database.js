@@ -1,8 +1,15 @@
 const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient({
+// this vars are reused on lambda executions, avoiding hitting pooling limit
+const globalForPrisma = globalThis;
+
+const prisma = globalForPrisma.prisma || new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
 
 // Función para conectar a la base de datos
 async function connectDB() {
