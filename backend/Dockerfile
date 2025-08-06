@@ -7,4 +7,4 @@ RUN npm install --production
 
 COPY . .
 
-CMD ["index.handler"]
+CMD ["src/index.handler"]
