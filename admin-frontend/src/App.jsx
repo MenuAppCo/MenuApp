@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { ThemeProvider } from './contexts/ThemeContext'; // <-- AÑADIDO
 
@@ -16,6 +16,9 @@ import Products from './pages/products/Products';
 import Categories from './pages/categories/Categories';
 import Settings from './pages/settings/Settings';
 
+import ErrorBoundary from './components/ErrorBoundary';
+
+
 function App() {
   const { loading } = useAuth();
 
@@ -24,28 +27,32 @@ function App() {
   }
 
   return (
-    <Routes>
-      {/* Rutas públicas (solo para usuarios no logueados) */}
-      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-      <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+    <>
+      <ErrorBoundary>
+        <Routes>
+        {/* Rutas públicas (solo para usuarios no logueados) */}
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
-      {/* Ruta para completar el perfil (solo para usuarios logueados sin perfil) */}
-      <Route path="/complete-profile" element={<ProtectedRoute><CompleteProfile /></ProtectedRoute>} />
-
-      {/* Rutas principales protegidas */}
-      <Route element={<ProtectedRoute><ProfileChecker /></ProtectedRoute>}>
-        {/* Envolvemos el Layout con el ThemeProvider */}
-        <Route path="/*" element={<ThemeProvider><Layout /></ThemeProvider>}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="menus" element={<Menus />} />
-          <Route path="products" element={<Products />} />
-          <Route path="categories" element={<Categories />} />
-          <Route path="settings" element={<Settings />} />
-          {/* Cualquier otra ruta protegida va aquí */}
+        {/* Rutas principales protegidas */}
+        <Route element={<ProtectedRoute><ProfileChecker /></ProtectedRoute>}>
+          {/* Envolvemos el Layout con el ThemeProvider */}
+          <Route path="/*" element={<ThemeProvider><Layout /></ThemeProvider>}>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="menus" element={<Menus />} />
+            <Route path="products" element={<Products />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="settings" element={<Settings />} />
+            {/* Cualquier otra ruta protegida va aquí */}
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+
+        {/* Ruta para completar el perfil (fuera del ProfileChecker) */}
+        <Route path="/complete-profile" element={<ProtectedRoute><CompleteProfile /></ProtectedRoute>} />
+      </Routes>
+        </ErrorBoundary>
+    </>
   );
 }
 

@@ -1,32 +1,31 @@
-import React from 'react'
+import React from 'react';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = { hasError: false, error: null }
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error }
+  static getDerivedStateFromError(_error) {
+    return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo)
+  componentDidCatch(_error, errorInfo) {
+    console.error('ErrorBoundary caught an error:', _error, errorInfo);
+    this.setState({
+      error: _error,
+      errorInfo: errorInfo
+    });
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="max-w-md w-full text-center">
-            <div className="mx-auto h-12 w-12 text-red-500 mb-4">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        <div className="flex items-center justify-center h-screen bg-gray-50">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">
               Algo salió mal
-            </h2>
+            </h1>
             <p className="text-gray-600 mb-4">
               Ha ocurrido un error inesperado. Por favor, recarga la página.
             </p>
@@ -34,15 +33,26 @@ class ErrorBoundary extends React.Component {
               onClick={() => window.location.reload()}
               className="btn-primary"
             >
-              Recargar página
+              Recargar Página
             </button>
+            {this.state.error && (
+              <details className="mt-4 text-left">
+                <summary className="cursor-pointer text-sm text-gray-500">
+                  Ver detalles del error
+                </summary>
+                <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
+                  {this.state.error.toString()}
+                  {this.state.errorInfo.componentStack}
+                </pre>
+              </details>
+            )}
           </div>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
-export default ErrorBoundary 
+export default ErrorBoundary; 
