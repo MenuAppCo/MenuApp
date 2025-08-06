@@ -150,6 +150,5 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-exports.handler = serverlessExpress({ app })
-
-module.exports = app; 
+module.exports = app;
+module.exports.handler = serverlessExpress({ app });
