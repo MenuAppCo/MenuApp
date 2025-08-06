@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-
+const serverlessExpress = require('@codegenie/serverless-express')
 const { connectDB } = require('./config/database');
 
 // Importar rutas
@@ -139,17 +139,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Puerto del servidor
-const PORT = process.env.PORT || 3000;
-
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor MenuApp ejecutándose en puerto ${PORT}`);
-  console.log(`📊 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 URL: http://localhost:${PORT}`);
-  console.log(`📋 Health check: http://localhost:${PORT}/health`);
-});
-
 // Manejo de señales para cerrar el servidor
 process.on('SIGTERM', () => {
   console.log('SIGTERM recibido, cerrando servidor...');
@@ -160,5 +149,7 @@ process.on('SIGINT', () => {
   console.log('SIGINT recibido, cerrando servidor...');
   process.exit(0);
 });
+
+exports.handler = serverlessExpress({ app })
 
 module.exports = app; 
