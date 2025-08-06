@@ -21,19 +21,20 @@ const uploadProductImage = async (req, res) => {
       return res.status(404).json(errorResponse(ERROR_MESSAGES.NOT_FOUND, 404));
     }
 
-    // Validar imagen
-    await ImageService.validateImage(uploadedFile.path);
+    // Validar imagen usando buffer
+    await ImageService.validateImageBuffer(uploadedFile.buffer);
 
-    // Procesar imagen
-    const processedImage = await ImageService.processImage(uploadedFile.path, {
+    // Procesar imagen usando buffer
+    const processedImage = await ImageService.processImageBuffer(uploadedFile.buffer, {
       width: 800,
       height: 800,
       quality: 80,
-      format: 'webp'
+      format: 'webp',
+      filename: uploadedFile.filename
     });
 
     // Crear múltiples tamaños
-    const imageSizes = await ImageService.createImageSizes(processedImage.processedPath);
+    const imageSizes = await ImageService.createImageSizesFromBuffer(uploadedFile.buffer, uploadedFile.filename);
 
     // Actualizar producto con la nueva imagen
     const updatedProduct = await prisma.product.update({
@@ -87,19 +88,20 @@ const uploadCategoryImage = async (req, res) => {
       return res.status(404).json(errorResponse(ERROR_MESSAGES.NOT_FOUND, 404));
     }
 
-    // Validar imagen
-    await ImageService.validateImage(uploadedFile.path);
+    // Validar imagen usando buffer
+    await ImageService.validateImageBuffer(uploadedFile.buffer);
 
-    // Procesar imagen
-    const processedImage = await ImageService.processImage(uploadedFile.path, {
+    // Procesar imagen usando buffer
+    const processedImage = await ImageService.processImageBuffer(uploadedFile.buffer, {
       width: 600,
       height: 400,
       quality: 80,
-      format: 'webp'
+      format: 'webp',
+      filename: uploadedFile.filename
     });
 
     // Crear múltiples tamaños
-    const imageSizes = await ImageService.createImageSizes(processedImage.processedPath);
+    const imageSizes = await ImageService.createImageSizesFromBuffer(uploadedFile.buffer, uploadedFile.filename);
 
     // Actualizar categoría con la nueva imagen
     const updatedCategory = await prisma.category.update({
@@ -131,19 +133,20 @@ const uploadRestaurantLogo = async (req, res) => {
   try {
     const { uploadedFile } = req;
 
-    // Validar imagen
-    await ImageService.validateImage(uploadedFile.path);
+    // Validar imagen usando buffer
+    await ImageService.validateImageBuffer(uploadedFile.buffer);
 
-    // Procesar imagen (logo más pequeño)
-    const processedImage = await ImageService.processImage(uploadedFile.path, {
+    // Procesar imagen usando buffer (logo más pequeño)
+    const processedImage = await ImageService.processImageBuffer(uploadedFile.buffer, {
       width: 300,
       height: 300,
       quality: 90,
-      format: 'webp'
+      format: 'webp',
+      filename: uploadedFile.filename
     });
 
     // Crear múltiples tamaños
-    const imageSizes = await ImageService.createImageSizes(processedImage.processedPath);
+    const imageSizes = await ImageService.createImageSizesFromBuffer(uploadedFile.buffer, uploadedFile.filename);
 
     // Actualizar restaurante con el nuevo logo
     const updatedRestaurant = await prisma.restaurant.update({

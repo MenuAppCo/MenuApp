@@ -47,3 +47,9 @@ module "apigw" {
 
   menapp_certificate_arn = data.terraform_remote_state.route53.outputs.menapp_certificate_validation.certificate_arn
 }
+
+module "s3" {
+  source      = "./s3"
+  environment = var.environment
+  app         = var.app
+}
