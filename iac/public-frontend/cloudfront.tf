@@ -94,6 +94,30 @@ resource "aws_cloudfront_distribution" "frontend" {
     }
   }
 
+  ordered_cache_behavior {
+    path_pattern           = "/restaurants"
+    target_origin_id       = "s3-${data.terraform_remote_state.restaurants_frontend.outputs.frontend_bucket_id}"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl     = 0
+    default_ttl = 3600
+    max_ttl     = 86400
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_restaurants_spa.arn
+    }
+  }
+
   custom_error_response {
     error_code         = 403
     response_code      = 200
