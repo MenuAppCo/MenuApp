@@ -36,8 +36,8 @@ jobs:
             "VITE_SUPABASE_ANON": "${{ vars.SUPABASE_ANON }}"
           }
           EOF
-          
-          echo "env-vars=$(cat env-vars.json | jq -c .)" >> $GITHUB_OUTPUT
+
+          echo "env-vars=$(cat env-vars.json | base64 -w 0)" >> $GITHUB_OUTPUT
   
   cd-admin-frontend:
     permissions:
