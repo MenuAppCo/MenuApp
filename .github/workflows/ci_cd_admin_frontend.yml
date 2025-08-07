@@ -30,5 +30,11 @@ jobs:
       cloudfront-distribution-id: 'E2Q2BA3Q2EDJ7'
       s3-bucket-url: 's3://production-menapp-admin-frontend'
       branch-name: ${{ github.ref_name }}
-
+    env:
+      ENV: production
+      REGION: us-east-1
+      DEBUG: false
+      VITE_API_URL: ${{ vars.ADMIN_API_URL }}
+      VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
   
