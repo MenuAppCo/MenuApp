@@ -4,19 +4,30 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'frontends/landing/**'
+      - 'frontends/restaurants/**'
   pull_request:
     branches: [ master ]
     paths:
-      - 'frontends/landing/**'
+      - 'frontends/restaurants/**'
 
 jobs:
-  ci-landing-frontend:
+  ci-restaurants-frontend:
     uses: ./.github/workflows/reusable-frontend-ci.yml
     with:
-      frontend-path: 'frontends/landing'
+      frontend-path: 'frontends/restaurants'
       node-version: '20'
   
-
+  cd-restaurants-frontend:
+    permissions:
+      id-token: write
+      contents: read
+    needs: ci-restaurants-frontend
+    uses: ./.github/workflows/reusable-frontend-cd.yml
+    with:
+      frontend-path: 'frontends/restaurants'
+      node-version: '20'
+      cloudfront-distribution-id: 'E3PVFAZHMLAOA3'
+      s3-bucket-url: 's3://production-menapp-restaurants-frontend'
+      branch-name: ${{ github.ref_name }}
 
   
