@@ -28,7 +28,7 @@ on:
         required: false
         description: 'json file of key pairs env vars'
         type: string
-        default: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
+        default: ''
 
 permissions:
   id-token: write
