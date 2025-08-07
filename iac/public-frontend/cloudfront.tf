@@ -82,6 +82,11 @@ resource "aws_cloudfront_distribution" "frontend" {
     min_ttl     = 0
     default_ttl = 3600
     max_ttl     = 86400
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_restaurants_spa.arn
+    }
   }
 
   custom_error_response {
@@ -168,4 +173,23 @@ resource "aws_s3_bucket_policy" "landing_frontend_policy" {
       }
     ]
   })
+}
+
+resource "aws_cloudfront_function" "rewrite_restaurants_spa" {
+  name    = "rewrite-restaurants-spa"
+  runtime = "cloudfront-js-1.0"
+
+  code    = <<EOF
+function handler(event) {
+    var request = event.request;
+    var uri = request.uri;
+
+    if (uri.startsWith("/restaurants") && !uri.match(/\\.[a-zA-Z0-9]+$/)) {
+        request.uri = "/restaurants/index.html";
+    }
+
+    return request;
+}
+EOF
+  publish = true
 }
