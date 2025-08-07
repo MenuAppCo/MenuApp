@@ -9,6 +9,7 @@ on:
     branches: [ master ]
     paths:
       - 'iac/admin-frontend/**'
+  workflow_dispatch:
 
 jobs:
   ci-admin-frontend-terraform:

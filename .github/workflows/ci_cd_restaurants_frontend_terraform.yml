@@ -9,6 +9,7 @@ on:
     branches: [ master ]
     paths:
       - 'iac/public-frontend/restaurants/**'
+  workflow_dispatch:
 
 jobs:
   ci-restaurants-frontend-terraform:

@@ -9,6 +9,7 @@ on:
     branches: [ master ]
     paths:
       - 'iac/public-frontend/landing/**'
+  workflow_dispatch:
 
 jobs:
   ci-landing-frontend-terraform:
