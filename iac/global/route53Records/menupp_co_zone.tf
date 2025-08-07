@@ -1,6 +1,6 @@
-resource "aws_route53_record" "menapp_apex_wildcard" {
+resource "aws_route53_record" "menapp_apex" {
   zone_id = data.terraform_remote_state.route53.outputs.menapp_zone.zone_id
-  name    = "*.menapp.co"
+  name    = "menapp.co"
   type    = "A"
 
   alias {
@@ -9,6 +9,19 @@ resource "aws_route53_record" "menapp_apex_wildcard" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_route53_record" "menapp_www" {
+  zone_id = data.terraform_remote_state.route53.outputs.menapp_zone.zone_id
+  name    = "www.menapp.co"
+  type    = "A"
+
+  alias {
+    name                   = data.terraform_remote_state.cloudfront_public_frontend.outputs.cdn.domain_name
+    zone_id                = data.terraform_remote_state.cloudfront_public_frontend.outputs.cdn.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
 
 resource "aws_route53_record" "menapp_apex_admin" {
   zone_id = data.terraform_remote_state.route53.outputs.menapp_zone.zone_id
