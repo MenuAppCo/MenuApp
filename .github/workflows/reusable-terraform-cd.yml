@@ -16,6 +16,14 @@ on:
         required: true
         description: 'current branch name'
         type: string
+    secrets:
+      DATABASE_URL:
+        required: false
+      SUPABASE_SERVICE_KEY:
+        required: false
+env:
+  TF_VAR_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  TF_VAR_SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 permissions:
   id-token: write
   contents: read

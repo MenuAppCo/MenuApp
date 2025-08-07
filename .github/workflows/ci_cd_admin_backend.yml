@@ -51,9 +51,7 @@ jobs:
             "ENV": "production",
             "REGION": "us-east-1",
             "DEBUG": "false",
-            "TF_VAR_DATABASE_URL": "${{ secrets.DATABASE_UR }}",
-            "TF_VAR_SUPABASE_URL": "${{ secrets.SUPABASE_URL }}",
-            "TF_VAR_SUPABASE_SERVICE_KEY": "${{ secrets.SUPABASE_SERVICE_KEY }}",
+            "TF_VAR_SUPABASE_URL": "${{ vars.SUPABASE_URL }}",
             "TF_VAR_ADMIN_BACKEND_IMAGE_TAG": "${{ needs.cd-admin-backend.outputs.image-tag }}"
           }
           EOF
@@ -70,3 +68,4 @@ jobs:
       terraform-path: 'iac/backend'
       env-vars: ${{ needs.generate-env-vars.outputs.env-vars }}
       branch-name: ${{ github.ref_name }}
+    secrets: inherit
