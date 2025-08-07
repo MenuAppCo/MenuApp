@@ -1,0 +1,29 @@
+name: CI & CD Restaurants frontend terraform 
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'iac/public-frontend/restaurants/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'iac/public-frontend/restaurants/**'
+
+jobs:
+  ci-restaurants-frontend-terraform:
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/public-frontend/restaurants'
+
+  cd-restaurants-frontend-terraform:
+    permissions:
+      id-token: write
+      contents: read
+    needs: ci-restaurants-frontend-terraform
+    uses: ./.github/workflows/reusable-terraform-cd.yml
+    with:
+      branch-name: ${{ github.ref_name }}
+      terraform-path: 'iac/public-frontend/restaurants'
+
+

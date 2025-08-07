@@ -4,11 +4,11 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'admin-frontend/**'
+      - 'frontends/admin/**'
   pull_request:
     branches: [ master ]
     paths:
-      - 'admin-frontend/**'
+      - 'frontends/admin/**'
 
 jobs:
   ci-admin-frontend:
@@ -24,7 +24,7 @@ jobs:
     needs: ci-admin-frontend
     uses: ./.github/workflows/reusable-frontend-cd.yml
     with:
-      frontend-path: 'admin-frontend'
+      frontend-path: 'frontends/admin'
       node-version: '20'
       cloudfront-distribution-id: 'E2Q2BA3Q2EDJ7'
       s3-bucket-url: 's3://production-menapp-admin-frontend'

@@ -1,0 +1,22 @@
+name: CI & CD landing frontend 
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'frontends/landing/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'frontends/landing/**'
+
+jobs:
+  ci-landing-frontend:
+    uses: ./.github/workflows/reusable-frontend-ci.yml
+    with:
+      frontend-path: 'frontends/landing'
+      node-version: '20'
+  
+
+
+  

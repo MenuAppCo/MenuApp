@@ -1,29 +1,29 @@
-name: CI & CD Public frontend terraform 
+name: CI & CD Landing frontend terraform 
 
 on:
   push:
     branches: [ master ]
     paths:
-      - 'iac/public-frontend/*'
+      - 'iac/public-frontend/landing/**'
   pull_request:
     branches: [ master ]
     paths:
-      - 'iac/public-frontend/*'
+      - 'iac/public-frontend/landing/**'
 
 jobs:
-  ci-public-frontend-terraform:
+  ci-landing-frontend-terraform:
     uses: ./.github/workflows/reusable-terraform-ci.yml
     with:
-      terraform-path: 'iac/public-frontend'
+      terraform-path: 'iac/public-frontend/landing'
 
-  cd-public-frontend-terraform:
+  cd-landing-frontend-terraform:
     permissions:
       id-token: write
       contents: read
-    needs: ci-public-frontend-terraform
+    needs: ci-landing-frontend-terraform
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
       branch-name: ${{ github.ref_name }}
-      terraform-path: 'iac/public-frontend'
+      terraform-path: 'iac/public-frontend/landing'
 
 
