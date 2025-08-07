@@ -33,7 +33,7 @@ jobs:
             "DEBUG": "false",
             "VITE_API_URL": "${{ vars.ADMIN_API_URL }}",
             "VITE_SUPABASE_URL": "${{ vars.SUPABASE_URL }}",
-            "VITE_SUPABASE_ANON_KEY": "${{ vars.SUPABASE_ANON }}"
+            "VITE_SUPABASE_ANON": "${{ vars.SUPABASE_ANON }}"
           }
           EOF
           
