@@ -1026,4 +1026,75 @@ paths:
         type: aws_proxy
         payloadFormatVersion: "2.0"
 
+  /api/v1/users/me/profile:
+    options:
+      summary: CORS preflight for user profile
+      responses:
+        '200':
+          description: CORS OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            responseTemplates:
+              application/json: "{}"
+
+    get:
+      summary: Get my profile
+      operationId: getMyProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile details
+        '401':
+          description: Unauthorized
+        '404':
+          description: Profile not found
+      x-amazon-apigateway-integration:
+        uri: "${lambda_uri}"
+        httpMethod: POST
+        type: aws_proxy
+        payloadFormatVersion: "2.0"
+
+    post:
+      summary: Create my profile
+      operationId: createMyProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Profile created
+        '400':
+          description: Bad request - missing required fields
+        '401':
+          description: Unauthorized
+        '409':
+          description: Profile already exists
+      x-amazon-apigateway-integration:
+        uri: "${lambda_uri}"
+        httpMethod: POST
+        type: aws_proxy
+        payloadFormatVersion: "2.0"
+
 components: {}

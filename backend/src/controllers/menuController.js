@@ -2,7 +2,6 @@ const { prisma } = require('../config/database');
 const { errorResponse, successResponse, getPagination } = require('../utils/helpers');
 const { ERROR_MESSAGES } = require('../utils/constants');
 
-// Obtener todos los menús de un restaurante
 const getMenus = async (req, res) => {
   try {
     console.log('🔍 getMenus called, restaurant ID:', req.restaurant?.id);
@@ -53,7 +52,6 @@ const getMenus = async (req, res) => {
   }
 };
 
-// Crear un nuevo menú
 const createMenu = async (req, res) => {
   try {
     const { name, description, type = 'FOOD' } = req.body;
@@ -89,7 +87,6 @@ const createMenu = async (req, res) => {
   }
 };
 
-// Obtener un menú específico
 const getMenu = async (req, res) => {
   try {
     const { menuId } = req.params;
@@ -120,7 +117,6 @@ const getMenu = async (req, res) => {
   }
 };
 
-// Actualizar un menú
 const updateMenu = async (req, res) => {
   try {
     const { menuId } = req.params;

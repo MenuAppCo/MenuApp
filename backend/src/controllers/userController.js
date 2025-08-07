@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Obtener el perfil del usuario actual
 const getMyProfile = async (req, res) => {
   const userId = req.user.id;
   try {
@@ -20,7 +19,6 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-// Crear el perfil del usuario actual
 const createMyProfile = async (req, res) => {
   const userId = req.user.id;
   const { email } = req.user;

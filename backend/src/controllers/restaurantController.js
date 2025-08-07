@@ -3,41 +3,6 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const restaurantController = {
-  // Inicializar un restaurante después del registro
-  async initializeRestaurant(req, res) {
-    const { name } = req.body;
-    const userId = req.user.id; // ID del usuario desde el token de Supabase
-
-    if (!name || !userId) {
-      return res.status(400).json({ message: 'El nombre del restaurante y el ID de usuario son requeridos.' });
-    }
-
-    try {
-      // Verificar si el usuario ya tiene un restaurante
-      const existingRestaurant = await prisma.restaurant.findUnique({
-        where: { userId },
-      });
-
-      if (existingRestaurant) {
-        return res.status(409).json({ message: 'Este usuario ya tiene un restaurante asociado.' });
-      }
-
-      // Crear el nuevo restaurante
-      const newRestaurant = await prisma.restaurant.create({
-        data: {
-          name,
-          userId, // Enlazar con el usuario de Supabase
-          // Aquí puedes añadir valores por defecto si es necesario
-        },
-      });
-
-      res.status(201).json(newRestaurant);
-    } catch (error) {
-      console.error("Error al inicializar el restaurante:", error);
-      res.status(500).json({ message: 'Error interno del servidor.' });
-    }
-  },
-  // Obtener información del restaurante del usuario autenticado
   async getMyRestaurant(req, res) {
     try {
       const restaurantId = req.restaurant.id
@@ -81,7 +46,6 @@ const restaurantController = {
     }
   },
 
-  // Actualizar información del restaurante
   async updateMyRestaurant(req, res) {
     try {
       const restaurantId = req.restaurant.id
@@ -133,7 +97,6 @@ const restaurantController = {
     }
   },
 
-  // Obtener configuración del restaurante
   async getMySettings(req, res) {
     try {
       const restaurantId = req.restaurant.id
@@ -219,7 +182,6 @@ const restaurantController = {
     }
   },
 
-  // Actualizar configuración del restaurante
   async updateMySettings(req, res) {
     try {
       const restaurantId = req.restaurant.id
@@ -290,7 +252,6 @@ const restaurantController = {
     }
   },
 
-  // Obtener redes sociales del restaurante
   async getMySocialMedia(req, res) {
     try {
       const restaurantId = req.restaurant.id
@@ -352,7 +313,6 @@ const restaurantController = {
     }
   },
 
-  // Actualizar redes sociales del restaurante
   async updateMySocialMedia(req, res) {
     try {
       const restaurantId = req.restaurant.id

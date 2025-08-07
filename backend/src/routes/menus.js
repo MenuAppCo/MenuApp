@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('../middleware/auth');
 const {
   getMenus,
   createMenu,
@@ -10,25 +9,12 @@ const {
   reorderMenus
 } = require('../controllers/menuController');
 
-// Todas las rutas requieren autenticación
-router.use(authMiddleware);
 
-// Obtener todos los menús del restaurante
 router.get('/', getMenus);
-
-// Crear nuevo menú
 router.post('/', createMenu);
-
-// Reordenar menús
 router.put('/reorder', reorderMenus);
-
-// Obtener menú específico
 router.get('/:menuId', getMenu);
-
-// Actualizar menú
 router.put('/:menuId', updateMenu);
-
-// Eliminar menú
 router.delete('/:menuId', deleteMenu);
 
 module.exports = router; 

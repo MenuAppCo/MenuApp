@@ -8,6 +8,7 @@ const serverlessExpress = require('@codegenie/serverless-express')
 const { connectDB } = require('./config/database');
 const routes = require('./routes');
 const { middlewareNotFound } = require('./middleware/404');
+const authMiddleware  = require('./middleware/auth');
 const {  middlewareErrors } = require('./middleware/errors');
 
 const app = express();
@@ -51,6 +52,7 @@ app.get('/health', (req, res) => {
 });
 
 
+app.use('/api/v1/',authMiddleware)
 app.use('/api/v1', routes);
 app.use('*', middlewareNotFound);
 app.use(middlewareErrors);
