@@ -34,6 +34,7 @@ module "lambda" {
   supabase_url         = var.SUPABASE_URL
   supabase_service_key = var.SUPABASE_SERVICE_KEY
   ecr                  = module.ecr
+  frontend_url         = var.FRONTEND_URL
 
   admin_api_lambda_image_tag = var.ADMIN_BACKEND_IMAGE_TAG
 }
