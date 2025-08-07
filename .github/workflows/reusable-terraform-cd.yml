@@ -16,33 +16,26 @@ on:
         required: true
         description: 'current branch name'
         type: string
-      admin-backend-image-tag:
-        description: 'admin backend image tag'
-        required: false
-        type: string
-    secrets:
-      database-url:
-        required: false
-      supabase-url:
-        required: false
-      supabase-service-key:
-        required: false
 permissions:
   id-token: write
   contents: read
 jobs:
   cd-terraform:
     if: inputs.branch-name == 'master' 
-    env:
-      TF_VAR_DATABASE_URL: ${{ secrets.database-url }}
-      TF_VAR_SUPABASE_URL: ${{ secrets.supabase-url }}
-      TF_VAR_SUPABASE_SERVICE_KEY: ${{ secrets.supabase-service-key }}
-      TF_VAR_ADMIN_BACKEND_IMAGE_TAG: ${{ inputs.admin-backend-image-tag }}
     name: cd-terraform
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Parse env-vars JSON into $GITHUB_ENV
+      if: inputs.env-vars != ''
+      run: |
+        echo '${{ inputs.env-vars }}' | base64 -d > tmp-env.json
+        for key in $(jq -r 'keys[]' tmp-env.json); do
+          value=$(jq -r ".\"$key\"" tmp-env.json)
+          echo "$key=$value" >> $GITHUB_ENV
+        done
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4

@@ -36,7 +36,7 @@ jobs:
     - name: Parse env-vars JSON into $GITHUB_ENV
       if: inputs.env-vars != ''
       run: |
-        echo '${{ inputs.env-vars }}' > tmp-env.json
+        echo '${{ inputs.env-vars }}' | base64 -d > tmp-env.json
         for key in $(jq -r 'keys[]' tmp-env.json); do
           value=$(jq -r ".\"$key\"" tmp-env.json)
           echo "$key=$value" >> $GITHUB_ENV

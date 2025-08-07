@@ -38,24 +38,36 @@ jobs:
     with:
       terraform-path: 'iac/backend'
 
+  generate-env-vars:
+    needs: [cd-admin-backend]
+    runs-on: ubuntu-latest
+    outputs:
+      env-vars: ${{ steps.generate-env-json.outputs.env-vars }}
+    steps:
+      - name: Generate environment variables JSON
+        id: generate-env-json
+        run: |
+          cat << EOF > env-vars.json
+          {
+            "ENV": "production",
+            "REGION": "us-east-1",
+            "DEBUG": "false",
+            "TF_VAR_DATABASE_URL": "${{ secrets.DATABASE_UR }}",
+            "TF_VAR_SUPABASE_URL": "${{ secrets.SUPABASE_URL }}",
+            "TF_VAR_SUPABASE_SERVICE_KEY": "${{ secrets.SUPABASE_SERVICE_KEY }}",
+            "TF_VAR_ADMIN_BACKEND_IMAGE_TAG": ${{ needs.cd-admin-backend.outputs.image-tag }}
+          }
+          EOF
+
+          echo "env-vars=$(cat env-vars.json | base64 -w 0)" >> $GITHUB_OUTPUT
+
   cd-admin-backend-terraform:
-    needs: [ci-admin-backend-terraform, cd-admin-backend]
+    needs: [ci-admin-backend-terraform, cd-admin-backend, generate-env-vars]
     permissions:
       id-token: write
       contents: read
     uses: ./.github/workflows/reusable-terraform-cd.yml
     with:
       terraform-path: 'iac/backend'
-      env-vars: |
-        {
-          "ENV":"production",
-          "REGION":"us-east-1",
-          "DEBUG":"false"
-        } 
-      admin-backend-image-tag: ${{ needs.cd-admin-backend.outputs.image-tag }}
+      env-vars: ${{ needs.generate-env-vars.outputs.env-vars }}
       branch-name: ${{ github.ref_name }}
-    secrets:
-      database-url: ${{ secrets.DATABASE_URL }}
-      supabase-url: ${{ secrets.SUPABASE_URL }}
-      supabase-service-key: ${{ secrets.SUPABASE_SERVICE_KEY }}
-

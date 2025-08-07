@@ -7,11 +7,6 @@ on:
         description: 'Path to the frontend directory'
         required: true
         type: string
-      env-vars:
-        required: false
-        description: 'json file of key pairs env vars'
-        type: string
-        default: ''
 
 jobs:
   ci-terraform:
