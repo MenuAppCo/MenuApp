@@ -1,4 +1,4 @@
-name: CI & CD landing frontend 
+name: CI & CD Restaurants frontend 
 
 on:
   push:
