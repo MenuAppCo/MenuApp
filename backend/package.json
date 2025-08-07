@@ -8,7 +8,7 @@
     "dev": "cross-env nodemon src/dev.js",
     "build": "echo 'No build step required '",
     "tests": "echo TODO jest",
-    "lint": "echo TODO",
+    "lint": "echo TODO ",
     "migrate": "cross-env prisma migrate dev",
     "migrate:deploy": "cross-env prisma migrate deploy",
     "db:seed": "cross-env node prisma/seed.js",
