@@ -89,6 +89,14 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 }
 
+resource "aws_cloudfront_origin_access_control" "frontend" {
+  name                              = "public-frontend-oac"
+  description                       = "Origin Access Control for frontend S3 Bucket"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
 resource "aws_cloudfront_origin_access_control" "landing_frontend" {
   name                              = "s3-${data.terraform_remote_state.landing_frontend.outputs.frontend_bucket_id}-frontend-oac"
   description                       = "Origin Access Control for frontend S3 Bucket"
