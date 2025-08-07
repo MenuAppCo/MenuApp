@@ -15,7 +15,7 @@ jobs:
   ci-admin-frontend:
     uses: ./.github/workflows/reusable-frontend-ci.yml
     with:
-      frontend-path: 'admin-frontend'
+      frontend-path: 'frontends/admin'
       node-version: '20'
   
   cd-admin-frontend:
