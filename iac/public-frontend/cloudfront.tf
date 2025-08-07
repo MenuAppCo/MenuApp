@@ -48,7 +48,7 @@ resource "aws_cloudfront_distribution" "frontend" {
 
   ordered_cache_behavior {
     path_pattern           = "/restaurants/*"
-    target_origin_id       =  "s3-${data.terraform_remote_state.restaurants_frontend.outputs.frontend_bucket_id}"
+    target_origin_id       = "s3-${data.terraform_remote_state.restaurants_frontend.outputs.frontend_bucket_id}"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
