@@ -8,7 +8,7 @@ export const config = {
   
   // Configuración de Supabase
   supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-  supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON,
   
   // Determinar si estamos en desarrollo
   isDevelopment: import.meta.env.DEV,
