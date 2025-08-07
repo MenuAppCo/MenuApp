@@ -54,7 +54,7 @@ jobs:
             "TF_VAR_DATABASE_URL": "${{ secrets.DATABASE_UR }}",
             "TF_VAR_SUPABASE_URL": "${{ secrets.SUPABASE_URL }}",
             "TF_VAR_SUPABASE_SERVICE_KEY": "${{ secrets.SUPABASE_SERVICE_KEY }}",
-            "TF_VAR_ADMIN_BACKEND_IMAGE_TAG": ${{ needs.cd-admin-backend.outputs.image-tag }}
+            "TF_VAR_ADMIN_BACKEND_IMAGE_TAG": "${{ needs.cd-admin-backend.outputs.image-tag }}"
           }
           EOF
 
