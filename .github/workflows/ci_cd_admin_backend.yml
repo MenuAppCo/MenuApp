@@ -30,7 +30,6 @@ jobs:
       image-path: 'backend'
       image-uri: '084519756118.dkr.ecr.us-east-1.amazonaws.com/admin-api-lambda'
       branch-name: ${{ github.ref_name }}
-      env-vars: '{"ENV":"production","REGION":"us-east-1","DEBUG":"false"}'
 
   ci-admin-backend-terraform:
     needs: cd-admin-backend
