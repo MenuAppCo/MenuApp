@@ -63,6 +63,11 @@ resource "aws_cloudfront_distribution" "frontend" {
     min_ttl     = 0
     default_ttl = 3600
     max_ttl     = 86400
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_restaurants_spa.arn
+    }
   }
 
   ordered_cache_behavior {
