@@ -15,6 +15,9 @@ variable "iam" {
       admin_api_lambda = object({
         arn = string
       })
+      public_api_lambda = object({
+        arn = string
+      })
     })
   })
 }
@@ -41,6 +44,7 @@ variable "ecr" {
   description = "ecr module outputs"
   type = object({
     admin_api_lambda_ecr_url = string
+    public_api_lambda_ecr_url = string
   })
 }
 
