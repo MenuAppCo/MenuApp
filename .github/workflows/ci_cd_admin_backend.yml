@@ -61,7 +61,7 @@ jobs:
             "TF_VAR_SUPABASE_URL": "${{ vars.SUPABASE_URL }}",
             "TF_VAR_ADMIN_BACKEND_IMAGE_TAG": "${{ needs.cd-admin-backend.outputs.image-tag }}",
             "TF_VAR_FRONTEND_URL": "${{ vars.FRONTEND_URL }}",
-            "TF_VAR_PUBLIC_BACKEND_IMAGE_TAG": "${{ needs.cd-public-backend.outputs.image-tag }}",
+            "TF_VAR_PUBLIC_BACKEND_IMAGE_TAG": "${{ needs.cd-public-backend.outputs.image-tag }}"
           }
           EOF
 
