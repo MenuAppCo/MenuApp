@@ -76,7 +76,8 @@ jobs:
       run: echo "image_tag=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
 
     - name: Build Docker image
-      run: docker build -f ${{ inputs.dockerfile-path }} -t $IMAGE_URI_WITH_TAG ${{ inputs.image-path }}
+      working-directory: ${{ inputs.image-path }}
+      run: docker build -f ${{ inputs.dockerfile-path }} -t $IMAGE_URI_WITH_TAG .
 
     - name: Push Docker image to ECR
       run: docker push $IMAGE_URI_WITH_TAG
