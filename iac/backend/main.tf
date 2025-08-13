@@ -36,7 +36,8 @@ module "lambda" {
   ecr                  = module.ecr
   frontend_url         = var.FRONTEND_URL
 
-  admin_api_lambda_image_tag = var.ADMIN_BACKEND_IMAGE_TAG
+  admin_api_lambda_image_tag  = var.ADMIN_BACKEND_IMAGE_TAG
+  public_api_lambda_image_tag = var.PUBLIC_BACKEND_IMAGE_TAG
 }
 
 

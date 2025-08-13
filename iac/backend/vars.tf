@@ -34,6 +34,13 @@ variable "ADMIN_BACKEND_IMAGE_TAG" {
   sensitive   = false
 }
 
+variable "PUBLIC_BACKEND_IMAGE_TAG" {
+  description = "Public backend image tag"
+  type        = string
+  sensitive   = false
+}
+
+
 variable "FRONTEND_URL" {
   description = "frontend url"
   type        = string
