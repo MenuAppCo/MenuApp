@@ -43,7 +43,7 @@ variable "supabase_service_key" {
 variable "ecr" {
   description = "ecr module outputs"
   type = object({
-    admin_api_lambda_ecr_url = string
+    admin_api_lambda_ecr_url  = string
     public_api_lambda_ecr_url = string
   })
 }
