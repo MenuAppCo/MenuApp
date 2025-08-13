@@ -37,7 +37,7 @@ resource "aws_acm_certificate" "menapp" {
     "api.menapp.co",
     "admin.menapp.co",
     "app.menapp.co",
-    "*.menapp.co"
+    "menu.menapp.co"
   ]
 
   tags = {
