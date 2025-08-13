@@ -1,13 +1,13 @@
 const express = require('express');
-const router = express.Router();
-const { uploadProductImage, uploadCategoryImage, uploadRestaurantLogo } = require('../middleware/upload');
+const { uploadProductImage, uploadCategoryImage, uploadRestaurantLogo } = require('../../../src/middleware/upload');
 const {
   uploadProductImage: uploadProductImageController,
   uploadCategoryImage: uploadCategoryImageController,
   uploadRestaurantLogo: uploadRestaurantLogoController,
   deleteImage
-} = require('../controllers/uploadController');
+} = require('../../../src/controllers/uploadController');
 
+const router = express.Router();
 
 router.post('/products/:productId', uploadProductImage, uploadProductImageController);
 router.post('/categories/:categoryId', uploadCategoryImage, uploadCategoryImageController);

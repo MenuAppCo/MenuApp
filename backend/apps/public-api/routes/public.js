@@ -1,6 +1,7 @@
 const express = require('express');
+const { getPublicMenu, getRestaurantInfo, getRestaurantMenus } = require('../../../src/controllers/publicMenuController');
+
 const router = express.Router();
-const { getPublicMenu, getRestaurantInfo, getRestaurantMenus } = require('../controllers/publicMenuController');
 
 router.get('/restaurant/:slug', getRestaurantInfo);
 router.get('/restaurant/:slug/menus', getRestaurantMenus);

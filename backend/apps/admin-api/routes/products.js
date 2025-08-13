@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const {
   getProducts,
   getProduct,
@@ -8,7 +7,9 @@ const {
   deleteProduct,
   toggleProductVisibility,
   toggleProductFeatured
-} = require('../controllers/productController');
+} = require('../../../src/controllers/productController');
+
+const router = express.Router();
 
 router.get('/', getProducts);
 router.get('/:id', getProduct);

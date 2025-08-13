@@ -4,7 +4,11 @@ on:
   workflow_call:
     inputs:
       image-path:
-        description: 'image path'
+        description: 'build context path (e.g., ./backend)'
+        required: true
+        type: string
+      dockerfile-path:
+        description: 'path to Dockerfile relative to build context (e.g., apps/admin-api/Dockerfile)'
         required: true
         type: string
       image-uri:
@@ -72,7 +76,7 @@ jobs:
       run: echo "image_tag=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
 
     - name: Build Docker image
-      run: docker build  -t $IMAGE_URI_WITH_TAG ${{ inputs.image-path }}
+      run: docker build -f ${{ inputs.dockerfile-path }} -t $IMAGE_URI_WITH_TAG ${{ inputs.image-path }}
 
     - name: Push Docker image to ECR
       run: docker push $IMAGE_URI_WITH_TAG

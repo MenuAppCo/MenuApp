@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const {
   getCategories,
   getCategory,
@@ -7,7 +6,9 @@ const {
   updateCategory,
   deleteCategory,
   reorderCategories
-} = require('../controllers/categoryController');
+} = require('../../../src/controllers/categoryController');
+
+const router = express.Router();
 
 router.get('/', getCategories);
 router.get('/:id', getCategory);

@@ -4,8 +4,10 @@
   "description": "Backend API para MenuApp SaaS",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "cross-env nodemon src/dev.js",
+    "start-api": "node apps/admin-api/index.js",
+    "start-public": "node apps/public-api/index.js",
+    "dev-api": "cross-env nodemon src/admin-dev.js",
+    "dev-public": "cross-env nodemon src/public-dev.js",
     "build": "echo 'No build step required '",
     "tests": "echo TODO jest",
     "lint": "echo TODO ",

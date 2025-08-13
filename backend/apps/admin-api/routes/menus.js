@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const {
   getMenus,
   createMenu,
@@ -7,8 +6,9 @@ const {
   updateMenu,
   deleteMenu,
   reorderMenus
-} = require('../controllers/menuController');
+} = require('../../../src/controllers/menuController');
 
+const router = express.Router();
 
 router.get('/', getMenus);
 router.post('/', createMenu);

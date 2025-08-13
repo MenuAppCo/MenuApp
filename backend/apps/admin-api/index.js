@@ -5,11 +5,11 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const serverlessExpress = require('@codegenie/serverless-express')
-const { connectDB } = require('./config/database');
+const { connectDB } = require('../../src/config/database');
 const routes = require('./routes');
-const { middlewareNotFound } = require('./middleware/404');
-const authMiddleware  = require('./middleware/auth');
-const {  middlewareErrors } = require('./middleware/errors');
+const { middlewareNotFound } = require('../../src/middleware/404');
+const authMiddleware  = require('../../src/middleware/auth');
+const {  middlewareErrors } = require('../../src/middleware/errors');
 
 const app = express();
 

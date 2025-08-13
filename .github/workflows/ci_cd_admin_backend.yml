@@ -28,6 +28,7 @@ jobs:
     uses: ./.github/workflows/reusable-backend-cd.yml
     with:
       image-path: 'backend'
+      dockerfile-path: 'apps/admin-api/Dockerfile'
       image-uri: '084519756118.dkr.ecr.us-east-1.amazonaws.com/admin-api-lambda'
       branch-name: ${{ github.ref_name }}
 

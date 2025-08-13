@@ -1,5 +1,5 @@
 require('dotenv').config();
-const app = require('./index.js')
+const app = require('../apps/public-api/index.js')
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
 

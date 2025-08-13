@@ -1,6 +1,7 @@
 const express = require('express');
+const { getMyProfile, createMyProfile } = require('../../../src/controllers/userController');
+
 const router = express.Router();
-const { getMyProfile, createMyProfile } = require('../controllers/userController');
 
 router.get('/me/profile', getMyProfile);
 router.post('/me/profile', createMyProfile);
