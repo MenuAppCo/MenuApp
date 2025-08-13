@@ -1,5 +1,5 @@
 data "template_file" "admin_openapi_rendered" {
-  template = file("${path.root}/../../backend/openapi.yml.tl")
+  template = file("${path.root}/../../backend/apps/admin-api/openapi.yml.tl")
 
   vars = {
     lambda_uri = "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${var.lambdas.admin_api_lambda.arn}/invocations"
