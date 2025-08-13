@@ -44,12 +44,6 @@ jobs:
       image-uri: '084519756118.dkr.ecr.us-east-1.amazonaws.com/admin-api-lambda'
       branch-name: ${{ github.ref_name }}
 
-  ci-backend-terraform:
-    needs: [cd-admin-backend, cd-public-backend]
-    uses: ./.github/workflows/reusable-terraform-ci.yml
-    with:
-      terraform-path: 'iac/backend'
-
   generate-env-vars:
     needs: [cd-admin-backend, cd-public-backend]
     runs-on: ubuntu-latest
@@ -72,8 +66,14 @@ jobs:
 
           echo "env-vars=$(cat env-vars.json | base64 -w 0)" >> $GITHUB_OUTPUT
 
+  ci-backend-terraform:
+    needs: [cd-admin-backend, cd-public-backend]
+    uses: ./.github/workflows/reusable-terraform-ci.yml
+    with:
+      terraform-path: 'iac/backend'
+
   cd-backend-terraform:
-    needs: [generate-env-vars]
+    needs: [ci-backend-terraform, generate-env-vars]
     permissions:
       id-token: write
       contents: read
