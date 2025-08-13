@@ -34,7 +34,7 @@ resource "aws_api_gateway_stage" "public_api_production" {
   deployment_id = aws_api_gateway_deployment.public_api_deployment.id
 }
 
-resource "aws_lambda_permission" "api_gw_admin_permission" {
+resource "aws_lambda_permission" "api_gw_public_permission" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = var.lambdas.public_api_lambda.function_name
