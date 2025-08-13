@@ -8,10 +8,8 @@ RUN npm install
 
 COPY . .
 
-COPY apps/admin-api/index.js ./src/index.js
-
 RUN npx prisma generate
 
 RUN npm prune --production
 
-CMD ["src/index.handler"]
+CMD ["apps/admin-api/index.handler"]
