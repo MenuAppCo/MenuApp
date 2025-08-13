@@ -1,0 +1,15 @@
+meta {
+  name: initialize
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/api/v1/restaurants/initialize
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

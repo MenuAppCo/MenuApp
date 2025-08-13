@@ -14,14 +14,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  ci-admin-backend:
+  ci-backend:
     uses: ./.github/workflows/reusable-backend-ci.yml
     with:
       backend-path: 'backend'
       node-version: '20'
 
+  cd-public-backend:
+    needs: ci-backend
+    permissions:
+      id-token: write
+      contents: read
+    uses: ./.github/workflows/reusable-backend-cd.yml
+    with:
+      image-path: './backend'
+      dockerfile-path: 'apps/public-api/Dockerfile'
+      image-uri: '084519756118.dkr.ecr.us-east-1.amazonaws.com/public-api-lambda'
+      branch-name: ${{ github.ref_name }}
+
   cd-admin-backend:
-    needs: ci-admin-backend
+    needs: ci-backend
     permissions:
       id-token: write
       contents: read
@@ -32,14 +44,14 @@ jobs:
       image-uri: '084519756118.dkr.ecr.us-east-1.amazonaws.com/admin-api-lambda'
       branch-name: ${{ github.ref_name }}
 
-  ci-admin-backend-terraform:
-    needs: cd-admin-backend
+  ci-backend-terraform:
+    needs: [cd-admin-backend, cd-public-backend]
     uses: ./.github/workflows/reusable-terraform-ci.yml
     with:
       terraform-path: 'iac/backend'
 
   generate-env-vars:
-    needs: [cd-admin-backend]
+    needs: [cd-admin-backend, cd-public-backend]
     runs-on: ubuntu-latest
     outputs:
       env-vars: ${{ steps.generate-env-json.outputs.env-vars }}
@@ -60,8 +72,8 @@ jobs:
 
           echo "env-vars=$(cat env-vars.json | base64 -w 0)" >> $GITHUB_OUTPUT
 
-  cd-admin-backend-terraform:
-    needs: [ci-admin-backend-terraform, cd-admin-backend, generate-env-vars]
+  cd-backend-terraform:
+    needs: [generate-env-vars]
     permissions:
       id-token: write
       contents: read
@@ -71,3 +83,4 @@ jobs:
       env-vars: ${{ needs.generate-env-vars.outputs.env-vars }}
       branch-name: ${{ github.ref_name }}
     secrets: inherit
+

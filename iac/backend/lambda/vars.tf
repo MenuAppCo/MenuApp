@@ -25,18 +25,6 @@ variable "database_url" {
   sensitive   = true
 }
 
-variable "supabase_url" {
-  description = "Supabase URL"
-  type        = string
-  sensitive   = true
-}
-
-variable "supabase_service_key" {
-  description = "Supabase service key"
-  type        = string
-  sensitive   = true
-}
-
 variable "ecr" {
   description = "ecr module outputs"
   type = object({
@@ -44,7 +32,7 @@ variable "ecr" {
   })
 }
 
-variable "admin_api_lambda_image_tag" {
+variable "public_api_lambda_image_tag" {
   description = "admin api lambda image tag"
   type        = string
 }
