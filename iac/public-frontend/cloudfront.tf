@@ -213,7 +213,11 @@ function handler(event) {
     var request = event.request;
     var uri = request.uri;
 
-    if (uri.startsWith("/restaurants") && !uri.match(/\\.[a-zA-Z0-9]+$/)) {
+    // Only rewrite if there's no dot in the last path segment
+    if (
+        uri.startsWith("/restaurants") &&
+        uri.split("/").pop().indexOf(".") === -1
+    ) {
         request.uri = "/restaurants/index.html";
     }
 
@@ -222,3 +226,4 @@ function handler(event) {
 EOF
   publish = true
 }
+
