@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Admin API
+  title: Admin API 
   description: Template-based OpenAPI for API Gateway & Lambda
   version: "1.0"
 

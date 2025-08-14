@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Public API 
+  title: Public API
   description: Template-based OpenAPI for API Gateway & Lambda
   version: "1.0"
 

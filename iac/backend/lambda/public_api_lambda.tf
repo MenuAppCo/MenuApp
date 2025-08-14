@@ -9,9 +9,9 @@ resource "aws_lambda_function" "public_api_lambda" {
 
   environment {
     variables = {
-      SERVICE_NAME             = "public-api-lambda"
-      DATABASE_URL             = var.database_url
-      RESTAURANTS_FRONTEND_URL = var.restaurants_frontend_url
+      SERVICE_NAME        = "public-api-lambda"
+      DATABASE_URL        = var.database_url
+      PUBLIC_FRONTEND_URL = var.public_frontend_url
     }
   }
 

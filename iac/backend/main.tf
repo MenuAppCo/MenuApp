@@ -35,7 +35,7 @@ module "lambda" {
   supabase_service_key        = var.SUPABASE_SERVICE_KEY
   ecr                         = module.ecr
   admin_frontend_url          = var.ADMIN_FRONTEND_URL
-  restaurants_frontend_url    = var.RESTAURANTS_FRONTEND_URL
+  public_frontend_url         = var.PUBLIC_FRONTEND_URL
   admin_api_lambda_image_tag  = var.ADMIN_BACKEND_IMAGE_TAG
   public_api_lambda_image_tag = var.PUBLIC_BACKEND_IMAGE_TAG
 }

@@ -58,8 +58,8 @@ variable "admin_frontend_url" {
   type        = string
 }
 
-variable "restaurants_frontend_url" {
-  description = "restaurants url"
+variable "public_frontend_url" {
+  description = "public frontend url"
   type        = string
 }
 
