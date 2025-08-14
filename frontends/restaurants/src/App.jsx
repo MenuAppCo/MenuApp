@@ -10,8 +10,8 @@ function App() {
     <ErrorBoundary>
       <div className="min-h-screen bg-gray-50">
         <Routes>
-          <Route path="/restaurant/:slug" element={<PublicRestaurant />} />
-          <Route path="/restaurant/:slug/menus" element={<PublicMenus />} />
+          <Route path="/restaurants/:slug" element={<PublicRestaurant />} />
+          <Route path="/restaurants/:slug/menus" element={<PublicMenus />} />
           <Route path="/menu/:slug/:menuType" element={<PublicMenu />} />
         </Routes>
         {/* TODO Notificaciones a*/}
