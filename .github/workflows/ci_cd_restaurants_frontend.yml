@@ -17,12 +17,31 @@ jobs:
     with:
       frontend-path: 'frontends/restaurants'
       node-version: '20'
-  
+
+  generate-env-vars:
+    runs-on: ubuntu-latest
+    outputs:
+      env-vars: ${{ steps.generate-env-json.outputs.env-vars }}
+    steps:
+      - name: Generate environment variables JSON
+        id: generate-env-json
+        run: |
+          cat << EOF > env-vars.json
+          {
+            "ENV": "production",
+            "REGION": "us-east-1",
+            "DEBUG": "false",
+            "VITE_API_URL": "${{ vars.PUBLIC_API_URL }}"
+          }
+          EOF
+
+          echo "env-vars=$(cat env-vars.json | base64 -w 0)" >> $GITHUB_OUTPUT
+
   cd-restaurants-frontend:
     permissions:
       id-token: write
       contents: read
-    needs: ci-restaurants-frontend
+    needs: [ci-restaurants-frontend, generate-env-vars]
     uses: ./.github/workflows/reusable-frontend-cd.yml
     with:
       frontend-path: 'frontends/restaurants'
@@ -30,5 +49,5 @@ jobs:
       cloudfront-distribution-id: 'E3PVFAZHMLAOA3'
       s3-bucket-url: 's3://production-menapp-restaurants-frontend/restaurants'
       branch-name: ${{ github.ref_name }}
-
+      env-vars: ${{ needs.generate-env-vars.outputs.env-vars }}
   
