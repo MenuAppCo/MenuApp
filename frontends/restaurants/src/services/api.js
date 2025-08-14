@@ -42,7 +42,6 @@ api.interceptors.response.use(
     console.error('API Error:', error.config?.url, error.response?.status, error.response?.data)
     
     if (error.response?.status === 401) {
-      // Token expirado o inválido
       localStorage.removeItem('auth-storage')
       window.location.href = '/login'
     }
