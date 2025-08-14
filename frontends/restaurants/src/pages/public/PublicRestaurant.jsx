@@ -59,7 +59,7 @@ const PublicRestaurant = () => {
   const handleActionClick = (action) => {
     switch (action) {
       case 'menu':
-        window.location.href = `/restaurant/${slug}/menus`
+        window.location.href = `/restaurants/${slug}/menus`
         break
       case 'reservations':
         if (restaurant.phone) {
