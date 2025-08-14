@@ -1,4 +1,4 @@
-name: CI & CD Restaurants frontend 
+name: ci_cd_restaurants_frontend
 
 on:
   push:

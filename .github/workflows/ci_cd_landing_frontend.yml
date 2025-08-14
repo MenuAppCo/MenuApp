@@ -1,4 +1,4 @@
-name: CI & CD landing frontend 
+name: ci_cd_landing_frontend 
 
 on:
   push:

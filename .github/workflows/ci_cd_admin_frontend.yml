@@ -1,4 +1,4 @@
-name: CI & CD Admin frontend 
+name: ci_cd_admin_frontend 
 
 on:
   push:

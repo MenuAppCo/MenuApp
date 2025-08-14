@@ -1,4 +1,4 @@
-name: CI & CD Admin frontend terraform 
+name: ci_cd_admin_frontend_terraform 
 
 on:
   push:

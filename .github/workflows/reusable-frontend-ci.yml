@@ -1,4 +1,4 @@
-name: Reusable Frontend CI
+name: reusable_frontend_ci
 
 on:
   workflow_call:

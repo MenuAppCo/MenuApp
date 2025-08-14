@@ -1,4 +1,4 @@
-name: Reusable Frontend CD
+name: reusable_frontend_cd
 
 on:
   workflow_call:

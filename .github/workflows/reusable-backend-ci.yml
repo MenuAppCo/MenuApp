@@ -1,4 +1,4 @@
-name: Reusable Backend CI
+name: reusable_backend_ci
 
 on:
   workflow_call:

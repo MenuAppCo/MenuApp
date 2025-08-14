@@ -1,4 +1,4 @@
-name: CI & CD Restaurants frontend terraform 
+name: ci_cd_restaurants_frontend_terraform
 
 on:
   push:

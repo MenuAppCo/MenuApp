@@ -1,4 +1,4 @@
-name: Reusable Terraform CD
+name: reusable_terraform_cd
 
 on:
   workflow_call:

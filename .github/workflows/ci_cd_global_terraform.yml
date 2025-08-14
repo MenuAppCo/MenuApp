@@ -1,4 +1,4 @@
-name: CI & CD Global terraform 
+name: ci_cd_global_terraform 
 
 on:
   push:

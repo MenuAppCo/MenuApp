@@ -1,4 +1,4 @@
-name: Reusable Terraform CI
+name: reusable_terraform_ci
 
 on:
   workflow_call:
