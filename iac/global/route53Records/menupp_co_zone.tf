@@ -47,3 +47,15 @@ resource "aws_route53_record" "menapp_admin_api_apex" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_route53_record" "menapp_public_api_apex" {
+  zone_id = data.terraform_remote_state.route53.outputs.menapp_zone.zone_id
+  name    = "menu.menapp.co"
+  type    = "A"
+
+  alias {
+    name                   = data.terraform_remote_state.admin_api.outputs.public_api_domain_regional_domain_name
+    zone_id                = data.terraform_remote_state.admin_api.outputs.public_api_domain_regional_zone_id
+    evaluate_target_health = false
+  }
+}
