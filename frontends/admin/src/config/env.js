@@ -20,5 +20,5 @@ export const config = {
 // Función helper para construir URLs del menú público
 export const buildPublicMenuUrl = (restaurantSlug) => {
   if (!restaurantSlug) return '';
-  return `${config.publicFrontendUrl}/restaurant/${restaurantSlug}`;
+  return `${config.publicFrontendUrl}/restaurants/${restaurantSlug}`;
 }; 
