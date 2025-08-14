@@ -120,7 +120,7 @@ const PublicMenu = () => {
             <div className="px-4 py-4">
               <div className="flex items-center space-x-3">
                 <Link
-                  to={`/restaurant/${slug}/menus`}
+                  to={`/restaurants/${slug}/menus`}
                   className="text-gray-600 hover:text-gray-900 p-2 -ml-2"
                 >
                   <ArrowLeft className="h-5 w-5" />
