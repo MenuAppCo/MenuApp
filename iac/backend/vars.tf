@@ -41,7 +41,13 @@ variable "PUBLIC_BACKEND_IMAGE_TAG" {
 }
 
 
-variable "FRONTEND_URL" {
-  description = "frontend url"
+variable "RESTAURANTS_FRONTEND_URL" {
+  description = "restaurants frontend url"
+  type        = string
+}
+
+
+variable "ADMIN_FRONTEND_URL" {
+  description = "admin frontend url"
   type        = string
 }

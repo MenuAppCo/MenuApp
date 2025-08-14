@@ -13,7 +13,7 @@ resource "aws_lambda_function" "admin_api_lambda" {
       DATABASE_URL         = var.database_url
       SUPABASE_URL         = var.supabase_url
       SUPABASE_SERVICE_KEY = var.supabase_service_key
-      FRONTEND_URL         = var.frontend_url
+      ADMIN_FRONTEND_URL   = var.admin_frontend_url
     }
   }
 

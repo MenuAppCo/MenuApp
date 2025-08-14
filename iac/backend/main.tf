@@ -26,16 +26,16 @@ module "iam" {
 }
 
 module "lambda" {
-  source               = "./lambda"
-  environment          = var.environment
-  app                  = var.app
-  iam                  = module.iam
-  database_url         = var.DATABASE_URL
-  supabase_url         = var.SUPABASE_URL
-  supabase_service_key = var.SUPABASE_SERVICE_KEY
-  ecr                  = module.ecr
-  frontend_url         = var.FRONTEND_URL
-
+  source                      = "./lambda"
+  environment                 = var.environment
+  app                         = var.app
+  iam                         = module.iam
+  database_url                = var.DATABASE_URL
+  supabase_url                = var.SUPABASE_URL
+  supabase_service_key        = var.SUPABASE_SERVICE_KEY
+  ecr                         = module.ecr
+  admin_frontend_url          = var.ADMIN_FRONTEND_URL
+  restaurants_frontend_url    = var.RESTAURANTS_FRONTEND_URL
   admin_api_lambda_image_tag  = var.ADMIN_BACKEND_IMAGE_TAG
   public_api_lambda_image_tag = var.PUBLIC_BACKEND_IMAGE_TAG
 }

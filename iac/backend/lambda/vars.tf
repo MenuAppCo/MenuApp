@@ -53,8 +53,13 @@ variable "admin_api_lambda_image_tag" {
   type        = string
 }
 
-variable "frontend_url" {
-  description = "frontend url"
+variable "admin_frontend_url" {
+  description = "admin frontend url"
+  type        = string
+}
+
+variable "restaurants_frontend_url" {
+  description = "restaurants url"
   type        = string
 }
 
