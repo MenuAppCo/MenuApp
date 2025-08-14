@@ -53,3 +53,19 @@ resource "aws_cloudwatch_log_group" "public_api_logs" {
   }
 }
 
+resource "aws_api_gateway_domain_name" "public_api_domain" {
+  domain_name = local.public_api_domain_name
+
+  regional_certificate_arn = var.menapp_certificate_arn
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
+}
+
+resource "aws_api_gateway_base_path_mapping" "public_api_mapping" {
+  api_id      = aws_api_gateway_rest_api.public_api.id
+  stage_name  = aws_api_gateway_stage.public_api_production.stage_name
+  domain_name = aws_api_gateway_domain_name.public_api_domain.domain_name
+
+  depends_on = [aws_api_gateway_stage.public_api_production]
+}

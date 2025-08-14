@@ -52,3 +52,20 @@ resource "aws_cloudwatch_log_group" "admin_api_logs" {
     App         = var.app
   }
 }
+
+resource "aws_api_gateway_domain_name" "admin_api_domain" {
+  domain_name = local.admin_domain_name
+
+  regional_certificate_arn = var.menapp_certificate_arn
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
+}
+
+resource "aws_api_gateway_base_path_mapping" "admin_api_mapping" {
+  api_id      = aws_api_gateway_rest_api.admin_api.id
+  stage_name  = aws_api_gateway_stage.admin_api_production.stage_name
+  domain_name = aws_api_gateway_domain_name.admin_api_domain.domain_name
+
+  depends_on = [aws_api_gateway_stage.admin_api_production]
+}
