@@ -1,4 +1,4 @@
-name: CI & CD Admin backend 
+name: ci_cd_backend
 
 on:
   push:
