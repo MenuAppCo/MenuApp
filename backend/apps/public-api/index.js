@@ -31,7 +31,7 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:5174',
-    process.env.RESTAURANTS_FRONTEND_URL
+    process.env.PUBLIC_FRONTEND_URL
   ].filter(Boolean),
   credentials: true
 }));
