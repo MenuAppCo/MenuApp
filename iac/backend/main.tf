@@ -20,9 +20,9 @@ module "ecr" {
 
 
 module "iam" {
-  source      = "./iam"
-  environment = var.environment
-  app         = var.app
+  source         = "./iam"
+  environment    = var.environment
+  app            = var.app
   s3_bucket_name = var.s3_bucket_name
 }
 
@@ -52,8 +52,8 @@ module "apigw" {
 }
 
 module "s3" {
-  source      = "./s3"
-  environment = var.environment
-  app         = var.app
+  source         = "./s3"
+  environment    = var.environment
+  app            = var.app
   s3_bucket_name = var.s3_bucket_name
 }

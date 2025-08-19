@@ -51,7 +51,10 @@ resource "aws_s3_bucket_policy" "images" {
         Sid    = "AllowLambdaAccess"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/*"
+          AWS = [
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/admin-api-lambda",
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/public-api-lambda"
+          ]
         }
         Action = [
           "s3:GetObject",
@@ -63,14 +66,6 @@ resource "aws_s3_bucket_policy" "images" {
           aws_s3_bucket.images.arn,
           "${aws_s3_bucket.images.arn}/*"
         ]
-        Condition = {
-          StringEquals = {
-            "aws:PrincipalArn": [
-              "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/admin-api-lambda",
-              "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/public-api-lambda"
-            ]
-          }
-        }
       }
     ]
   })
