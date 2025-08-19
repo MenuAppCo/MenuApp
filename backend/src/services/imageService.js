@@ -2,6 +2,9 @@ const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs').promises;
 const { UPLOAD } = require('../utils/constants');
+const S3Service = require('./s3Service');
+const LocalImageService = require('./localImageService');
+const config = require('../config/environment');
 
 class ImageService {
   // Procesar y optimizar imagen usando buffer
@@ -12,7 +15,8 @@ class ImageService {
         height = 800,
         quality = 80,
         format = 'webp',
-        filename = 'image'
+        filename = 'image',
+        type = 'general'
       } = options;
 
       console.log(`🖼️ Procesando imagen desde buffer: ${filename}`);
@@ -65,22 +69,44 @@ class ImageService {
           }).toBuffer();
       }
 
-      // Generar URL virtual (para Lambda, no guardamos en disco)
+      // Generar nombre único para el archivo
       const baseName = path.basename(filename, path.extname(filename));
-      const virtualUrl = `/uploads/processed/${baseName}-processed.${format}`;
+      const processedFilename = `${baseName}-processed.${format}`;
 
-      console.log(`💾 Imagen procesada en memoria: ${virtualUrl}`);
+      // Usar S3 en producción, local en desarrollo
+      if (config.isProduction() && config.S3_BUCKET_NAME) {
+        try {
+          // Subir imagen procesada a S3
+          const s3Result = await S3Service.uploadImage(
+            processedBuffer, 
+            type, 
+            processedFilename, 
+            `image/${format}`
+          );
 
-      return {
-        buffer: processedBuffer,
-        url: virtualUrl,
-        metadata: {
-          width: metadata.width,
-          height: metadata.height,
-          format: metadata.format,
-          size: metadata.size
+          console.log(`💾 Imagen procesada y subida a S3: ${s3Result.url}`);
+
+          return {
+            buffer: processedBuffer,
+            url: s3Result.url,
+            s3Key: s3Result.key,
+            metadata: {
+              width: metadata.width,
+              height: metadata.height,
+              format: metadata.format,
+              size: metadata.size
+            }
+          };
+        } catch (s3Error) {
+          console.warn('⚠️ Error subiendo a S3, fallback a almacenamiento local:', s3Error.message);
         }
-      };
+      }
+
+      // Fallback a almacenamiento local
+      const localResult = await LocalImageService.processImageBuffer(buffer, options);
+      console.log(`💾 Imagen procesada y guardada localmente: ${localResult.url}`);
+
+      return localResult;
     } catch (error) {
       console.error('❌ Error procesando imagen desde buffer:', error);
       console.error('🔧 Opciones:', options);
@@ -116,24 +142,35 @@ class ImageService {
             })
             .toBuffer();
 
-          const virtualUrl = `/uploads/sizes/${baseName}-${sizeName}.webp`;
-
           results[sizeName] = {
             buffer: sizeBuffer,
-            url: virtualUrl,
             width: dimensions.width,
             height: dimensions.height
           };
           
-          console.log(`✅ Tamaño ${sizeName} creado: ${virtualUrl}`);
+          console.log(`✅ Tamaño ${sizeName} creado en memoria`);
         } catch (sizeError) {
           console.error(`❌ Error creando tamaño ${sizeName}:`, sizeError);
           // Continuar con otros tamaños
         }
       }
 
-      console.log(`🎉 Todos los tamaños creados exitosamente`);
-      return results;
+      // Usar S3 en producción, local en desarrollo
+      if (config.isProduction() && config.S3_BUCKET_NAME) {
+        try {
+          // Subir todos los tamaños a S3
+          const s3Results = await S3Service.uploadImageSizes(results, 'sizes', baseName);
+          console.log(`🎉 Todos los tamaños creados y subidos a S3 exitosamente`);
+          return s3Results;
+        } catch (s3Error) {
+          console.warn('⚠️ Error subiendo tamaños a S3, fallback a almacenamiento local:', s3Error.message);
+        }
+      }
+
+      // Fallback a almacenamiento local
+      const localResults = await LocalImageService.createImageSizesFromBuffer(buffer, filename, sizes);
+      console.log(`🎉 Todos los tamaños creados localmente exitosamente`);
+      return localResults;
     } catch (error) {
       console.error('❌ Error creando tamaños de imagen desde buffer:', error);
       throw new Error(`Error al crear tamaños de imagen: ${error.message}`);
@@ -345,41 +382,57 @@ class ImageService {
     try {
       if (!imageUrl) return;
 
-      // Convertir URL a path
-      const imagePath = imageUrl.replace('/uploads', path.join(__dirname, '../../uploads'));
-      
-      // Verificar si el archivo existe
-      try {
-        await fs.access(imagePath);
-      } catch {
-        console.log('Archivo no encontrado:', imagePath);
-        return;
-      }
-
-      // Obtener información del archivo
-      const dir = path.dirname(imagePath);
-      const ext = path.extname(imagePath);
-      const baseName = path.basename(imagePath, ext);
-
-      // Eliminar archivo principal
-      await fs.unlink(imagePath);
-
-      // Buscar y eliminar variantes
-      const files = await fs.readdir(dir);
-      const variants = files.filter(file => 
-        file.startsWith(baseName) && file !== path.basename(imagePath)
-      );
-
-      for (const variant of variants) {
-        const variantPath = path.join(dir, variant);
-        try {
-          await fs.unlink(variantPath);
-        } catch (error) {
-          console.log('Error eliminando variante:', variantPath, error.message);
+      // Si es una URL de S3, extraer la key y eliminar de S3
+      if (imageUrl.includes('s3.amazonaws.com')) {
+        const urlParts = imageUrl.split('.com/');
+        if (urlParts.length > 1) {
+          const key = urlParts[1];
+          await S3Service.deleteImageAndVariants('general', key.split('/').pop());
+          console.log('Imagen eliminada exitosamente de S3:', key);
+          return;
         }
       }
 
-      console.log('Imagen eliminada exitosamente:', imagePath);
+      // Para URLs locales (compatibilidad hacia atrás)
+      if (imageUrl.startsWith('/uploads')) {
+        console.log('⚠️ URL local detectada, eliminando archivos locales:', imageUrl);
+        
+        // Convertir URL a path
+        const imagePath = imageUrl.replace('/uploads', path.join(__dirname, '../../uploads'));
+        
+        // Verificar si el archivo existe
+        try {
+          await fs.access(imagePath);
+        } catch {
+          console.log('Archivo local no encontrado:', imagePath);
+          return;
+        }
+
+        // Obtener información del archivo
+        const dir = path.dirname(imagePath);
+        const ext = path.extname(imagePath);
+        const baseName = path.basename(imagePath, ext);
+
+        // Eliminar archivo principal
+        await fs.unlink(imagePath);
+
+        // Buscar y eliminar variantes
+        const files = await fs.readdir(dir);
+        const variants = files.filter(file => 
+          file.startsWith(baseName) && file !== path.basename(imagePath)
+        );
+
+        for (const variant of variants) {
+          const variantPath = path.join(dir, variant);
+          try {
+            await fs.unlink(variantPath);
+          } catch (error) {
+            console.log('Error eliminando variante local:', variantPath, error.message);
+          }
+        }
+
+        console.log('Imagen local eliminada exitosamente:', imagePath);
+      }
     } catch (error) {
       console.error('Error eliminando imagen:', error);
       throw new Error('Error al eliminar la imagen');

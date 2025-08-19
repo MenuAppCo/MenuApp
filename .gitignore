@@ -22,3 +22,9 @@ Thumbs.db
 # Optional: build/dist folders
 dist/
 build/
+
+# Uploads directory (development)
+backend/uploads/
+
+# AWS credentials (development)
+.aws/

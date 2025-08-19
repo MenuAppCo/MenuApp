@@ -40,3 +40,42 @@ resource "aws_s3_bucket_lifecycle_configuration" "images" {
   }
 }
 
+# Bucket policy para permitir acceso desde Lambda
+resource "aws_s3_bucket_policy" "images" {
+  bucket = aws_s3_bucket.images.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowLambdaAccess"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/*"
+        }
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          aws_s3_bucket.images.arn,
+          "${aws_s3_bucket.images.arn}/*"
+        ]
+        Condition = {
+          StringEquals = {
+            "aws:PrincipalArn": [
+              "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/admin-api-lambda",
+              "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/public-api-lambda"
+            ]
+          }
+        }
+      }
+    ]
+  })
+}
+
+# Data source para obtener el ID de la cuenta actual
+data "aws_caller_identity" "current" {}
+

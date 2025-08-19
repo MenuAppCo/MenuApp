@@ -23,6 +23,7 @@ module "iam" {
   source      = "./iam"
   environment = var.environment
   app         = var.app
+  s3_bucket_name = var.s3_bucket_name
 }
 
 module "lambda" {
@@ -54,4 +55,5 @@ module "s3" {
   source      = "./s3"
   environment = var.environment
   app         = var.app
+  s3_bucket_name = var.s3_bucket_name
 }

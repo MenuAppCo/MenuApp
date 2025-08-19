@@ -2,6 +2,7 @@ const { prisma } = require('../config/database');
 const ImageService = require('../services/imageService');
 const { errorResponse, successResponse } = require('../utils/helpers');
 const { ERROR_MESSAGES } = require('../utils/constants');
+const S3Service = require('../services/s3Service');
 
 // Subir imagen de producto
 const uploadProductImage = async (req, res) => {
@@ -30,7 +31,8 @@ const uploadProductImage = async (req, res) => {
       height: 800,
       quality: 80,
       format: 'webp',
-      filename: uploadedFile.filename
+      filename: uploadedFile.filename,
+      type: 'products'
     });
 
     // Crear múltiples tamaños
@@ -97,7 +99,8 @@ const uploadCategoryImage = async (req, res) => {
       height: 400,
       quality: 80,
       format: 'webp',
-      filename: uploadedFile.filename
+      filename: uploadedFile.filename,
+      type: 'categories'
     });
 
     // Crear múltiples tamaños
@@ -142,7 +145,8 @@ const uploadRestaurantLogo = async (req, res) => {
       height: 300,
       quality: 90,
       format: 'webp',
-      filename: uploadedFile.filename
+      filename: uploadedFile.filename,
+      type: 'restaurants'
     });
 
     // Crear múltiples tamaños
@@ -239,7 +243,18 @@ const deleteImage = async (req, res) => {
     // Eliminar archivo de imagen
     const imageUrl = entity.imageUrl || entity.logoUrl;
     if (imageUrl) {
-      await ImageService.deleteImage(imageUrl);
+      // Si es una URL de S3, extraer la key y eliminar de S3
+      if (imageUrl.includes('s3.amazonaws.com')) {
+        const urlParts = imageUrl.split('.com/');
+        if (urlParts.length > 1) {
+          const key = urlParts[1];
+          const filename = key.split('/').pop();
+          await S3Service.deleteImageAndVariants(type, filename);
+        }
+      } else {
+        // Para URLs locales (compatibilidad hacia atrás)
+        await ImageService.deleteImage(imageUrl);
+      }
     }
 
     // Actualizar entidad

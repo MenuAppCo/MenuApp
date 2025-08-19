@@ -51,3 +51,9 @@ variable "ADMIN_FRONTEND_URL" {
   description = "admin frontend url"
   type        = string
 }
+
+variable "s3_bucket_name" {
+  description = "S3 bucket name for storing images"
+  type        = string
+  default     = "production-menapp-images"
+}

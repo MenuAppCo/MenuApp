@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { UPLOAD } = require('../utils/constants');
+const { getS3Url, getS3Key } = require('../config/s3');
 
 // Configuración de almacenamiento en memoria para Lambda
 const storage = multer.memoryStorage();
@@ -85,7 +86,9 @@ const uploadImage = (type = 'general') => {
         mimetype: req.file.mimetype,
         size: req.file.size,
         buffer: req.file.buffer, // Contenido del archivo en memoria
-        url: `/uploads/${type}/${filename}`
+        url: `/uploads/${type}/${filename}`,
+        s3Key: getS3Key(type, filename),
+        s3Url: getS3Url(getS3Key(type, filename))
       };
       
       next();
@@ -158,7 +161,9 @@ const uploadRestaurantLogoField = (req, res, next) => {
       mimetype: req.file.mimetype,
       size: req.file.size,
       buffer: req.file.buffer, // Contenido del archivo en memoria
-      url: `/uploads/restaurants/${filename}`
+      url: `/uploads/restaurants/${filename}`,
+      s3Key: getS3Key('restaurants', filename),
+      s3Url: getS3Url(getS3Key('restaurants', filename))
     };
     
     console.log('✅ Archivo procesado, URL:', req.uploadedFile.url)
