@@ -9,3 +9,8 @@ variable "app" {
   type        = string
   default     = "menupp"
 }
+
+variable "s3_bucket_name" {
+  description = "S3 bucket name for storing images"
+  type        = string
+}

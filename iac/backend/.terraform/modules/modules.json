@@ -1,1 +1,0 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"apigw","Source":"./apigw","Dir":"apigw"},{"Key":"ecr","Source":"./ecr","Dir":"ecr"},{"Key":"iam","Source":"./iam","Dir":"iam"},{"Key":"iam.policies","Source":"./policies","Dir":"iam/policies"},{"Key":"iam.roles","Source":"./roles","Dir":"iam/roles"},{"Key":"lambda","Source":"./lambda","Dir":"lambda"}]}

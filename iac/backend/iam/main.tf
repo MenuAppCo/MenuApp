@@ -1,8 +1,9 @@
 module "policies" {
   source = "./policies"
 
-  environment = var.environment
-  app         = var.app
+  environment    = var.environment
+  app            = var.app
+  s3_bucket_name = var.s3_bucket_name
 }
 
 module "roles" {
