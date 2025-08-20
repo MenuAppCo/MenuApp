@@ -1,6 +1,5 @@
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const { UPLOAD } = require('../utils/constants');
 const { getS3Url, getS3Key } = require('../config/s3');
 

@@ -1,0 +1,23 @@
+meta {
+  name: Upload product image
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{API_URL}}/api/v1/uploads/products/{{PRODUCT_ID}}
+  body: multipartForm
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:multipart-form {
+  image: @file(/home/rojbar/Downloads/sancocho.jpg) @contentType(image/jpeg)
+}
+
+body:file {
+  file: @file()
+}

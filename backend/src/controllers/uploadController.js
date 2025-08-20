@@ -22,6 +22,7 @@ const uploadProductImage = async (req, res) => {
       return res.status(404).json(errorResponse(ERROR_MESSAGES.NOT_FOUND, 404));
     }
 
+    console.log("DEBUG_UPLOADED_FILE", uploadedFile)
     // Validar imagen usando buffer
     await ImageService.validateImageBuffer(uploadedFile.buffer);
 
