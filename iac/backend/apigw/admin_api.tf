@@ -13,6 +13,8 @@ resource "aws_api_gateway_rest_api" "admin_api" {
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+
+  binary_media_types = ["*/*"]
 }
 
 resource "aws_api_gateway_deployment" "admin_api_deployment" {
