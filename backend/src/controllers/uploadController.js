@@ -24,6 +24,7 @@ const uploadProductImage = async (req, res) => {
 
       console.log(`🔍 Controlador recibió archivo: ${uploadedFile.originalname} (${uploadedFile.buffer?.length || 0} bytes)`);
     
+      console.log(`🔍 buffer first bytes ${uploadedFile.buffer.slice(0, 20)} `)
       console.log(`🔍 buffer ${uploadedFile.buffer} `)
     // Validar imagen usando buffer
     await ImageService.validateImageBuffer(uploadedFile.buffer);
