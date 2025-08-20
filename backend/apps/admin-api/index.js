@@ -58,7 +58,16 @@ app.use('*', middlewareNotFound);
 app.use(middlewareErrors);
 
 module.exports = app;
-module.exports.handler = serverlessExpress({ app, binaryMimeTypes: [ "multipart/form-data",
-  "image/jpeg",
-  "image/png",
-  "image/webp",]});
+
+module.exports.handler = (event, context) => {
+  console.log("isBase64Encoded:", event.isBase64Encoded);
+  console.log("content-type:", event.headers?.["content-type"]);
+  console.log("body length:", event.body?.length);
+
+  return serverlessExpress({
+    app,
+    binarySettings: {
+      contentTypes: ["*/*"]
+    }
+  })(event, context);
+};
