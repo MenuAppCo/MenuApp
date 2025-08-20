@@ -14,7 +14,12 @@ resource "aws_api_gateway_rest_api" "admin_api" {
     types = ["REGIONAL"]
   }
 
-  binary_media_types = ["*/*"]
+  binary_media_types = [
+    "multipart/form-data",
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ]
 }
 
 resource "aws_api_gateway_deployment" "admin_api_deployment" {
