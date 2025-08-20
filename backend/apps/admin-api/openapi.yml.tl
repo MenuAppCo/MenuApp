@@ -1097,4 +1097,284 @@ paths:
         type: aws_proxy
         payloadFormatVersion: "2.0"
 
+  /api/v1/uploads/products/{productId}:
+    options:
+      summary: CORS preflight for product image upload
+      responses:
+        '200':
+          description: CORS OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            responseTemplates:
+              application/json: "{}"
+
+    post:
+      summary: Upload product image
+      operationId: uploadProductImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Image uploaded successfully
+        '400':
+          description: Bad request - invalid image
+        '401':
+          description: Unauthorized
+        '404':
+          description: Product not found
+      x-amazon-apigateway-integration:
+        uri: "${lambda_uri}"
+        httpMethod: POST
+        type: aws_proxy
+        payloadFormatVersion: "2.0"
+
+  /api/v1/uploads/categories/{categoryId}:
+    options:
+      summary: CORS preflight for category image upload
+      responses:
+        '200':
+          description: CORS OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            responseTemplates:
+              application/json: "{}"
+
+    post:
+      summary: Upload category image
+      operationId: uploadCategoryImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Image uploaded successfully
+        '400':
+          description: Bad request - invalid image
+        '401':
+          description: Unauthorized
+        '404':
+          description: Category not found
+      x-amazon-apigateway-integration:
+        uri: "${lambda_uri}"
+        httpMethod: POST
+        type: aws_proxy
+        payloadFormatVersion: "2.0"
+
+  /api/v1/uploads/restaurant/logo:
+    options:
+      summary: CORS preflight for restaurant logo upload
+      responses:
+        '200':
+          description: CORS OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            responseTemplates:
+              application/json: "{}"
+
+    post:
+      summary: Upload restaurant logo
+      operationId: uploadRestaurantLogo
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Logo uploaded successfully
+        '400':
+          description: Bad request - invalid image
+        '401':
+          description: Unauthorized
+      x-amazon-apigateway-integration:
+        uri: "${lambda_uri}"
+        httpMethod: POST
+        type: aws_proxy
+        payloadFormatVersion: "2.0"
+
+    delete:
+      summary: Delete restaurant logo
+      operationId: deleteRestaurantLogo
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logo deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Logo not found
+      x-amazon-apigateway-integration:
+        uri: "${lambda_uri}"
+        httpMethod: POST
+        type: aws_proxy
+        payloadFormatVersion: "2.0"
+
+  /api/v1/uploads/{type}/{id}:
+    options:
+      summary: CORS preflight for image deletion
+      responses:
+        '200':
+          description: CORS OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            responseTemplates:
+              application/json: "{}"
+
+    delete:
+      summary: Delete image
+      operationId: deleteImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [products, categories, restaurant]
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Image deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Image not found
+      x-amazon-apigateway-integration:
+        uri: "${lambda_uri}"
+        httpMethod: POST
+        type: aws_proxy
+        payloadFormatVersion: "2.0"
+
 components: {}
