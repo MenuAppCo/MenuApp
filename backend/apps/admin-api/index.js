@@ -58,4 +58,7 @@ app.use('*', middlewareNotFound);
 app.use(middlewareErrors);
 
 module.exports = app;
-module.exports.handler = serverlessExpress({ app });
+module.exports.handler = serverlessExpress({ app, binaryMimeTypes: [ "multipart/form-data",
+  "image/jpeg",
+  "image/png",
+  "image/webp",]});
