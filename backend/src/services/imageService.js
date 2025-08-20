@@ -178,46 +178,22 @@ class ImageService {
         throw new Error('El buffer está vacío');
       }
       
-      // Log detallado del buffer para debug
-      console.log('🔍 Debug del buffer:');
-      console.log('  - Tipo:', typeof buffer);
-      console.log('  - Es Buffer:', Buffer.isBuffer(buffer));
-      console.log('  - Constructor:', buffer.constructor.name);
-      console.log('  - Longitud:', buffer.length);
-      console.log('  - Primeros 20 bytes:', buffer.slice(0, 20));
-      
       // Intentar crear una instancia de Sharp
       let sharpInstance;
       try {
         sharpInstance = sharp(buffer);
-        console.log('✅ Instancia de Sharp creada exitosamente');
       } catch (sharpError) {
         console.error('❌ Error creando instancia de Sharp:', sharpError);
         throw new Error('Error al inicializar Sharp');
       }
       
       // Obtener metadata
-      console.log('🔍 Intentando obtener metadata...');
       let metadata;
       try {
         metadata = await sharpInstance.metadata();
-        console.log('✅ Metadata obtenida exitosamente');
       } catch (metadataError) {
         console.error('❌ Error obteniendo metadata:', metadataError);
-        console.error('  - Mensaje:', metadataError.message);
-        console.error('  - Stack:', metadataError.stack);
-        
-        // Intentar con un enfoque alternativo
-        console.log('🔄 Intentando enfoque alternativo...');
-        try {
-          // Crear una nueva instancia de Sharp
-          const newSharpInstance = sharp(buffer);
-          metadata = await newSharpInstance.metadata();
-          console.log('✅ Metadata obtenida con enfoque alternativo');
-        } catch (altError) {
-          console.error('❌ Enfoque alternativo también falló:', altError.message);
-          throw new Error(`No se pudo leer la imagen: ${metadataError.message}`);
-        }
+        throw new Error(`No se pudo leer la imagen: ${metadataError.message}`);
       }
       
       console.log(`📊 Metadatos de validación:`, {

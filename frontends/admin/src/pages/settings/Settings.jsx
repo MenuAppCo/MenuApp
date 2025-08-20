@@ -3,6 +3,7 @@ import { Settings as SettingsIcon, Palette, Globe, Bell, Shield, Upload, Trash2,
 import { useRestaurant, useRestaurantSettings, useUpdateRestaurant, useUpdateRestaurantSettings, useUploadRestaurantLogo, useRestaurantSocialMedia, useUpdateRestaurantSocialMedia } from '../../hooks/useRestaurant'
 import { useTheme } from '../../hooks/useTheme'
 import { usePageTitle } from '../../hooks/usePageTitle'
+import { toast } from 'react-hot-toast'
 
 const SOCIAL_PLATFORMS = [
   { key: 'instagram', label: 'Instagram', icon: Instagram, placeholder: 'https://instagram.com/tuusuario' },
@@ -56,10 +57,21 @@ const Settings = () => {
   const handleLogoChange = (e) => {
     const file = e.target.files[0]
     if (file) {
+      // Validar el archivo antes de procesarlo
+      if (file.size > 5 * 1024 * 1024) { // 5MB
+        toast.error('El archivo es demasiado grande. Máximo 5MB')
+        return
+      }
+      
+      if (!file.type.startsWith('image/')) {
+        toast.error('El archivo debe ser una imagen')
+        return
+      }
+      
       setLogoFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => setLogoPreview(e.target.result)
-      reader.readAsDataURL(file)
+      // Usar URL.createObjectURL en lugar de FileReader para evitar corrupción
+      const objectUrl = URL.createObjectURL(file)
+      setLogoPreview(objectUrl)
     }
   }
 
@@ -85,6 +97,10 @@ const Settings = () => {
       // Subir logo si se seleccionó uno nuevo
       if (logoFile) {
         await uploadLogoMutation.mutateAsync(logoFile)
+        // Limpiar la URL del objeto para liberar memoria
+        if (logoPreview && logoPreview.startsWith('blob:')) {
+          URL.revokeObjectURL(logoPreview)
+        }
         setLogoFile(null)
         setLogoPreview(null)
       }
@@ -200,6 +216,10 @@ const Settings = () => {
                     <button
                       type="button"
                       onClick={() => {
+                        // Limpiar la URL del objeto para liberar memoria
+                        if (logoPreview && logoPreview.startsWith('blob:')) {
+                          URL.revokeObjectURL(logoPreview)
+                        }
                         setLogoFile(null)
                         setLogoPreview(null)
                       }}

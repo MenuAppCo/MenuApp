@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { X, Upload, Trash2 } from 'lucide-react'
 import { useCreateProduct, useUpdateProduct, useUploadProductImage } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
+import { toast } from 'react-hot-toast'
 
 const productSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -106,14 +107,29 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
+      // Validar el archivo antes de procesarlo
+      if (file.size > 5 * 1024 * 1024) { // 5MB
+        toast.error('El archivo es demasiado grande. Máximo 5MB')
+        return
+      }
+      
+      if (!file.type.startsWith('image/')) {
+        toast.error('El archivo debe ser una imagen')
+        return
+      }
+      
       setImageFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => setImagePreview(e.target.result)
-      reader.readAsDataURL(file)
+      // Usar URL.createObjectURL en lugar de FileReader para evitar corrupción
+      const objectUrl = URL.createObjectURL(file)
+      setImagePreview(objectUrl)
     }
   }
 
   const removeImage = () => {
+    // Limpiar la URL del objeto para liberar memoria
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      URL.revokeObjectURL(imagePreview)
+    }
     setImageFile(null)
     setImagePreview(null)
   }
