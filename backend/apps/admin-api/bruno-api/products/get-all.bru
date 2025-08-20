@@ -1,0 +1,15 @@
+meta {
+  name: Get All Products
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_URL}}/api/v1/products
+  body: none
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}

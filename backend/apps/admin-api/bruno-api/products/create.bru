@@ -1,0 +1,26 @@
+meta {
+  name: Create Product
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API_URL}}/api/v1/products
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Sample Product",
+    "description": "This is a sample product description",
+    "price": 9.99,
+    "categoryId": "{{CATEGORY_ID}}",
+    "isVisible": true,
+    "isFeatured": false
+  }
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Update Product
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{API_URL}}/api/v1/products/{{PRODUCT_ID}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Updated Product Name",
+    "description": "This is an updated product description",
+    "price": 12.99,
+    "categoryId": "{{CATEGORY_ID}}",
+    "isVisible": true,
+    "isFeatured": true
+  }
+}
