@@ -72,6 +72,8 @@ const uploadImage = (type = 'general') => {
         });
       }
       
+      console.log(`🔍 Archivo recibido: ${req.file.originalname} (${req.file.size} bytes, ${req.file.mimetype})`);
+      
       // Generar nombre único para el archivo
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       const ext = path.extname(req.file.originalname);
@@ -88,6 +90,8 @@ const uploadImage = (type = 'general') => {
         s3Key: getS3Key(type, filename),
         s3Url: getS3Url(getS3Key(type, filename))
       };
+      
+      console.log(`✅ Archivo procesado: ${req.uploadedFile.filename}`);
       
       next();
     });
@@ -145,6 +149,8 @@ const uploadRestaurantLogoField = (req, res, next) => {
       });
     }
     
+    console.log(`🔍 Logo recibido: ${req.file.originalname} (${req.file.size} bytes, ${req.file.mimetype})`);
+    
     console.log('✅ Archivo recibido:', req.file.originalname)
     
     // Generar nombre único para el archivo
@@ -164,6 +170,7 @@ const uploadRestaurantLogoField = (req, res, next) => {
       s3Url: getS3Url(getS3Key('restaurants', filename))
     };
     
+    console.log(`✅ Logo procesado: ${req.uploadedFile.filename}`);
     console.log('✅ Archivo procesado, URL:', req.uploadedFile.url)
     next();
   });

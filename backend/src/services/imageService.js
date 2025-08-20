@@ -4,6 +4,23 @@ const { UPLOAD } = require('../utils/constants');
 const S3Service = require('./s3Service');
 const config = require('../config/environment');
 
+// Configuración específica para Sharp en AWS Lambda
+if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  console.log('🔧 Configurando Sharp para AWS Lambda...');
+  // Configurar Sharp para Lambda
+  sharp.cache(false); // Deshabilitar cache
+  sharp.concurrency(1); // Usar solo 1 thread
+  console.log('✅ Sharp configurado para Lambda');
+} else {
+  console.log('🔧 Sharp ejecutándose en entorno local');
+}
+
+// Log de información de Sharp
+console.log('🔍 Información de Sharp:');
+console.log('  - Versión:', sharp.versions.sharp);
+console.log('  - Versión de libvips:', sharp.versions.vips);
+console.log('  - Entorno:', process.env.AWS_LAMBDA_FUNCTION_NAME ? 'AWS Lambda' : 'Local');
+
 class ImageService {
   // Procesar y optimizar imagen usando buffer
   static async processImageBuffer(buffer, options = {}) {
@@ -19,18 +36,15 @@ class ImageService {
 
       console.log(`🖼️ Procesando imagen desde buffer: ${filename}`);
       
+      // NO llamar a metadata() aquí - ya se validó en validateImageBuffer
       const image = sharp(buffer);
-      const metadata = await image.metadata();
       
-      console.log(`📊 Metadatos de imagen:`, {
-        format: metadata.format,
-        width: metadata.width,
-        height: metadata.height,
-        size: metadata.size
-      });
+      // Usar dimensiones por defecto si no se especifican
+      const targetWidth = width || 800;
+      const targetHeight = height || 800;
 
       // Redimensionar manteniendo proporción
-      const resizedImage = image.resize(width, height, {
+      const resizedImage = image.resize(targetWidth, targetHeight, {
         fit: 'inside',
         withoutEnlargement: true
       });
@@ -86,10 +100,10 @@ class ImageService {
         url: s3Result.url,
         s3Key: s3Result.key,
         metadata: {
-          width: metadata.width,
-          height: metadata.height,
-          format: metadata.format,
-          size: metadata.size
+          width: targetWidth,
+          height: targetHeight,
+          format: format,
+          size: processedBuffer.length
         }
       };
     } catch (error) {
@@ -153,9 +167,34 @@ class ImageService {
   // Validar imagen desde buffer
   static async validateImageBuffer(buffer) {
     try {
-      console.log(`🔍 Validando imagen desde buffer`);
+      console.log(`🔍 Validando imagen desde buffer (${buffer?.length || 0} bytes)`);
       
-      const metadata = await sharp(buffer).metadata();
+      // Verificar que el buffer sea válido
+      if (!Buffer.isBuffer(buffer)) {
+        throw new Error('El buffer no es válido');
+      }
+      
+      if (buffer.length === 0) {
+        throw new Error('El buffer está vacío');
+      }
+      
+      // Intentar crear una instancia de Sharp
+      let sharpInstance;
+      try {
+        sharpInstance = sharp(buffer);
+      } catch (sharpError) {
+        console.error('❌ Error creando instancia de Sharp:', sharpError);
+        throw new Error('Error al inicializar Sharp');
+      }
+      
+      // Obtener metadata
+      let metadata;
+      try {
+        metadata = await sharpInstance.metadata();
+      } catch (metadataError) {
+        console.error('❌ Error obteniendo metadata:', metadataError);
+        throw new Error(`No se pudo leer la imagen: ${metadataError.message}`);
+      }
       
       console.log(`📊 Metadatos de validación:`, {
         format: metadata.format,
@@ -176,9 +215,6 @@ class ImageService {
       if (!allowedFormats.includes(metadata.format)) {
         throw new Error(`Formato de imagen no soportado: ${metadata.format}. Formatos permitidos: ${allowedFormats.join(', ')}`);
       }
-
-      // Verificar que la imagen se puede leer correctamente
-      await sharp(buffer).metadata();
       
       console.log(`✅ Imagen válida: ${metadata.format} ${metadata.width}x${metadata.height}`);
       return metadata;
