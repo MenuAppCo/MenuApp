@@ -89,6 +89,14 @@ const uploadImage = (type = 'general') => {
         s3Url: getS3Url(getS3Key(type, filename))
       };
       
+      console.log('🔍 DEBUG - Archivo procesado en middleware:');
+      console.log('  - Filename:', req.uploadedFile.filename);
+      console.log('  - Originalname:', req.uploadedFile.originalname);
+      console.log('  - Mimetype:', req.uploadedFile.mimetype);
+      console.log('  - Size:', req.uploadedFile.size);
+      console.log('  - Buffer length:', req.uploadedFile.buffer?.length || 'undefined');
+      console.log('  - Buffer type:', typeof req.uploadedFile.buffer);
+      
       next();
     });
   };
@@ -164,6 +172,13 @@ const uploadRestaurantLogoField = (req, res, next) => {
       s3Url: getS3Url(getS3Key('restaurants', filename))
     };
     
+    console.log('🔍 DEBUG - Logo procesado en middleware:');
+    console.log('  - Filename:', req.uploadedFile.filename);
+    console.log('  - Originalname:', req.uploadedFile.originalname);
+    console.log('  - Mimetype:', req.uploadedFile.mimetype);
+    console.log('  - Size:', req.uploadedFile.size);
+    console.log('  - Buffer length:', req.uploadedFile.buffer?.length || 'undefined');
+    console.log('  - Buffer type:', typeof req.uploadedFile.buffer);
     console.log('✅ Archivo procesado, URL:', req.uploadedFile.url)
     next();
   });
