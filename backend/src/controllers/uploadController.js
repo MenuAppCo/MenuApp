@@ -22,11 +22,15 @@ const uploadProductImage = async (req, res) => {
       return res.status(404).json(errorResponse(ERROR_MESSAGES.NOT_FOUND, 404));
     }
 
-    console.log("🔍 DEBUG - Controlador recibió:");
-    console.log("  - uploadedFile:", uploadedFile);
-    console.log("  - buffer type:", typeof uploadedFile.buffer);
-    console.log("  - buffer length:", uploadedFile.buffer?.length || 'undefined');
-    console.log("  - buffer is Buffer:", Buffer.isBuffer(uploadedFile.buffer));
+      console.log("🔍 DEBUG - Controlador recibió:");
+      console.log("  - uploadedFile:", uploadedFile);
+      console.log("  - buffer type:", typeof uploadedFile.buffer);
+      console.log("  - buffer length:", uploadedFile.buffer?.length || 'undefined');
+      console.log("  - buffer is Buffer:", Buffer.isBuffer(uploadedFile.buffer));
+      console.log("  - buffer first 100 bytes:", uploadedFile.buffer?.slice(0, 100));
+      console.log("  - buffer last 100 bytes:", uploadedFile.buffer?.slice(-100));
+      console.log("  - buffer first 100 bytes:", uploadedFile.buffer?.slice(0, 100));
+      console.log("  - buffer last 100 bytes:", uploadedFile.buffer?.slice(-100));
     
     // Validar imagen usando buffer
     await ImageService.validateImageBuffer(uploadedFile.buffer);
