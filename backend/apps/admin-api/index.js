@@ -67,7 +67,12 @@ module.exports.handler = (event, context) => {
   return serverlessExpress({
     app,
     binarySettings: {
-      contentTypes: ["*/*"]
+      contentTypes: [
+        "multipart/form-data",
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ]
     }
   })(event, context);
 };
