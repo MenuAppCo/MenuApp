@@ -4,7 +4,6 @@ const fs = require('fs');
 const { UPLOAD } = require('../utils/constants');
 const { getS3Url, getS3Key } = require('../config/s3');
 
-// Configuración de almacenamiento en memoria para Lambda
 const storage = multer.memoryStorage();
 
 // Filtro de archivos
