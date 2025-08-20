@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Este proyecto ahora soporta la subida de imágenes a Amazon S3 para almacenamiento persistente. En desarrollo local, las imágenes se guardan en el sistema de archivos local como fallback.
+Este proyecto soporta **exclusivamente** la subida de imágenes a Amazon S3 para almacenamiento persistente. No hay soporte para almacenamiento local en desarrollo.
 
 ## Variables de Entorno Requeridas
 
@@ -20,7 +20,7 @@ S3_BUCKET_NAME=production-menapp-images  # Valor por defecto si no se especifica
 
 ### Para Desarrollo Local
 ```bash
-# AWS S3 Configuration (opcional para desarrollo)
+# AWS S3 Configuration (REQUERIDO para desarrollo)
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
@@ -77,8 +77,8 @@ bucket-name/
 
 ### 3. Almacenamiento
 - ✅ S3 en producción
-- ✅ Sistema de archivos local en desarrollo
-- ✅ Fallback automático si S3 falla
+- ✅ S3 en desarrollo (requerido)
+- ❌ No hay fallback a almacenamiento local
 
 ### 4. Gestión de Archivos
 - ✅ Eliminación de imágenes
@@ -111,11 +111,12 @@ Los roles de Lambda tienen los siguientes permisos S3:
 
 ## Desarrollo Local
 
-Para desarrollo local sin S3:
+Para desarrollo local **CON S3**:
 
-1. No configures las variables de AWS
-2. Las imágenes se guardarán en `backend/uploads/`
-3. Las URLs serán relativas: `/uploads/products/image.jpg`
+1. **Configura OBLIGATORIAMENTE** las variables de AWS
+2. Las imágenes se subirán a S3
+3. Las URLs serán absolutas: `https://bucket.s3.region.amazonaws.com/products/image.jpg`
+4. **No hay soporte para almacenamiento local**
 
 ## Producción
 
