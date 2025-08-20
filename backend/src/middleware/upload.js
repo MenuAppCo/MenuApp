@@ -73,6 +73,10 @@ const uploadImage = (type = 'general') => {
       }
       
       console.log(`🔍 Archivo recibido: ${req.file.originalname} (${req.file.size} bytes, ${req.file.mimetype})`);
+      console.log(`  - Buffer type: ${typeof req.file.buffer}`);
+      console.log(`  - Buffer is Buffer: ${Buffer.isBuffer(req.file.buffer)}`);
+      console.log(`  - Buffer length: ${req.file.buffer?.length || 'undefined'}`);
+      console.log(`  - Buffer constructor: ${req.file.buffer?.constructor?.name || 'undefined'}`);
       
       // Generar nombre único para el archivo
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
