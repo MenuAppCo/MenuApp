@@ -19,18 +19,15 @@ class ImageService {
 
       console.log(`🖼️ Procesando imagen desde buffer: ${filename}`);
       
+      // NO llamar a metadata() aquí - ya se validó en validateImageBuffer
       const image = sharp(buffer);
-      const metadata = await image.metadata();
       
-      console.log(`📊 Metadatos de imagen:`, {
-        format: metadata.format,
-        width: metadata.width,
-        height: metadata.height,
-        size: metadata.size
-      });
+      // Usar dimensiones por defecto si no se especifican
+      const targetWidth = width || 800;
+      const targetHeight = height || 800;
 
       // Redimensionar manteniendo proporción
-      const resizedImage = image.resize(width, height, {
+      const resizedImage = image.resize(targetWidth, targetHeight, {
         fit: 'inside',
         withoutEnlargement: true
       });
@@ -86,10 +83,10 @@ class ImageService {
         url: s3Result.url,
         s3Key: s3Result.key,
         metadata: {
-          width: metadata.width,
-          height: metadata.height,
-          format: metadata.format,
-          size: metadata.size
+          width: targetWidth,
+          height: targetHeight,
+          format: format,
+          size: processedBuffer.length
         }
       };
     } catch (error) {
@@ -153,11 +150,7 @@ class ImageService {
   // Validar imagen desde buffer
   static async validateImageBuffer(buffer) {
     try {
-      console.log(`🔍 Validando imagen desde buffer`);
-      console.log(`  - Buffer type:`, typeof buffer);
-      console.log(`  - Buffer length:`, buffer?.length || 'undefined');
-      console.log(`  - Buffer is Buffer:`, Buffer.isBuffer(buffer));
-      console.log(`  - Buffer first 100 bytes:`, buffer?.slice(0, 100));
+      console.log(`🔍 Validando imagen desde buffer (${buffer?.length || 0} bytes)`);
       
       const metadata = await sharp(buffer).metadata();
       

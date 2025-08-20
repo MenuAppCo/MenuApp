@@ -72,16 +72,7 @@ const uploadImage = (type = 'general') => {
         });
       }
       
-      console.log('🔍 DEBUG - Archivo recibido de Multer:');
-      console.log('  - req.file:', req.file);
-      console.log('  - req.file.buffer type:', typeof req.file.buffer);
-      console.log('  - req.file.buffer length:', req.file.buffer?.length || 'undefined');
-      console.log('  - req.file.buffer is Buffer:', Buffer.isBuffer(req.file.buffer));
-      console.log('  - req.file.originalname:', req.file.originalname);
-      console.log('  - req.file.mimetype:', req.file.mimetype);
-      console.log('  - req.file.size:', req.file.size);
-      console.log('  - req.file.buffer first 100 bytes:', req.file.buffer?.slice(0, 100));
-      console.log('  - req.file.buffer last 100 bytes:', req.file.buffer?.slice(-100));
+      console.log(`🔍 Archivo recibido: ${req.file.originalname} (${req.file.size} bytes, ${req.file.mimetype})`);
       
       // Generar nombre único para el archivo
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -100,15 +91,7 @@ const uploadImage = (type = 'general') => {
         s3Url: getS3Url(getS3Key(type, filename))
       };
       
-      console.log('🔍 DEBUG - Archivo procesado en middleware:');
-      console.log('  - Filename:', req.uploadedFile.filename);
-      console.log('  - Originalname:', req.uploadedFile.originalname);
-      console.log('  - Mimetype:', req.uploadedFile.mimetype);
-      console.log('  - Size:', req.uploadedFile.size);
-      console.log('  - Buffer length:', req.uploadedFile.buffer?.length || 'undefined');
-      console.log('  - Buffer type:', typeof req.uploadedFile.buffer);
-      console.log('  - Buffer first 100 bytes:', req.uploadedFile.buffer?.slice(0, 100));
-      console.log('  - Buffer last 100 bytes:', req.uploadedFile.buffer?.slice(-100));
+      console.log(`✅ Archivo procesado: ${req.uploadedFile.filename}`);
       
       next();
     });
@@ -166,16 +149,7 @@ const uploadRestaurantLogoField = (req, res, next) => {
       });
     }
     
-    console.log('🔍 DEBUG - Logo recibido de Multer:');
-    console.log('  - req.file:', req.file);
-    console.log('  - req.file.buffer type:', typeof req.file.buffer);
-    console.log('  - req.file.buffer length:', req.file.buffer?.length || 'undefined');
-    console.log('  - req.file.buffer is Buffer:', Buffer.isBuffer(req.file.buffer));
-    console.log('  - req.file.originalname:', req.file.originalname);
-    console.log('  - req.file.mimetype:', req.file.mimetype);
-    console.log('  - req.file.size:', req.file.size);
-    console.log('  - req.file.buffer first 100 bytes:', req.file.buffer?.slice(0, 100));
-    console.log('  - req.file.buffer last 100 bytes:', req.file.buffer?.slice(-100));
+    console.log(`🔍 Logo recibido: ${req.file.originalname} (${req.file.size} bytes, ${req.file.mimetype})`);
     
     console.log('✅ Archivo recibido:', req.file.originalname)
     
@@ -196,13 +170,7 @@ const uploadRestaurantLogoField = (req, res, next) => {
       s3Url: getS3Url(getS3Key('restaurants', filename))
     };
     
-    console.log('🔍 DEBUG - Logo procesado en middleware:');
-    console.log('  - Filename:', req.uploadedFile.filename);
-    console.log('  - Originalname:', req.uploadedFile.originalname);
-    console.log('  - Mimetype:', req.uploadedFile.mimetype);
-    console.log('  - Size:', req.uploadedFile.size);
-    console.log('  - Buffer length:', req.uploadedFile.buffer?.length || 'undefined');
-    console.log('  - Buffer type:', typeof req.uploadedFile.buffer);
+    console.log(`✅ Logo procesado: ${req.uploadedFile.filename}`);
     console.log('✅ Archivo procesado, URL:', req.uploadedFile.url)
     next();
   });
