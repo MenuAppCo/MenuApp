@@ -154,6 +154,10 @@ class ImageService {
   static async validateImageBuffer(buffer) {
     try {
       console.log(`🔍 Validando imagen desde buffer`);
+      console.log(`  - Buffer type:`, typeof buffer);
+      console.log(`  - Buffer length:`, buffer?.length || 'undefined');
+      console.log(`  - Buffer is Buffer:`, Buffer.isBuffer(buffer));
+      console.log(`  - Buffer first 100 bytes:`, buffer?.slice(0, 100));
       
       const metadata = await sharp(buffer).metadata();
       

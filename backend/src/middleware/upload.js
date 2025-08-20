@@ -72,6 +72,17 @@ const uploadImage = (type = 'general') => {
         });
       }
       
+      console.log('🔍 DEBUG - Archivo recibido de Multer:');
+      console.log('  - req.file:', req.file);
+      console.log('  - req.file.buffer type:', typeof req.file.buffer);
+      console.log('  - req.file.buffer length:', req.file.buffer?.length || 'undefined');
+      console.log('  - req.file.buffer is Buffer:', Buffer.isBuffer(req.file.buffer));
+      console.log('  - req.file.originalname:', req.file.originalname);
+      console.log('  - req.file.mimetype:', req.file.mimetype);
+      console.log('  - req.file.size:', req.file.size);
+      console.log('  - req.file.buffer first 100 bytes:', req.file.buffer?.slice(0, 100));
+      console.log('  - req.file.buffer last 100 bytes:', req.file.buffer?.slice(-100));
+      
       // Generar nombre único para el archivo
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       const ext = path.extname(req.file.originalname);
@@ -96,6 +107,8 @@ const uploadImage = (type = 'general') => {
       console.log('  - Size:', req.uploadedFile.size);
       console.log('  - Buffer length:', req.uploadedFile.buffer?.length || 'undefined');
       console.log('  - Buffer type:', typeof req.uploadedFile.buffer);
+      console.log('  - Buffer first 100 bytes:', req.uploadedFile.buffer?.slice(0, 100));
+      console.log('  - Buffer last 100 bytes:', req.uploadedFile.buffer?.slice(-100));
       
       next();
     });
@@ -152,6 +165,17 @@ const uploadRestaurantLogoField = (req, res, next) => {
         }
       });
     }
+    
+    console.log('🔍 DEBUG - Logo recibido de Multer:');
+    console.log('  - req.file:', req.file);
+    console.log('  - req.file.buffer type:', typeof req.file.buffer);
+    console.log('  - req.file.buffer length:', req.file.buffer?.length || 'undefined');
+    console.log('  - req.file.buffer is Buffer:', Buffer.isBuffer(req.file.buffer));
+    console.log('  - req.file.originalname:', req.file.originalname);
+    console.log('  - req.file.mimetype:', req.file.mimetype);
+    console.log('  - req.file.size:', req.file.size);
+    console.log('  - req.file.buffer first 100 bytes:', req.file.buffer?.slice(0, 100));
+    console.log('  - req.file.buffer last 100 bytes:', req.file.buffer?.slice(-100));
     
     console.log('✅ Archivo recibido:', req.file.originalname)
     
