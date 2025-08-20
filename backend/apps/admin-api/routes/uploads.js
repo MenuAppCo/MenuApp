@@ -1,5 +1,5 @@
 const express = require('express');
-const { uploadProductImage, uploadCategoryImage, uploadRestaurantLogo } = require('../../../src/middleware/upload');
+const { uploadProductImage, uploadCategoryImage, uploadRestaurantLogoField } = require('../../../src/middleware/upload');
 const {
   uploadProductImage: uploadProductImageController,
   uploadCategoryImage: uploadCategoryImageController,
@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post('/products/:productId', uploadProductImage, uploadProductImageController);
 router.post('/categories/:categoryId', uploadCategoryImage, uploadCategoryImageController);
-router.post('/restaurant/logo', uploadRestaurantLogo, uploadRestaurantLogoController);
+router.post('/restaurant/logo', uploadRestaurantLogoField, uploadRestaurantLogoController);
 router.delete('/restaurant/logo', (req, res) => {
   req.params.type = 'restaurant';
   req.params.id = req.restaurant.id;

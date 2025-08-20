@@ -29,14 +29,9 @@ const config = {
     const required = [
       'DATABASE_URL',
       'SUPABASE_URL',
-      'SUPABASE_SERVICE_KEY'
+      'SUPABASE_SERVICE_KEY',
+      'S3_BUCKET_NAME' // S3 es requerido para todas las operaciones de imagen
     ];
-    
-    // S3_BUCKET_NAME ya tiene valor por defecto, no es crítico
-    // Solo validar que esté presente si se especifica explícitamente
-    if (process.env.S3_BUCKET_NAME && !config.S3_BUCKET_NAME) {
-      required.push('S3_BUCKET_NAME');
-    }
     
     const missing = required.filter(key => !config[key]);
     

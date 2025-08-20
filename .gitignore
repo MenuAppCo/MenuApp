@@ -23,8 +23,7 @@ Thumbs.db
 dist/
 build/
 
-# Uploads directory (development)
-backend/uploads/
+# No hay uploads locales - solo S3
 
 # AWS credentials (development)
 .aws/
