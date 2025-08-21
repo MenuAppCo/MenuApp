@@ -9,11 +9,13 @@ resource "aws_lambda_function" "admin_api_lambda" {
 
   environment {
     variables = {
-      SERVICE_NAME         = "admin-api-lambda"
-      DATABASE_URL         = var.database_url
-      SUPABASE_URL         = var.supabase_url
-      SUPABASE_SERVICE_KEY = var.supabase_service_key
-      ADMIN_FRONTEND_URL   = var.admin_frontend_url
+      SERVICE_NAME          = "admin-api-lambda"
+      DATABASE_URL          = var.database_url
+      SUPABASE_URL          = var.supabase_url
+      SUPABASE_SERVICE_KEY  = var.supabase_service_key
+      ADMIN_FRONTEND_URL    = var.admin_frontend_url
+      S3_IMAGES_BUCKET_NAME = var.s3_images_bucket_name
+      AWS_REGION            = var.aws_region
     }
   }
 

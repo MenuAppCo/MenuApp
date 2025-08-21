@@ -1,3 +1,8 @@
+locals {
+  aws_region = "us-east-1"
+}
+
+
 terraform {
   required_providers {
     aws = {
@@ -8,7 +13,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = local.aws_region
 }
 
 
@@ -39,6 +44,8 @@ module "lambda" {
   public_frontend_url         = var.PUBLIC_FRONTEND_URL
   admin_api_lambda_image_tag  = var.ADMIN_BACKEND_IMAGE_TAG
   public_api_lambda_image_tag = var.PUBLIC_BACKEND_IMAGE_TAG
+  s3_images_bucket_name       = module.s3.images_bucket_name
+  aws_region                  = local.aws_region
 }
 
 
@@ -52,8 +59,7 @@ module "apigw" {
 }
 
 module "s3" {
-  source         = "./s3"
-  environment    = var.environment
-  app            = var.app
-  s3_bucket_name = var.s3_bucket_name
+  source      = "./s3"
+  environment = var.environment
+  app         = var.app
 }

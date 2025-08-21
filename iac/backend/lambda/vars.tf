@@ -67,3 +67,13 @@ variable "public_api_lambda_image_tag" {
   description = "public api lambda image tag"
   type        = string
 }
+
+variable "s3_images_bucket_name" {
+  description = "s3 images bucket name"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "aws region"
+  type        = string
+}
