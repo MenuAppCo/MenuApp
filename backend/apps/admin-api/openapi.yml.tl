@@ -1099,7 +1099,7 @@ paths:
 
   /api/v1/uploads/products/{productId}:
     options:
-      summary: CORS preflight for product image upload
+      summary: CORS preflight for product image uploads
       responses:
         '200':
           description: CORS OK
