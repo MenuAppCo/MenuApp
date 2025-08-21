@@ -1,4 +1,5 @@
 const { s3, S3_CONFIG, getS3Url, getS3Key } = require('../config/s3');
+const {  PutObjectCommand } = require("@aws-sdk/client-s3");
 
 class S3Service {
   // Subir archivo a S3
@@ -11,14 +12,10 @@ class S3Service {
         Key: key,
         Body: buffer,
         ContentType: contentType,
-        Metadata: metadata,
-        // Configurar cache para imágenes
-        CacheControl: 'public, max-age=31536000', // 1 año
-        // Configurar ACL privado (por defecto)
-        ACL: 'private'
+        Metadata: metadata
       };
 
-      const result = await s3.upload(params).promise();
+      const result = await s3.send( new PutObjectCommand(params));
       
       console.log(`✅ Archivo subido exitosamente a S3: ${result.Location}`);
       
