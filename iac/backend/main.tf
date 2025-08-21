@@ -45,7 +45,6 @@ module "lambda" {
   admin_api_lambda_image_tag  = var.ADMIN_BACKEND_IMAGE_TAG
   public_api_lambda_image_tag = var.PUBLIC_BACKEND_IMAGE_TAG
   s3_images_bucket_name       = module.s3.images_bucket_name
-  aws_region                  = local.aws_region
 }
 
 

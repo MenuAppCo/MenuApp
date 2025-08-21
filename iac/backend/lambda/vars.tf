@@ -72,8 +72,3 @@ variable "s3_images_bucket_name" {
   description = "s3 images bucket name"
   type        = string
 }
-
-variable "aws_region" {
-  description = "aws region"
-  type        = string
-}
