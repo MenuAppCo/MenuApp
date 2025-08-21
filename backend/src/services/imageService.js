@@ -2,7 +2,6 @@ const sharp = require('sharp');
 const path = require('path');
 const { UPLOAD } = require('../utils/constants');
 const S3Service = require('./s3Service');
-const config = require('../config/environment');
 
 // Configuración específica para Sharp en AWS Lambda
 if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
