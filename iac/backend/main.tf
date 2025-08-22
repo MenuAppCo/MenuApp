@@ -58,9 +58,10 @@ module "apigw" {
 }
 
 module "s3" {
-  source      = "./s3"
-  environment = var.environment
-  app         = var.app
+  source               = "./s3"
+  environment          = var.environment
+  app                  = var.app
+  media_cloudfront_arn = module.cloudfront.media_cdn.arn
 }
 
 module "cloudfront" {

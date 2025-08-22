@@ -70,6 +70,20 @@ resource "aws_s3_bucket_policy" "images" {
           aws_s3_bucket.images.arn,
           "${aws_s3_bucket.images.arn}/*"
         ]
+      },
+      {
+        Sid    = "AllowMediaCloudFrontServicePrincipal"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.images.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = var.media_cloudfront_arn
+          }
+        }
       }
     ]
   })
