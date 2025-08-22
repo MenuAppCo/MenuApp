@@ -117,14 +117,14 @@ const uploadCategoryImage = async (req, res) => {
         id: parseInt(categoryId)
       },
       data: {
-        imageUrl: processedImage.url
+        imageUrl: processedImage.s3Key
       }
     });
 
     res.json(successResponse({
       category: updatedCategory,
       image: {
-        url: processedImage.url,
+        url: processedImage.s3Key,
         sizes: imageSizes,
         metadata: processedImage.metadata
       }
@@ -163,7 +163,7 @@ const uploadRestaurantLogo = async (req, res) => {
         id: req.restaurant.id
       },
       data: {
-        logoUrl: processedImage.url
+        logoUrl: processedImage.s3Key
       },
       select: {
         id: true,
