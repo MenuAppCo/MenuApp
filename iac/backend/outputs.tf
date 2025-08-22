@@ -13,3 +13,7 @@ output "public_api_domain_regional_domain_name" {
 output "public_api_domain_regional_zone_id" {
   value = module.apigw.public_api_domain_regional_zone_id
 }
+
+output "media_cdn" {
+  value = module.media_cdn
+}
