@@ -92,7 +92,7 @@ class ImageService {
         `image/${format}`
       );
 
-      console.log(`💾 Imagen procesada y subida a S3: ${s3Result.url}`);
+      console.log(`💾 Imagen procesada y subida a S3:`, s3Result);
 
       return {
         buffer: processedBuffer,
