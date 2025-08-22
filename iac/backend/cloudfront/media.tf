@@ -1,7 +1,7 @@
 resource "aws_cloudfront_distribution" "media" {
-  enabled             = true
-  is_ipv6_enabled     = true
-  price_class         = "PriceClass_100"
+  enabled         = true
+  is_ipv6_enabled = true
+  price_class     = "PriceClass_100"
 
   aliases = [
     "media.menapp.co"
