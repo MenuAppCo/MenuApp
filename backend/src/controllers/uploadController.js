@@ -49,7 +49,7 @@ const uploadProductImage = async (req, res) => {
         id: parseInt(productId)
       },
       data: {
-        imageUrl: processedImage.url
+        imageUrl: processedImage.s3Key
       },
       include: {
         category: {

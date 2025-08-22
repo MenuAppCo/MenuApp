@@ -96,7 +96,6 @@ class ImageService {
 
       return {
         buffer: processedBuffer,
-        url: s3Result.url,
         s3Key: s3Result.key,
         metadata: {
           width: targetWidth,

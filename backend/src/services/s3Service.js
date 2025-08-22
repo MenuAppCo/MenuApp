@@ -2,36 +2,26 @@ const { s3, S3_CONFIG, getS3Url, getS3Key } = require('../config/s3');
 const {  PutObjectCommand } = require("@aws-sdk/client-s3");
 
 class S3Service {
-  // Subir archivo a S3
   static async uploadFile(buffer, key, contentType, metadata = {}) {
     try {
-      console.log(`📤 Subiendo archivo a S3: ${key}`);
-      
-      const params = {
+      const result = await s3.send( new PutObjectCommand({
         Bucket: S3_CONFIG.bucket,
         Key: key,
         Body: buffer,
         ContentType: contentType,
         Metadata: metadata
-      };
-
-      const result = await s3.send( new PutObjectCommand(params));
-      
-      console.log(`✅ Archivo subido exitosamente a S3: ${result.Location}`);
+      }));
       
       return {
-        key: result.Key,
-        url: result.Location,
+        key: key,
         etag: result.ETag,
         versionId: result.VersionId
       };
     } catch (error) {
-      console.error('❌ Error subiendo archivo a S3:', error);
-      throw new Error(`Error al subir archivo a S3: ${error.message}`);
+      throw error;
     }
   }
 
-  // Subir imagen procesada a S3
   static async uploadImage(buffer, type, filename, contentType = 'image/webp') {
     try {
       const key = getS3Key(type, filename);
@@ -43,16 +33,12 @@ class S3Service {
 
       return await this.uploadFile(buffer, key, contentType, metadata);
     } catch (error) {
-      console.error('❌ Error subiendo imagen a S3:', error);
       throw error;
     }
   }
 
-  // Subir múltiples tamaños de imagen
   static async uploadImageSizes(imageBuffers, type, baseFilename) {
     try {
-      console.log(`📤 Subiendo múltiples tamaños de imagen a S3: ${baseFilename}`);
-      
       const results = {};
       
       for (const [sizeName, imageData] of Object.entries(imageBuffers)) {
@@ -164,12 +150,10 @@ class S3Service {
     }
   }
 
-  // Obtener URL pública de S3
   static getPublicUrl(key) {
     return getS3Url(key);
   }
 
-  // Verificar si archivo existe en S3
   static async fileExists(key) {
     try {
       const params = {
@@ -187,7 +171,6 @@ class S3Service {
     }
   }
 
-  // Obtener metadatos del archivo
   static async getFileMetadata(key) {
     try {
       const params = {
@@ -212,7 +195,6 @@ class S3Service {
     }
   }
 
-  // Generar URL pre-firmada para acceso temporal
   static async generatePresignedUrl(key, expiresIn = 3600) {
     try {
       const params = {
