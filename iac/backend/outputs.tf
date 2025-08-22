@@ -15,5 +15,5 @@ output "public_api_domain_regional_zone_id" {
 }
 
 output "media_cdn" {
-  value = module.media_cdn
+  value = module.cloudfront.media_cdn
 }
