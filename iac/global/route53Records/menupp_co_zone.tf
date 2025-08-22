@@ -66,8 +66,8 @@ resource "aws_route53_record" "menapp_media_api_apex" {
   type    = "A"
 
   alias {
-    name                   = data.terraform_remote_state.outputs.media_cdn.domain_name
-    zone_id                = data.terraform_remote_state.outputs.media_cdn.hosted_zone_id
+    name                   = data.terraform_remote_state.admin_api.outputs.media_cdn.domain_name
+    zone_id                = data.terraform_remote_state.admin_api.outputs.media_cdn.hosted_zone_id
     evaluate_target_health = false
   }
 }
