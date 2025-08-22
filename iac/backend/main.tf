@@ -62,3 +62,12 @@ module "s3" {
   environment = var.environment
   app         = var.app
 }
+
+module "cloudfront" {
+  source                               = "./cloudfront"
+  environment                          = var.environment
+  app                                  = var.app
+  s3_media_bucket_regional_domain_name = module.s3.images_bucket_regional_domain_name
+  s3_media_bucket_id                   = module.s3.images_bucket_id
+  menapp_certificate_arn               = data.terraform_remote_state.route53.outputs.menapp_certificate_validation.certificate_arn
+}
