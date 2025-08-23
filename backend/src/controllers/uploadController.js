@@ -164,18 +164,6 @@ const uploadRestaurantLogo = async (req, res) => {
       },
       data: {
         logoUrl: processedImage.s3Key
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        slug: true,
-        logoUrl: true,
-        planType: true,
-        theme: true,
-        primaryColor: true,
-        secondaryColor: true,
-        fontFamily: true
       }
     });
 
