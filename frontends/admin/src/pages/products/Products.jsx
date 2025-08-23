@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Eye, Star } from 'lucide-react'
+import { useState } from 'react'
+import { Plus, Edit, Trash2, Eye, Search, Filter, X } from 'lucide-react'
 import { useProducts, useDeleteProduct } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
 import { useMenus } from '../../hooks/useMenus'
@@ -7,7 +7,6 @@ import { useRestaurant } from '../../hooks/useRestaurant'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import ProductModal from '../../components/modals/ProductModal'
 import ProductViewModal from '../../components/modals/ProductViewModal'
-import ConfirmModal from '../../components/modals/ConfirmModal'
 import { buildImageUrl } from '../../utils/imageUtils'
 
 const Products = () => {

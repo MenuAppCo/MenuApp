@@ -3,7 +3,6 @@ import { Plus, Edit, Trash2, FolderOpen } from 'lucide-react'
 import { useCategories, useDeleteCategory } from '../../hooks/useCategories'
 import { useMenus } from '../../hooks/useMenus'
 import CategoryModal from '../../components/modals/CategoryModal'
-import ConfirmModal from '../../components/modals/ConfirmModal'
 import { buildImageUrl } from '../../utils/imageUtils'
 
 const Categories = () => {

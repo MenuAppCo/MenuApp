@@ -51,7 +51,7 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
   useEffect(() => {
     if (category) {
       setValue('name', category.name)
-      setValue('nameEn', category.nameEn || '')
+      setValue('nameEn', category.descriptionEn || '')
       setValue('description', category.description || '')
       setValue('descriptionEn', category.descriptionEn || '')
       setValue('order', category.order)
@@ -81,7 +81,7 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
         setValue('menuId', menusData.data.data[0].id)
       }
     }
-  }, [category, setValue, reset, menusData])
+  }, [category, setValue, reset, menusData, imagePreview])
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]

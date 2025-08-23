@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Upload, Trash2, Save } from 'lucide-react'
-import { useRestaurant, useUpdateRestaurant } from '../../hooks/useRestaurant'
+import { Upload, Trash2, Settings as SettingsIcon, Palette, Globe, Bell, Shield, Instagram, Facebook } from 'lucide-react'
+import { useRestaurant, useRestaurantSettings, useUpdateRestaurant, useUpdateRestaurantSettings, useUploadRestaurantLogo, useRestaurantSocialMedia, useUpdateRestaurantSocialMedia } from '../../hooks/useRestaurant'
+import { useTheme } from '../../hooks/useTheme'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { toast } from 'react-hot-toast'
 import { buildImageUrl } from '../../utils/imageUtils'
 
