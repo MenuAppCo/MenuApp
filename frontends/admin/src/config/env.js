@@ -6,6 +6,9 @@ export const config = {
   // URL del backend API
   apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000',
   
+  // URL para archivos de media (imágenes, etc.)
+  mediaUrl: import.meta.env.VITE_MEDIA_URL || 'media.menapp.co',
+  
   // Configuración de Supabase
   supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
   supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON,

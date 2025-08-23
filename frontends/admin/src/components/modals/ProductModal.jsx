@@ -63,7 +63,7 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
       setValue('featured', product.featured)
       // Construir URL completa para la imagen existente
       if (product.imageUrl) {
-        const fullImageUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${product.imageUrl.replace(/\\/g, '/')}`
+        const fullImageUrl = `https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${product.imageUrl.replace(/\\/g, '/')}`
         setImagePreview(fullImageUrl)
       } else {
         setImagePreview(null)
@@ -175,7 +175,7 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
         
         // Actualizar el preview con la nueva URL de la imagen
         if (uploadResult.data?.image?.url) {
-          setImagePreview(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${uploadResult.data.image.url.replace(/\\/g, '/')}`)
+          setImagePreview(`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${uploadResult.data.image.url.replace(/\\/g, '/')}`)
         }
       }
 

@@ -58,10 +58,10 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
       setValue('menuId', category.menuId)
       // Construir URL completa para la imagen existente
       if (category.imageUrl) {
-        const fullImageUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${category.imageUrl.replace(/\\/g, '/')}`
+        const fullImageUrl = `https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${category.imageUrl.replace(/\\/g, '/')}`
         console.log('🔍 Category Modal - Image URL Debug:')
         console.log('  Original imageUrl:', category.imageUrl)
-        console.log('  VITE_API_URL:', import.meta.env.VITE_API_URL)
+        console.log('  VITE_MEDIA_URL:', import.meta.env.VITE_MEDIA_URL)
         console.log('  Full image URL:', fullImageUrl)
         setImagePreview(fullImageUrl)
       } else {
@@ -142,7 +142,7 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
         
         // Actualizar el preview con la nueva URL de la imagen
         if (uploadResult.data?.image?.url) {
-          setImagePreview(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${uploadResult.data.image.url.replace(/\\/g, '/')}`)
+          setImagePreview(`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${uploadResult.data.image.url.replace(/\\/g, '/')}`)
         }
       }
 

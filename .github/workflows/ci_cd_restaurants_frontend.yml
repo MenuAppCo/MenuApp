@@ -31,7 +31,8 @@ jobs:
             "ENV": "production",
             "REGION": "us-east-1",
             "DEBUG": "false",
-            "VITE_API_URL": "${{ vars.PUBLIC_API_URL }}"
+            "VITE_API_URL": "${{ vars.PUBLIC_API_URL }}",
+            "VITE_MEDIA_URL": "${{ vars.MEDIA_URL }}"
           }
           EOF
 

@@ -195,7 +195,7 @@ const Settings = () => {
               {(logoPreview || restaurant?.data?.logoUrl) ? (
                 <div className="relative group w-28 h-28 mx-auto">
                   <img
-                    src={logoPreview || `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${restaurant?.data?.logoUrl}`}
+                    src={logoPreview || `https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${restaurant?.data?.logoUrl}`}
                     alt="Logo"
                     className="w-28 h-28 object-cover rounded-lg border shadow"
                   />

@@ -7,16 +7,13 @@ export const getImageUrl = (imagePath) => {
     return imagePath;
   }
   
-  // Si es una ruta relativa, construir la URL completa
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-  
-  // Remover /api del final si existe
-  const cleanBaseUrl = baseUrl.replace(/\/api$/, '');
+  // Si es una ruta relativa, construir la URL completa usando MEDIA_URL
+  const baseUrl = import.meta.env.VITE_MEDIA_URL || 'media.menapp.co';
   
   // Asegurar que la ruta comience con /
   const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
   
-  return `${cleanBaseUrl}${cleanPath}`;
+  return `https://${baseUrl}${cleanPath}`;
 };
 
 // Función para obtener URL de imagen optimizada

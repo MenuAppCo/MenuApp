@@ -145,7 +145,7 @@ const Categories = () => {
                 <div className="p-3 rounded-lg bg-blue-100">
                   {category.imageUrl ? (
                     <img
-                      src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${category.imageUrl.replace(/\\/g, '/')}`}
+                      src={`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${category.imageUrl.replace(/\\/g, '/')}`}
                       alt={category.name}
                       className="h-6 w-6 object-cover"
                       onError={(e) => {

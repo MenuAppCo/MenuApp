@@ -202,7 +202,7 @@ const Products = () => {
               <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg mb-4 overflow-hidden">
                 {product.imageUrl ? (
                   <img
-                    src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${product.imageUrl}`}
+                    src={`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${product.imageUrl}`}
                     alt={product.name}
                     className="w-full h-48 object-cover"
                   />
