@@ -107,7 +107,7 @@ const uploadRestaurantLogo = uploadImage('restaurants');
 const uploadRestaurantLogoField = (req, res, next) => {
   console.log('🔄 Procesando upload de logo del restaurante...')
   
-  upload.single('logo')(req, res, (err) => {
+  upload.single('image')(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       console.log('❌ Error de Multer:', err.code)
       if (err.code === 'LIMIT_FILE_SIZE') {
