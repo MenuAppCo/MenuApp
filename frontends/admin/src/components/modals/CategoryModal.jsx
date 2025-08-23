@@ -49,39 +49,44 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
   })
 
   useEffect(() => {
-    if (category) {
-      setValue('name', category.name)
-      setValue('nameEn', category.descriptionEn || '')
-      setValue('description', category.description || '')
-      setValue('descriptionEn', category.descriptionEn || '')
-      setValue('order', category.order)
-      setValue('isVisible', category.isVisible)
-      setValue('menuId', category.menuId)
-      // Construir URL completa para la imagen existente
-      if (category.imageUrl) {
-        const fullImageUrl = buildImageUrl(category.imageUrl);
-        console.log('🔍 Category Modal - Image URL Debug:')
-        console.log('  Original imageUrl:', category.imageUrl)
-        console.log('  VITE_MEDIA_URL:', import.meta.env.VITE_MEDIA_URL)
-        console.log('  Full image URL:', fullImageUrl)
-        setImagePreview(fullImageUrl)
-      } else {
-        setImagePreview(null)
-      }
-    } else {
-      reset()
-      // Limpiar URL del objeto si existe
-      if (imagePreview && imagePreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imagePreview)
-      }
+    if (!category) {
+      reset({
+        name: '',
+        nameEn: '',
+        description: '',
+        descriptionEn: '',
+        order: 1,
+        isVisible: true,
+        menuId: undefined,
+      })
+
       setImagePreview(null)
       setImageFile(null)
-      // Si no hay menús cargados, no establecer menuId por defecto
+
       if (menusData?.data?.data?.length > 0) {
         setValue('menuId', menusData.data.data[0].id)
       }
+
+      return
     }
-  }, [category, setValue, reset, menusData, imagePreview])
+
+    setValue('name', category.name)
+    setValue('nameEn', category.descriptionEn || '')
+    setValue('description', category.description || '')
+    setValue('descriptionEn', category.descriptionEn || '')
+    setValue('order', category.order)
+    setValue('isVisible', category.isVisible)
+    setValue('menuId', category.menuId)
+
+    if (category.imageUrl) {
+      const fullImageUrl = buildImageUrl(category.imageUrl);
+      setImagePreview(fullImageUrl)
+    } else {
+      setImagePreview(null)
+    }
+    setImageFile(null)
+
+  }, [category, setValue, reset, menusData])
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]

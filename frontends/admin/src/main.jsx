@@ -6,11 +6,10 @@ import App from './App.jsx'
 import './index.css'
 import { AuthProvider } from './contexts/AuthContext.jsx'
 
-// Crear cliente de React Query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutos
+      staleTime: 5 * 60 * 1000,
       retry: 1,
       retryDelay: 1000,
       refetchOnWindowFocus: false,

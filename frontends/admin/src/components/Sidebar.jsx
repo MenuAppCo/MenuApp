@@ -16,14 +16,14 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     await signOut()
-    navigate('/login', { replace: true }) // Redirigir al login
+    navigate('/login', { replace: true })
   }
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
     { name: 'Menús', href: '/menus', icon: BookOpen },
-    { name: 'Productos', href: '/products', icon: Package },
     { name: 'Categorías', href: '/categories', icon: FolderOpen },
+    { name: 'Productos', href: '/products', icon: Package },
     { name: 'Configuración', href: '/settings', icon: Settings },
   ]
 

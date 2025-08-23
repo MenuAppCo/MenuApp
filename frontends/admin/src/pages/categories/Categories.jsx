@@ -16,21 +16,10 @@ const Categories = () => {
   const { data: categoriesData, isLoading, error } = useCategories(filters)
   const deleteCategoryMutation = useDeleteCategory()
 
-  // Actualizar título de la página
   useEffect(() => {
     document.title = 'Categorías - Admin - MenuApp'
   }, [])
   
-  // Debug logs
-  console.log('📊 Categories Data:', categoriesData)
-  console.log('📋 Categories Array:', categoriesData?.data)
-  console.log('📈 Total Categories:', categoriesData?.meta?.total)
-  console.log('🔍 Category details:', categoriesData?.data?.map(cat => ({
-    id: cat.id,
-    name: cat.name,
-    _count: cat._count,
-    products: cat.products
-  })))
   
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta categoría? Esto también eliminará todos los productos asociados.')) {

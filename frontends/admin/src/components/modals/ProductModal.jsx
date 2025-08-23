@@ -52,26 +52,7 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
   })
 
   useEffect(() => {
-    if (product) {
-      // Modo edición: llenar formulario con datos del producto
-      setValue('name', product.name)
-      setValue('nameEn', product.nameEn || '')
-      setValue('description', product.description || '')
-      setValue('descriptionEn', product.descriptionEn || '')
-      setValue('price', product.price)
-      setValue('categoryId', product.categoryId)
-      setValue('visible', product.visible)
-      setValue('featured', product.featured)
-      // Construir URL completa para la imagen existente
-      if (product.imageUrl) {
-        const fullImageUrl = buildImageUrl(product.imageUrl);
-        setImagePreview(fullImageUrl)
-      } else {
-        setImagePreview(null)
-      }
-      setImageFile(null) // Limpiar archivo de imagen
-    } else {
-      // Modo creación: limpiar completamente el formulario
+    if (!product) {
       reset({
         name: '',
         nameEn: '',
@@ -82,9 +63,29 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
         visible: true,
         featured: false,
       })
+
       setImagePreview(null)
       setImageFile(null)
+
+      return
     }
+
+    setValue('name', product.name)
+    setValue('nameEn', product.nameEn || '')
+    setValue('description', product.description || '')
+    setValue('descriptionEn', product.descriptionEn || '')
+    setValue('price', product.price)
+    setValue('categoryId', product.categoryId)
+    setValue('visible', product.visible)
+    setValue('featured', product.featured)
+    if (product.imageUrl) {
+      const fullImageUrl = buildImageUrl(product.imageUrl);
+      setImagePreview(fullImageUrl)
+    } else {
+      setImagePreview(null)
+    }
+    setImageFile(null)
+
   }, [product, setValue, reset])
 
   // Limpiar formulario cuando se abre el modal sin producto
