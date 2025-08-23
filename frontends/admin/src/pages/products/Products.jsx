@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Plus, Search, Filter, Edit, Trash2, Eye, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Plus, Edit, Trash2, Eye, Star } from 'lucide-react'
 import { useProducts, useDeleteProduct } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
 import { useMenus } from '../../hooks/useMenus'
@@ -7,6 +7,8 @@ import { useRestaurant } from '../../hooks/useRestaurant'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import ProductModal from '../../components/modals/ProductModal'
 import ProductViewModal from '../../components/modals/ProductViewModal'
+import ConfirmModal from '../../components/modals/ConfirmModal'
+import { buildImageUrl } from '../../utils/imageUtils'
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -202,7 +204,7 @@ const Products = () => {
               <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg mb-4 overflow-hidden">
                 {product.imageUrl ? (
                   <img
-                    src={`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${product.imageUrl}`}
+                    src={buildImageUrl(product.imageUrl)}
                     alt={product.name}
                     className="w-full h-48 object-cover"
                   />

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Settings as SettingsIcon, Palette, Globe, Bell, Shield, Upload, Trash2, Instagram, Facebook } from 'lucide-react'
-import { useRestaurant, useRestaurantSettings, useUpdateRestaurant, useUpdateRestaurantSettings, useUploadRestaurantLogo, useRestaurantSocialMedia, useUpdateRestaurantSocialMedia } from '../../hooks/useRestaurant'
-import { useTheme } from '../../hooks/useTheme'
-import { usePageTitle } from '../../hooks/usePageTitle'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Upload, Trash2, Save } from 'lucide-react'
+import { useRestaurant, useUpdateRestaurant } from '../../hooks/useRestaurant'
 import { toast } from 'react-hot-toast'
+import { buildImageUrl } from '../../utils/imageUtils'
 
 const SOCIAL_PLATFORMS = [
   { key: 'instagram', label: 'Instagram', icon: Instagram, placeholder: 'https://instagram.com/tuusuario' },
@@ -195,7 +197,7 @@ const Settings = () => {
               {(logoPreview || restaurant?.data?.logoUrl) ? (
                 <div className="relative group w-28 h-28 mx-auto">
                   <img
-                    src={logoPreview || `https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${restaurant?.data?.logoUrl}`}
+                    src={logoPreview || buildImageUrl(restaurant?.data?.logoUrl)}
                     alt="Logo"
                     className="w-28 h-28 object-cover rounded-lg border shadow"
                   />

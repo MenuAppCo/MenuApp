@@ -6,6 +6,7 @@ import { X, Upload, Trash2 } from 'lucide-react'
 import { useCreateProduct, useUpdateProduct, useUploadProductImage } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
 import { toast } from 'react-hot-toast'
+import { buildImageUrl } from '../../utils/imageUtils'
 
 const productSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -63,7 +64,7 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
       setValue('featured', product.featured)
       // Construir URL completa para la imagen existente
       if (product.imageUrl) {
-        const fullImageUrl = `https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${product.imageUrl.replace(/\\/g, '/')}`
+        const fullImageUrl = buildImageUrl(product.imageUrl);
         setImagePreview(fullImageUrl)
       } else {
         setImagePreview(null)
@@ -175,7 +176,8 @@ const ProductModal = ({ isOpen, onClose, product = null }) => {
         
         // Actualizar el preview con la nueva URL de la imagen
         if (uploadResult.data?.image?.url) {
-          setImagePreview(`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${uploadResult.data.image.url.replace(/\\/g, '/')}`)
+          const fullImageUrl = buildImageUrl(uploadResult.data.image.url);
+          setImagePreview(fullImageUrl)
         }
       }
 

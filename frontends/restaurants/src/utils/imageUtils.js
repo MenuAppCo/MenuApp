@@ -1,5 +1,5 @@
-// Función para obtener la URL completa de una imagen
-export const getImageUrl = (imagePath) => {
+// Función helper para construir URLs de imágenes de manera consistente
+export const buildImageUrl = (imagePath) => {
   if (!imagePath) return null;
   
   // Si ya es una URL completa, devolverla tal como está
@@ -7,13 +7,20 @@ export const getImageUrl = (imagePath) => {
     return imagePath;
   }
   
-  // Si es una ruta relativa, construir la URL completa usando MEDIA_URL
   const baseUrl = import.meta.env.VITE_MEDIA_URL || 'media.menapp.co';
   
-  // Asegurar que la ruta comience con /
-  const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+  // Asegurar que baseUrl termine con "/" para evitar problemas de concatenación
+  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   
-  return `https://${baseUrl}${cleanPath}`;
+  // Asegurar que la ruta no tenga "/" al inicio para evitar doble slash
+  const normalizedPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+  
+  return `https://${normalizedBaseUrl}${normalizedPath}`;
+};
+
+// Función para obtener la URL completa de una imagen
+export const getImageUrl = (imagePath) => {
+  return buildImageUrl(imagePath);
 };
 
 // Función para obtener URL de imagen optimizada

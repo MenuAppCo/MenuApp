@@ -6,6 +6,7 @@ import { X, Upload, Trash2 } from 'lucide-react'
 import { useCreateCategory, useUpdateCategory, useUploadCategoryImage } from '../../hooks/useCategories'
 import { useMenus } from '../../hooks/useMenus'
 import { toast } from 'react-hot-toast'
+import { buildImageUrl } from '../../utils/imageUtils'
 
 const categorySchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -58,7 +59,7 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
       setValue('menuId', category.menuId)
       // Construir URL completa para la imagen existente
       if (category.imageUrl) {
-        const fullImageUrl = `https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${category.imageUrl.replace(/\\/g, '/')}`
+        const fullImageUrl = buildImageUrl(category.imageUrl);
         console.log('🔍 Category Modal - Image URL Debug:')
         console.log('  Original imageUrl:', category.imageUrl)
         console.log('  VITE_MEDIA_URL:', import.meta.env.VITE_MEDIA_URL)
@@ -142,7 +143,8 @@ const CategoryModal = ({ isOpen, onClose, category = null }) => {
         
         // Actualizar el preview con la nueva URL de la imagen
         if (uploadResult.data?.image?.url) {
-          setImagePreview(`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${uploadResult.data.image.url.replace(/\\/g, '/')}`)
+          const fullImageUrl = buildImageUrl(uploadResult.data.image.url);
+          setImagePreview(fullImageUrl)
         }
       }
 

@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { Plus, FolderOpen, Edit, Trash2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Plus, Edit, Trash2, FolderOpen } from 'lucide-react'
 import { useCategories, useDeleteCategory } from '../../hooks/useCategories'
-import { usePageTitle } from '../../hooks/usePageTitle'
-import CategoryModal from '../../components/modals/CategoryModal'
 import { useMenus } from '../../hooks/useMenus'
+import CategoryModal from '../../components/modals/CategoryModal'
+import ConfirmModal from '../../components/modals/ConfirmModal'
+import { buildImageUrl } from '../../utils/imageUtils'
 
 const Categories = () => {
   const [filters, setFilters] = useState({})
@@ -17,7 +18,9 @@ const Categories = () => {
   const deleteCategoryMutation = useDeleteCategory()
 
   // Actualizar título de la página
-  usePageTitle('Categorías - Admin - MenuApp')
+  useEffect(() => {
+    document.title = 'Categorías - Admin - MenuApp'
+  }, [])
   
   // Debug logs
   console.log('📊 Categories Data:', categoriesData)
@@ -145,7 +148,7 @@ const Categories = () => {
                 <div className="p-3 rounded-lg bg-blue-100">
                   {category.imageUrl ? (
                     <img
-                      src={`https://${import.meta.env.VITE_MEDIA_URL || 'media.menapp.co'}${category.imageUrl.replace(/\\/g, '/')}`}
+                      src={buildImageUrl(category.imageUrl)}
                       alt={category.name}
                       className="h-6 w-6 object-cover"
                       onError={(e) => {
