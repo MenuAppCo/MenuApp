@@ -20,7 +20,11 @@ export const buildImageUrl = (imagePath) => {
   if (normalizedPath.includes('-thumbnail') || normalizedPath.includes('-medium') || normalizedPath.includes('-large')) {
     // Extraer solo el nombre del archivo con sufijo
     const filename = normalizedPath.split('/').pop();
-    return `https://${normalizedBaseUrl}sizes/${filename}`;
+    
+    // Remover el sufijo '-processed' si existe, manteniendo solo el sufijo de tamaño
+    const cleanFilename = filename.replace('-processed-', '-');
+    
+    return `https://${normalizedBaseUrl}sizes/${cleanFilename}`;
   }
   
   return `https://${normalizedBaseUrl}${normalizedPath}`;
@@ -46,7 +50,9 @@ export const getOptimizedImageUrl = (imagePath, size = 'medium') => {
   // Extraer el nombre base del archivo (sin extensión)
   const pathParts = imagePath.split('/');
   const filename = pathParts.pop();
-  const baseName = filename.replace(/\.[^/.]+$/, '');
+  
+  // Remover el sufijo '-processed' si existe
+  const baseName = filename.replace(/\.[^/.]+$/, '').replace('-processed', '');
   
   // Construir la URL para la imagen optimizada en la carpeta /sizes
   return `https://${normalizedBaseUrl}sizes/${baseName}-${size}.webp`;
