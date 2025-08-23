@@ -15,6 +15,14 @@ export const buildImageUrl = (imagePath) => {
   // Asegurar que la ruta no tenga "/" al inicio para evitar doble slash
   const normalizedPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
   
+  // Detectar si la imagen tiene sufijo de tamaño (thumbnail, medium, large)
+  // Si es así, debe ir en la carpeta /sizes
+  if (normalizedPath.includes('-thumbnail') || normalizedPath.includes('-medium') || normalizedPath.includes('-large')) {
+    // Extraer solo el nombre del archivo con sufijo
+    const filename = normalizedPath.split('/').pop();
+    return `https://${normalizedBaseUrl}sizes/${filename}`;
+  }
+  
   return `https://${normalizedBaseUrl}${normalizedPath}`;
 };
 
@@ -27,17 +35,20 @@ export const getImageUrl = (imagePath) => {
 export const getOptimizedImageUrl = (imagePath, size = 'medium') => {
   if (!imagePath) return null;
   
-  const baseUrl = getImageUrl(imagePath);
-  if (!baseUrl) return null;
+  const baseUrl = import.meta.env.VITE_MEDIA_URL || 'media.menapp.co';
+  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   
   // Si la imagen ya tiene un sufijo de tamaño, no agregar otro
-  if (baseUrl.includes('-thumbnail') || baseUrl.includes('-medium') || baseUrl.includes('-large')) {
-    return baseUrl;
+  if (imagePath.includes('-thumbnail') || imagePath.includes('-medium') || imagePath.includes('-large')) {
+    return buildImageUrl(imagePath);
   }
   
-  // Agregar sufijo de tamaño
-  const extension = baseUrl.split('.').pop();
-  const baseWithoutExt = baseUrl.replace(`.${extension}`, '');
+  // Extraer el nombre base del archivo (sin extensión)
+  const pathParts = imagePath.split('/');
+  const filename = pathParts.pop();
+  const baseName = filename.replace(/\.[^/.]+$/, '');
+  const extension = filename.split('.').pop();
   
-  return `${baseWithoutExt}-${size}.webp`;
+  // Construir la URL para la imagen optimizada en la carpeta /sizes
+  return `https://${normalizedBaseUrl}sizes/${baseName}-${size}.webp`;
 }; 
