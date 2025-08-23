@@ -47,7 +47,6 @@ export const getOptimizedImageUrl = (imagePath, size = 'medium') => {
   const pathParts = imagePath.split('/');
   const filename = pathParts.pop();
   const baseName = filename.replace(/\.[^/.]+$/, '');
-  const extension = filename.split('.').pop();
   
   // Construir la URL para la imagen optimizada en la carpeta /sizes
   return `https://${normalizedBaseUrl}sizes/${baseName}-${size}.webp`;
