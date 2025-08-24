@@ -1,11 +1,7 @@
-resource "aws_ecr_repository" "public_api_lambda" {
-  name                 = "public-api-lambda"
-  image_tag_mutability = "IMMUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-
+module "public_api_lambda" {
+  source                        = "../../modules/ecr"
+  repository_name               = "public-api-lambda"
+  image_scanning_configuration  = false
   tags = {
     Environment = var.environment
     App         = var.app
