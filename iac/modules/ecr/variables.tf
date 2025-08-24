@@ -5,7 +5,7 @@ variable "repository_name" {
 
 variable "image_scanning_configuration" {
   description = "Configuration for image scanning on push."
-  type        = object({
+  type = object({
     scan_on_push = bool
   })
 }

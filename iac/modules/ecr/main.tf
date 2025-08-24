@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "this" {
-  name                 = var.repository_name
+  name = var.repository_name
   image_scanning_configuration {
     scan_on_push = var.image_scanning_configuration
   }
@@ -32,12 +32,4 @@ resource "aws_ecr_lifecycle_policy" "this" {
       }
     ]
   })
-}
-
-output "repository_uri" {
-  value = aws_ecr_repository.this.repository_url
-}
-
-output "repository_id" {
-  value = aws_ecr_repository.this.id
 }
