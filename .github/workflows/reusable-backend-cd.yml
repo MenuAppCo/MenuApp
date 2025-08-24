@@ -51,33 +51,3 @@ jobs:
           echo "$key=$value" >> $GITHUB_ENV
         done
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::084519756118:role/GithubActions
-        aws-region: us-east-1
-        audience: "sts.amazonaws.com"
-    
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
-
-    - name: Extract short SHA and set image URI
-      id: prep
-      run: |
-        SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-8)
-        IMAGE_TAG="$SHORT_SHA"
-        IMAGE_URI_WITH_TAG="${{ inputs.image-uri }}:$IMAGE_TAG"
-        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-        echo "IMAGE_URI_WITH_TAG=$IMAGE_URI_WITH_TAG" >> $GITHUB_ENV
-   
-    - name: Export image tag (SHA)
-      id: export-tag
-      run: echo "image_tag=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
-
-    - name: Build Docker image
-      working-directory: ${{ inputs.image-path }}
-      run: docker build -f ${{ inputs.dockerfile-path }} -t $IMAGE_URI_WITH_TAG .
-
-    - name: Push Docker image to ECR
-      run: docker push $IMAGE_URI_WITH_TAG
