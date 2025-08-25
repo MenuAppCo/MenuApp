@@ -7,6 +7,10 @@ on:
         description: 'Path to the frontend directory'
         required: true
         type: string
+      build-path:
+        description: 'Path to the frontend build'
+        required: true
+        type: string
       node-version:
         description: 'Node.js version to use'
         required: false
@@ -74,7 +78,7 @@ jobs:
         audience: "sts.amazonaws.com"
 
     - name: Deploy to S3
-      working-directory: ${{ inputs.frontend-path }}/dist
+      working-directory: ${{ inputs.build-path }}
       run: |
         aws s3 sync . ${{ inputs.s3-bucket-url }} --delete
 

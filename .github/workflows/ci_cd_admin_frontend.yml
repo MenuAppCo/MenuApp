@@ -49,6 +49,7 @@ jobs:
     uses: ./.github/workflows/reusable-frontend-cd.yml
     with:
       frontend-path: 'frontends/admin'
+      build-path: 'frontends/admin/dist'
       node-version: '20'
       cloudfront-distribution-id: 'E2Q2BA3Q2EDJ7'
       s3-bucket-url: 's3://production-menapp-admin-frontend'
