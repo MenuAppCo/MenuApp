@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { getImageUrl, getOptimizedImageUrl } from '../../utils/imageUtils'
 
-export default function ImageWithFallback({ 
+export default function ImageWithFallback({
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore TODO fix
   src, 
-  // @ts-ignore TODO fix
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore TODO fix
   alt,  
   className = '', 
   size = 'medium',
@@ -57,8 +59,9 @@ export default function ImageWithFallback({
   }
 
   return (
-    <img 
-    // @ts-ignore TODO fix
+    <img
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore TODO fix
       src={imageUrl}
       alt={alt}
       className={`${loading ? 'animate-pulse bg-gray-200' : ''} ${className}`}

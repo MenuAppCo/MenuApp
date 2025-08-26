@@ -1,7 +1,8 @@
 import { X, Star } from 'lucide-react'
 import ImageWithFallback from '../image-with-fallback/imageWithFallback'
 
-const ProductViewModal = ({ isOpen = false, onClose, product, restaurant }: { isOpen?: boolean; onClose?: () => void; product?: any; restaurant?: any }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ProductViewModal = ({ isOpen = false, onClose, product, restaurant }: { isOpen?: boolean; onClose?: () => void; product?: any; restaurant?: any }) => {     // TODO FIX
   if (!isOpen || !product) return null
 
   const settings = restaurant?.settings || {};

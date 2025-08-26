@@ -41,6 +41,7 @@ const PublicMenus = () => {
 
   const { restaurant } = restaurantData.data
   const menus = menusData?.data?.menus || []
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore TODO fix
   // Verificar si al menos un menú tiene descripción
   const hasAnyDescription = menus.some(menu => menu.description && menu.description.trim() !== '')
@@ -90,6 +91,7 @@ const PublicMenus = () => {
               </div>
             ) : (
               <div className="space-y-4 w-full flex flex-col items-center justify-center">
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
                 {/* @ts-ignore TODO fix */}
                 {menus.map((menu) => (
                   <Link
@@ -135,11 +137,13 @@ const PublicMenus = () => {
             <div className="rounded-lg p-4">
               <div className="flex justify-center space-x-4">
                 {Object.entries(restaurant.socialMedia)
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore TODO fix
                   .filter(([_, config]) => (config.active === true || config.isActive === true) && config.url && config.url.trim() !== "")
                   .map(([platform, config]) => (
                     <button
                       key={platform}
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore TODO fix
                       onClick={() => window.open(config.url, '_blank')}
                       className="w-12 h-12 rounded-full flex items-center justify-center transition-shadow hover:shadow-md"

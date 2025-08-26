@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { publicMenuService } from '../services/publicMenuService'
 
-export const usePublicMenu = (slug: string | undefined, menuType: string = 'food') => {
+export const usePublicMenu = (slug: string | undefined, menuType = 'food') => {
   return useQuery({
     queryKey: ['publicMenu', slug, menuType],
     queryFn: () => publicMenuService.getPublicMenu(slug, menuType),

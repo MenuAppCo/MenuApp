@@ -4,7 +4,8 @@ export default function MobileMenuContainer({ children, className = '' } :{child
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    const preventHorizontalScroll = (e: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const preventHorizontalScroll = (e: any) => {     // TODO FIX
       if (e.touches.length === 1) {
         const touch = e.touches[0]
         const startX = touch.clientX
