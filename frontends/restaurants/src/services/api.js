@@ -8,31 +8,6 @@ const api = axios.create({
   },
 })
 
-// Interceptor para agregar token automáticamente
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('auth-storage')
-    console.log('API Request:', config.method?.toUpperCase(), config.url, 'Token:', !!token)
-    
-    if (token) {
-      try {
-        const authData = JSON.parse(token)
-        if (authData.state?.token) {
-          config.headers.Authorization = `Bearer ${authData.state.token}`
-          console.log('Token added to request')
-        }
-      } catch (error) {
-        console.error('Error parsing auth token:', error)
-      }
-    }
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
-
-// Interceptor para manejar errores de respuesta
 api.interceptors.response.use(
   (response) => {
     console.log('API Response:', response.config.url, response.status, response.data)
