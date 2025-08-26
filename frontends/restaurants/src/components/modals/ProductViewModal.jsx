@@ -9,7 +9,6 @@ const ProductViewModal = ({ isOpen, onClose, product, restaurant }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">Detalles del plato</h2>
           <button
@@ -20,9 +19,7 @@ const ProductViewModal = ({ isOpen, onClose, product, restaurant }) => {
           </button>
         </div>
 
-        {/* Contenido */}
         <div className="p-4 space-y-4">
-          {/* Imagen del producto */}
           {settings.showImages !== false && product.imageUrl && product.imageVisible && (
             <div className="relative">
               <ImageWithFallback
@@ -40,7 +37,6 @@ const ProductViewModal = ({ isOpen, onClose, product, restaurant }) => {
             </div>
           )}
 
-          {/* Información del producto */}
           <div className="space-y-3">
             <div className="flex items-start justify-between">
               <h3 className="text-xl font-bold text-gray-900">{product.name}</h3>
@@ -54,7 +50,6 @@ const ProductViewModal = ({ isOpen, onClose, product, restaurant }) => {
               )}
             </div>
 
-            {/* Descripción */}
             {product.description && (
               <div>
                 <h4 className="text-sm font-semibold text-gray-700 mb-2">Descripción</h4>
@@ -63,25 +58,7 @@ const ProductViewModal = ({ isOpen, onClose, product, restaurant }) => {
                 </p>
               </div>
             )}
-
-            {/* Información adicional */}
-            <div className="pt-4 border-t border-gray-100">
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>Restaurante</span>
-                <span className="font-medium text-gray-900">{restaurant.name}</span>
-              </div>
-            </div>
           </div>
-        </div>
-
-        {/* Botón de cerrar */}
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-3">
-          <button
-            onClick={onClose}
-            className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
-          >
-            Cerrar
-          </button>
         </div>
       </div>
     </div>

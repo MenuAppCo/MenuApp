@@ -9,7 +9,6 @@ const PublicMenus = () => {
   const { slug } = useParams()
   const { data: restaurantData, isLoading: restaurantLoading, error: restaurantError } = useRestaurantInfo(slug)
   const { data: menusData, isLoading: menusLoading, error: menusError } = useRestaurantMenus(slug)
-
   // TODO Actualizar título de la página con el nombre del restaurante
   const restaurantName = restaurantData?.data?.restaurant?.name
   usePageTitle(restaurantName ? `${restaurantName} - Menús` : 'Menús')
@@ -94,7 +93,7 @@ const PublicMenus = () => {
                 {menus.map((menu) => (
                   <Link
                     key={menu.id}
-                    to={`/menu/${slug}/${menu.type || 'food'}`}
+                    to={`/restaurants/${slug}/menu/${slug}/${menu.type || 'food'}`}
                     className="block bg-white border border-gray-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all w-full max-w-md"
                   >
                     {hasAnyDescription ? (

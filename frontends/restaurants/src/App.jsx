@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route path="/restaurants/:slug" element={<PublicRestaurant />} />
           <Route path="/restaurants/:slug/menus" element={<PublicMenus />} />
-          <Route path="/menu/:slug/:menuType" element={<PublicMenu />} />
+          <Route path="/restaurants/:slug/menu/:slug/:menuType" element={<PublicMenu />} />
         </Routes>
         {/* TODO Notificaciones a*/}
         <Toaster 

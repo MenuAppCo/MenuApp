@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useRestaurantInfo } from '../../hooks/usePublicMenu'
+import { useNavigate } from "react-router-dom";
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { Phone, MapPin,  Calendar,  ThumbsUp, Instagram, Facebook, ExternalLink } from 'lucide-react'
 import ImageWithFallback from '../../components/ImageWithFallback'
@@ -10,6 +11,7 @@ const PublicRestaurant = () => {
   const { slug } = useParams()
   const { data, isLoading, error } = useRestaurantInfo(slug)
   const [showAddressModal, setShowAddressModal] = useState(false)
+  const navigate = useNavigate();
 
   // Actualizar título de la página con el nombre del restaurante
   const restaurantName = data?.data?.restaurant?.name
@@ -59,7 +61,7 @@ const PublicRestaurant = () => {
   const handleActionClick = (action) => {
     switch (action) {
       case 'menu':
-        window.location.href = `/restaurants/${slug}/menus`
+        navigate(`/restaurants/${slug}/menus`)
         break
       case 'reservations':
         if (restaurant.phone) {
