@@ -46,7 +46,7 @@ jobs:
     uses: ./.github/workflows/reusable-frontend-cd.yml
     with:
       frontend-path: 'frontends/restaurants'
-      build-path: 'frontends/restaurants/dist'
+      build-path: 'frontends/restaurants/build/client'
       node-version: '20'
       cloudfront-distribution-id: 'E3PVFAZHMLAOA3'
       s3-bucket-url: 's3://production-menapp-restaurants-frontend/restaurants'
