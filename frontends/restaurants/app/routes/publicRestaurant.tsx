@@ -1,20 +1,30 @@
-import { useParams, useNavigate } from 'react-router'
-import { useState } from 'react'
-import { useRestaurantInfo } from '../hooks/usePublicMenu'
-import { usePageTitle } from '../hooks/usePageTitle'
-import { Phone, MapPin,  Calendar,  ThumbsUp, Instagram, Facebook, ExternalLink } from 'lucide-react'
-import ImageWithFallback from '../components/image-with-fallback/imageWithFallback'
-import MobileMenuContainer from '../components/mobile-menu-container/mobileMenuContainer'
+import { useParams, useNavigate } from "react-router";
+import { useState } from "react";
+import { useRestaurantInfo } from "../hooks/usePublicMenu";
+import { usePageTitle } from "../hooks/usePageTitle";
+import {
+  Phone,
+  MapPin,
+  Calendar,
+  ThumbsUp,
+  Instagram,
+  Facebook,
+  ExternalLink,
+} from "lucide-react";
+import ImageWithFallback from "../components/image-with-fallback/imageWithFallback";
+import MobileMenuContainer from "../components/mobile-menu-container/mobileMenuContainer";
 
 const PublicRestaurant = () => {
-  const { slug } = useParams()
-  const { data, isLoading, error } = useRestaurantInfo(slug)
-  const [showAddressModal, setShowAddressModal] = useState(false)
+  const { slug } = useParams();
+  const { data, isLoading, error } = useRestaurantInfo(slug);
+  const [showAddressModal, setShowAddressModal] = useState(false);
   const navigate = useNavigate();
 
   // Actualizar título de la página con el nombre del restaurante
-  const restaurantName = data?.data?.restaurant?.name
-  usePageTitle(restaurantName ? `${restaurantName} - Menú Digital` : 'Menú Digital')
+  const restaurantName = data?.data?.restaurant?.name;
+  usePageTitle(
+    restaurantName ? `${restaurantName} - Menú Digital` : "Menú Digital",
+  );
 
   if (isLoading) {
     return (
@@ -24,7 +34,7 @@ const PublicRestaurant = () => {
           <p className="text-gray-600 text-sm">Cargando restaurante...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -32,11 +42,15 @@ const PublicRestaurant = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="text-gray-400 text-4xl mb-3">🍽️</div>
-          <h1 className="text-lg font-semibold text-gray-900 mb-2">Restaurante no encontrado</h1>
-          <p className="text-gray-500 text-sm">El restaurante que buscas no está disponible.</p>
+          <h1 className="text-lg font-semibold text-gray-900 mb-2">
+            Restaurante no encontrado
+          </h1>
+          <p className="text-gray-500 text-sm">
+            El restaurante que buscas no está disponible.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   // Validar que tenemos datos del restaurante
@@ -45,110 +59,120 @@ const PublicRestaurant = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="text-gray-400 text-4xl mb-3">🍽️</div>
-          <h1 className="text-lg font-semibold text-gray-900 mb-2">Error al cargar restaurante</h1>
-          <p className="text-gray-500 text-sm">No se pudieron cargar los datos del restaurante.</p>
+          <h1 className="text-lg font-semibold text-gray-900 mb-2">
+            Error al cargar restaurante
+          </h1>
+          <p className="text-gray-500 text-sm">
+            No se pudieron cargar los datos del restaurante.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
-  const { restaurant } = data.data
+  const { restaurant } = data.data;
 
   const settings = restaurant.settings || {};
 
   // Función para manejar clics en botones de acción
   const handleActionClick = (action: string) => {
     switch (action) {
-      case 'menu':
-        navigate(`/restaurants/${slug}/menus`)
-        break
-      case 'reservations':
+      case "menu":
+        navigate(`/restaurants/${slug}/menus`);
+        break;
+      case "reservations":
         if (restaurant.phone) {
-          window.open(`tel:${restaurant.phone}`, '_blank')
+          window.open(`tel:${restaurant.phone}`, "_blank");
         }
-        break
-      case 'location':
+        break;
+      case "location":
         if (restaurant.googleMapsUrl) {
-          window.open(restaurant.googleMapsUrl, '_blank')
+          window.open(restaurant.googleMapsUrl, "_blank");
         } else if (restaurant.address) {
-          setShowAddressModal(true)
+          setShowAddressModal(true);
         }
-        break
-      case 'contact':
+        break;
+      case "contact":
         if (restaurant.phone) {
-          window.open(`tel:${restaurant.phone}`, '_blank')
+          window.open(`tel:${restaurant.phone}`, "_blank");
         }
-        break
-      case 'rating':
-        {
-          // Si existe Tripadvisor, abrir ese enlace, sino mostrar mensaje
-          const tripadvisorUrl = restaurant.socialMedia?.tripadvisor?.url
-          if (tripadvisorUrl && tripadvisorUrl.trim() !== '') {
-            window.open(tripadvisorUrl, '_blank')
-          }
-          break
+        break;
+      case "rating": {
+        // Si existe Tripadvisor, abrir ese enlace, sino mostrar mensaje
+        const tripadvisorUrl = restaurant.socialMedia?.tripadvisor?.url;
+        if (tripadvisorUrl && tripadvisorUrl.trim() !== "") {
+          window.open(tripadvisorUrl, "_blank");
         }
+        break;
+      }
       default:
-        break
+        break;
     }
-  }
+  };
 
   // Función para manejar clics en redes sociales
-  const handleSocialMediaClick = (platform: string, url: string | undefined) => {
+  const handleSocialMediaClick = (
+    platform: string,
+    url: string | undefined,
+  ) => {
     if (url) {
-      window.open(url, '_blank')
+      window.open(url, "_blank");
     }
-  }
+  };
 
   // Obtener redes sociales activas con validación mejorada (excluyendo Tripadvisor)
   const activeSocialMediaList = (() => {
     try {
-      if (!restaurant.socialMedia || typeof restaurant.socialMedia !== 'object') {
-        console.log('🔍 No hay socialMedia o no es un objeto')
-        return []
+      if (
+        !restaurant.socialMedia ||
+        typeof restaurant.socialMedia !== "object"
+      ) {
+        console.log("🔍 No hay socialMedia o no es un objeto");
+        return [];
       }
 
-      const entries = Object.entries(restaurant.socialMedia)
-      console.log('🔍 Entries de socialMedia:', entries)
+      const entries = Object.entries(restaurant.socialMedia);
+      console.log("🔍 Entries de socialMedia:", entries);
 
       const filtered = entries
         .filter(([platform, config]) => {
           // Excluir Tripadvisor de las redes sociales
-          if (platform === 'tripadvisor') {
-            return false
+          if (platform === "tripadvisor") {
+            return false;
           }
-          
-          const isValid = config && 
-                         typeof config === 'object' && 
-                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                         // @ts-ignore TODO fix
-                         (config.active === true || config.isActive === true) && 
-                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                         // @ts-ignore TODO fix
-                         config.url && 
-                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                         // @ts-ignore TODO fix
-                         config.url.trim() !== ''
-          console.log(`🔍 ${platform}:`, { config, isValid })
-          return isValid
+
+          const isValid =
+            config &&
+            typeof config === "object" &&
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore TODO fix
+            (config.active === true || config.isActive === true) &&
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore TODO fix
+            config.url &&
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore TODO fix
+            config.url.trim() !== "";
+          console.log(`🔍 ${platform}:`, { config, isValid });
+          return isValid;
         })
-        .map(([platform, config]) => ({ 
-          platform, 
+        .map(([platform, config]) => ({
+          platform,
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore TODO fix
           url: config.url,
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore TODO fix
-          active: config.active || config.isActive 
-        }))
+          active: config.active || config.isActive,
+        }));
 
-      console.log('🔍 Redes sociales filtradas:', filtered)
-      return filtered
+      console.log("🔍 Redes sociales filtradas:", filtered);
+      return filtered;
     } catch (error) {
-      console.error('🔍 Error procesando redes sociales:', error)
-      return []
+      console.error("🔍 Error procesando redes sociales:", error);
+      return [];
     }
-  })()
+  })();
 
   return (
     <MobileMenuContainer>
@@ -159,9 +183,13 @@ const PublicRestaurant = () => {
             <div className="px-4 py-6">
               <div className="flex items-center space-x-4">
                 <div className="flex-1 text-center">
-                  <h1 className="text-xl font-bold text-gray-900">{restaurant.name}</h1>
+                  <h1 className="text-xl font-bold text-gray-900">
+                    {restaurant.name}
+                  </h1>
                   {restaurant.description && (
-                    <p className="text-gray-600 text-sm mt-1">{restaurant.description}</p>
+                    <p className="text-gray-600 text-sm mt-1">
+                      {restaurant.description}
+                    </p>
                   )}
                 </div>
               </div>
@@ -171,8 +199,8 @@ const PublicRestaurant = () => {
           {/* Logo grande centrado */}
           {restaurant.logoUrl && (
             <div className="flex justify-center mb-6 mt-6">
-              <ImageWithFallback 
-                src={restaurant.logoUrl} 
+              <ImageWithFallback
+                src={restaurant.logoUrl}
                 alt={restaurant.name}
                 className="h-40 w-40 object-contain rounded-lg"
                 size="large"
@@ -183,10 +211,9 @@ const PublicRestaurant = () => {
           <main className="p-4 space-y-6 flex-1 flex flex-col justify-center min-h-0">
             {/* Botón Menú */}
             <button
-              onClick={() => handleActionClick('menu')}
+              onClick={() => handleActionClick("menu")}
               className="w-full bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-primary-700 transition-colors flex items-center justify-center space-x-3"
             >
-              
               Ver Menú
             </button>
 
@@ -194,25 +221,26 @@ const PublicRestaurant = () => {
             <div className="grid grid-cols-2 gap-3">
               {settings.showReservations !== false && (
                 <button
-                  onClick={() => handleActionClick('reservations')}
+                  onClick={() => handleActionClick("reservations")}
                   className="bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:border-primary-300 hover:text-primary-700 transition-colors flex flex-col items-center space-y-2"
                 >
                   <Calendar className="h-5 w-5" />
                   <span className="text-sm">Reservas</span>
                 </button>
               )}
-              {settings.showLocation !== false && (restaurant.googleMapsUrl || restaurant.address) && (
-                <button
-                  onClick={() => handleActionClick('location')}
-                  className="bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:border-primary-300 hover:text-primary-700 transition-colors flex flex-col items-center space-y-2"
-                >
-                  <MapPin className="h-5 w-5" />
-                  <span className="text-sm">Ubicación</span>
-                </button>
-              )}
+              {settings.showLocation !== false &&
+                (restaurant.googleMapsUrl || restaurant.address) && (
+                  <button
+                    onClick={() => handleActionClick("location")}
+                    className="bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:border-primary-300 hover:text-primary-700 transition-colors flex flex-col items-center space-y-2"
+                  >
+                    <MapPin className="h-5 w-5" />
+                    <span className="text-sm">Ubicación</span>
+                  </button>
+                )}
               {settings.showContact !== false && (
                 <button
-                  onClick={() => handleActionClick('contact')}
+                  onClick={() => handleActionClick("contact")}
                   className="bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:border-primary-300 hover:text-primary-700 transition-colors flex flex-col items-center space-y-2"
                 >
                   <Phone className="h-5 w-5" />
@@ -221,7 +249,7 @@ const PublicRestaurant = () => {
               )}
               {settings.showRating !== false && (
                 <button
-                  onClick={() => handleActionClick('rating')}
+                  onClick={() => handleActionClick("rating")}
                   className="bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:border-primary-300 hover:text-primary-700 transition-colors flex flex-col items-center space-y-2"
                 >
                   <ThumbsUp className="h-5 w-5" />
@@ -242,12 +270,20 @@ const PublicRestaurant = () => {
                     className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
                     title={`Síguenos en ${platform}`}
                   >
-                    {platform === 'instagram' && <Instagram className="h-5 w-5 text-pink-600" />}
-                    {platform === 'facebook' && <Facebook className="h-5 w-5 text-blue-600" />}
-                    {platform === 'tiktok' && <span className="text-black font-bold text-sm">TikTok</span>}
-                    {!['instagram', 'facebook', 'tiktok'].includes(platform) && (
-                      <ExternalLink className="h-5 w-5 text-gray-600" />
+                    {platform === "instagram" && (
+                      <Instagram className="h-5 w-5 text-pink-600" />
                     )}
+                    {platform === "facebook" && (
+                      <Facebook className="h-5 w-5 text-blue-600" />
+                    )}
+                    {platform === "tiktok" && (
+                      <span className="text-black font-bold text-sm">
+                        TikTok
+                      </span>
+                    )}
+                    {!["instagram", "facebook", "tiktok"].includes(
+                      platform,
+                    ) && <ExternalLink className="h-5 w-5 text-gray-600" />}
                   </button>
                 ))}
               </div>
@@ -277,7 +313,7 @@ const PublicRestaurant = () => {
         </div>
       )}
     </MobileMenuContainer>
-  )
-}
+  );
+};
 
-export default PublicRestaurant 
+export default PublicRestaurant;

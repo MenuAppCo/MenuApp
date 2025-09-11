@@ -8,7 +8,5 @@ export function meta(_: Route.MetaArgs) {
 }
 
 export default function NotFound() {
-  return  <>
-          "NOT FOUND"
-        </>
+  return <>"NOT FOUND"</>;
 }

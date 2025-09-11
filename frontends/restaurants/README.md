@@ -86,8 +86,6 @@ This template comes with [Tailwind CSS](https://tailwindcss.com/) already config
 
 Built with ❤️ using React Router.
 
-
 ### CSS Framework
 
 https://www.hyperui.dev/
-

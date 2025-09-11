@@ -1,20 +1,34 @@
-import { useParams, Link } from 'react-router'
-import { useRestaurantInfo, useRestaurantMenus } from '../hooks/usePublicMenu'
-import { usePageTitle } from '../hooks/usePageTitle'
-import { ArrowLeft, Instagram, Facebook, Star, ExternalLink } from 'lucide-react'
-import ImageWithFallback from '../components/image-with-fallback/imageWithFallback'
-import MobileMenuContainer from '../components/mobile-menu-container/mobileMenuContainer'
+import { useParams, Link } from "react-router";
+import { useRestaurantInfo, useRestaurantMenus } from "../hooks/usePublicMenu";
+import { usePageTitle } from "../hooks/usePageTitle";
+import {
+  ArrowLeft,
+  Instagram,
+  Facebook,
+  Star,
+  ExternalLink,
+} from "lucide-react";
+import ImageWithFallback from "../components/image-with-fallback/imageWithFallback";
+import MobileMenuContainer from "../components/mobile-menu-container/mobileMenuContainer";
 
 const PublicMenus = () => {
-  const { slug } = useParams()
-  const { data: restaurantData, isLoading: restaurantLoading, error: restaurantError } = useRestaurantInfo(slug)
-  const { data: menusData, isLoading: menusLoading, error: menusError } = useRestaurantMenus(slug)
+  const { slug } = useParams();
+  const {
+    data: restaurantData,
+    isLoading: restaurantLoading,
+    error: restaurantError,
+  } = useRestaurantInfo(slug);
+  const {
+    data: menusData,
+    isLoading: menusLoading,
+    error: menusError,
+  } = useRestaurantMenus(slug);
   // TODO Actualizar título de la página con el nombre del restaurante
-  const restaurantName = restaurantData?.data?.restaurant?.name
-  usePageTitle(restaurantName ? `${restaurantName} - Menús` : 'Menús')
+  const restaurantName = restaurantData?.data?.restaurant?.name;
+  usePageTitle(restaurantName ? `${restaurantName} - Menús` : "Menús");
 
-  const isLoading = restaurantLoading || menusLoading
-  const error = restaurantError || menusError
+  const isLoading = restaurantLoading || menusLoading;
+  const error = restaurantError || menusError;
 
   if (isLoading) {
     return (
@@ -24,7 +38,7 @@ const PublicMenus = () => {
           <p className="text-gray-600 text-sm">Cargando menús...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -32,20 +46,25 @@ const PublicMenus = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="text-gray-400 text-4xl mb-3">🍽️</div>
-          <h1 className="text-lg font-semibold text-gray-900 mb-2">Restaurante no encontrado</h1>
-          <p className="text-gray-500 text-sm">El restaurante que buscas no está disponible.</p>
+          <h1 className="text-lg font-semibold text-gray-900 mb-2">
+            Restaurante no encontrado
+          </h1>
+          <p className="text-gray-500 text-sm">
+            El restaurante que buscas no está disponible.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
-  const { restaurant } = restaurantData.data
-  const menus = menusData?.data?.menus || []
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore TODO fix
+  const { restaurant } = restaurantData.data;
+  const menus = menusData?.data?.menus || [];
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore TODO fix
   // Verificar si al menos un menú tiene descripción
-  const hasAnyDescription = menus.some(menu => menu.description && menu.description.trim() !== '')
-
+  const hasAnyDescription = menus.some(
+    (menu) => menu.description && menu.description.trim() !== "",
+  );
 
   return (
     <MobileMenuContainer>
@@ -62,7 +81,9 @@ const PublicMenus = () => {
                   <ArrowLeft className="h-5 w-5" />
                 </Link>
                 <div className="flex-1 text-center">
-                  <h1 className="text-lg font-bold text-gray-900">{restaurant.name}</h1>
+                  <h1 className="text-lg font-bold text-gray-900">
+                    {restaurant.name}
+                  </h1>
                   <p className="text-gray-500 text-sm">Nuestros menús</p>
                 </div>
               </div>
@@ -72,8 +93,8 @@ const PublicMenus = () => {
           {/* Logo grande centrado */}
           {restaurant.logoUrl && (
             <div className="flex justify-center mb-6 mt-6">
-              <ImageWithFallback 
-                src={restaurant.logoUrl} 
+              <ImageWithFallback
+                src={restaurant.logoUrl}
                 alt={restaurant.name}
                 className="h-40 w-40 object-contain rounded-lg"
                 size="large"
@@ -86,8 +107,12 @@ const PublicMenus = () => {
             {menus.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-300 text-5xl mb-4">🍽️</div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">No hay menús disponibles</h2>
-                <p className="text-gray-500 text-sm">Pronto tendremos nuestros menús disponibles.</p>
+                <h2 className="text-lg font-semibold text-gray-900 mb-2">
+                  No hay menús disponibles
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  Pronto tendremos nuestros menús disponibles.
+                </p>
               </div>
             ) : (
               <div className="space-y-4 w-full flex flex-col items-center justify-center">
@@ -96,7 +121,7 @@ const PublicMenus = () => {
                 {menus.map((menu) => (
                   <Link
                     key={menu.id}
-                    to={`/restaurants/${slug}/menu/${slug}/${menu.type || 'food'}`}
+                    to={`/restaurants/${slug}/menu/${slug}/${menu.type || "food"}`}
                     className="block bg-white border border-gray-200 rounded-lg p-4 hover:border-primary-300 hover:shadow-md transition-all w-full max-w-md"
                   >
                     {hasAnyDescription ? (
@@ -133,34 +158,55 @@ const PublicMenus = () => {
           </main>
 
           {/* Redes sociales */}
-          {restaurant.socialMedia && Object.keys(restaurant.socialMedia).length > 0 && (
-            <div className="rounded-lg p-4">
-              <div className="flex justify-center space-x-4">
-                {Object.entries(restaurant.socialMedia)
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore TODO fix
-                  .filter(([_, config]) => (config.active === true || config.isActive === true) && config.url && config.url.trim() !== "")
-                  .map(([platform, config]) => (
-                    <button
-                      key={platform}
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore TODO fix
-                      onClick={() => window.open(config.url, '_blank')}
-                      className="w-12 h-12 rounded-full flex items-center justify-center transition-shadow hover:shadow-md"
-                      title={`Síguenos en ${platform}`}
-                    >
-                      {platform === 'instagram' && <Instagram className="h-5 w-5 text-pink-600" />}
-                      {platform === 'facebook' && <Facebook className="h-5 w-5 text-blue-600" />}
-                      {platform === 'tripadvisor' && <Star className="h-5 w-5 text-green-600" />}
-                      {platform === 'tiktok' && <span className="text-black font-bold text-sm">TikTok</span>}
-                      {!['instagram', 'facebook', 'tripadvisor', 'tiktok'].includes(platform) && (
-                        <ExternalLink className="h-5 w-5 text-gray-600" />
-                      )}
-                    </button>
-                  ))}
+          {restaurant.socialMedia &&
+            Object.keys(restaurant.socialMedia).length > 0 && (
+              <div className="rounded-lg p-4">
+                <div className="flex justify-center space-x-4">
+                  {Object.entries(restaurant.socialMedia)
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore TODO fix
+                    .filter(
+                      ([_, config]) =>
+                        (config.active === true || config.isActive === true) &&
+                        config.url &&
+                        config.url.trim() !== "",
+                    )
+                    .map(([platform, config]) => (
+                      <button
+                        key={platform}
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore TODO fix
+                        onClick={() => window.open(config.url, "_blank")}
+                        className="w-12 h-12 rounded-full flex items-center justify-center transition-shadow hover:shadow-md"
+                        title={`Síguenos en ${platform}`}
+                      >
+                        {platform === "instagram" && (
+                          <Instagram className="h-5 w-5 text-pink-600" />
+                        )}
+                        {platform === "facebook" && (
+                          <Facebook className="h-5 w-5 text-blue-600" />
+                        )}
+                        {platform === "tripadvisor" && (
+                          <Star className="h-5 w-5 text-green-600" />
+                        )}
+                        {platform === "tiktok" && (
+                          <span className="text-black font-bold text-sm">
+                            TikTok
+                          </span>
+                        )}
+                        {![
+                          "instagram",
+                          "facebook",
+                          "tripadvisor",
+                          "tiktok",
+                        ].includes(platform) && (
+                          <ExternalLink className="h-5 w-5 text-gray-600" />
+                        )}
+                      </button>
+                    ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Footer */}
           <footer className="mt-auto p-4 text-center flex-shrink-0">
@@ -169,7 +215,7 @@ const PublicMenus = () => {
         </div>
       </div>
     </MobileMenuContainer>
-  )
-}
+  );
+};
 
-export default PublicMenus 
+export default PublicMenus;

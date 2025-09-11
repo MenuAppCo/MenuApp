@@ -1,59 +1,72 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react";
 
-export default function MobileMenuContainer({ children, className = '' } :{children: React.ReactNode, className?: string}) {
-  const containerRef = useRef<HTMLDivElement | null>(null)
+export default function MobileMenuContainer({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const preventHorizontalScroll = (e: any) => {     // TODO FIX
+    const preventHorizontalScroll = (e: any) => {
+      // TODO FIX
       if (e.touches.length === 1) {
-        const touch = e.touches[0]
-        const startX = touch.clientX
-        const startY = touch.clientY
+        const touch = e.touches[0];
+        const startX = touch.clientX;
+        const startY = touch.clientY;
 
         const handleTouchMove = (e: TouchEvent) => {
-          const touch = e.touches[0]
-          const deltaX = Math.abs(touch.clientX - startX)
-          const deltaY = Math.abs(touch.clientY - startY)
+          const touch = e.touches[0];
+          const deltaX = Math.abs(touch.clientX - startX);
+          const deltaY = Math.abs(touch.clientY - startY);
 
           if (deltaX > deltaY && deltaX > 10) {
-            e.preventDefault()
+            e.preventDefault();
           }
-        }
+        };
 
         const handleTouchEnd = () => {
-          document.removeEventListener('touchmove', handleTouchMove as EventListener)
-          document.removeEventListener('touchend', handleTouchEnd)
-        }
+          document.removeEventListener(
+            "touchmove",
+            handleTouchMove as EventListener,
+          );
+          document.removeEventListener("touchend", handleTouchEnd);
+        };
 
-        document.addEventListener('touchmove', handleTouchMove, { passive: false })
-        document.addEventListener('touchend', handleTouchEnd)
+        document.addEventListener("touchmove", handleTouchMove, {
+          passive: false,
+        });
+        document.addEventListener("touchend", handleTouchEnd);
       }
-    }
+    };
 
-    const container = containerRef.current
+    const container = containerRef.current;
     if (container) {
-      container.addEventListener('touchstart', preventHorizontalScroll, { passive: true })
+      container.addEventListener("touchstart", preventHorizontalScroll, {
+        passive: true,
+      });
     }
 
     return () => {
       if (container) {
-        container.removeEventListener('touchstart', preventHorizontalScroll)
+        container.removeEventListener("touchstart", preventHorizontalScroll);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={`min-h-screen bg-white overflow-x-hidden ${className}`}
       style={{
-        WebkitOverflowScrolling: 'touch',
-        scrollBehavior: 'smooth'
+        WebkitOverflowScrolling: "touch",
+        scrollBehavior: "smooth",
       }}
     >
       {children}
     </div>
-  )
+  );
 }
-

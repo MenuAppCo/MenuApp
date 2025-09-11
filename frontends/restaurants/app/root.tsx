@@ -8,8 +8,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -27,17 +26,17 @@ export const links: Route.LinksFunction = () => [
     rel: "icon",
     href: "/favicon-32x32.png",
     sizes: "32x32",
-    type: "image/png"
+    type: "image/png",
   },
   {
     rel: "icon",
     href: "/favicon-16x16.png",
     sizes: "16x16",
-    type: "image/png"
+    type: "image/png",
   },
   {
     rel: "manifest",
-    href: "/site.webmanifest"
+    href: "/site.webmanifest",
   },
 ];
 
@@ -60,13 +59,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <>
-
+  return (
+    <>
       <QueryClientProvider client={new QueryClient()}>
         <Outlet />
       </QueryClientProvider>
-
-  </>
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

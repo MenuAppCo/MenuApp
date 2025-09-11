@@ -1,21 +1,21 @@
-import React from 'react'
+import React from "react";
 
 class ErrorBoundary extends React.Component {
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore TODO fix
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore TODO fix
   constructor(props) {
-    super(props)
-    this.state = { hasError: false, error: null }
+    super(props);
+    this.state = { hasError: false, error: null };
   }
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore TODO fix
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore TODO fix
   static getDerivedStateFromError(error) {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore TODO fix
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore TODO fix
   componentDidCatch(error, errorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo)
+    console.error("Error caught by boundary:", error, errorInfo);
   }
 
   render() {
@@ -27,7 +27,12 @@ class ErrorBoundary extends React.Component {
           <div className="max-w-md w-full text-center">
             <div className="mx-auto h-12 w-12 text-red-500 mb-4">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
               </svg>
             </div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -44,12 +49,12 @@ class ErrorBoundary extends React.Component {
             </button>
           </div>
         </div>
-      )
+      );
     }
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore TODO fix
-    return this.props.children
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore TODO fix
+    return this.props.children;
   }
 }
 
-export default ErrorBoundary 
+export default ErrorBoundary;
