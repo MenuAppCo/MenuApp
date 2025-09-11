@@ -1,12 +1,13 @@
-import {  useParams } from "react-router";
+import { useParams } from "react-router";
 import { useState, useEffect, useRef } from "react";
 import { usePublicMenu } from "../hooks/usePublicMenu";
 import { usePageTitle } from "../hooks/usePageTitle";
-import { Phone, MapPin, Globe, Star} from "lucide-react";
+import { Star } from "lucide-react";
 import ImageWithFallback from "../components/image-with-fallback/imageWithFallback";
 import ProductViewModal from "../components/product-view-modal/productViewModal";
 import MobileMenuContainer from "../components/mobile-menu-container/mobileMenuContainer";
 import Header from "~/components/header/header";
+import Footer from "~/components/footer/footer";
 
 const PublicMenu = () => {
   const { slug, menuType = "food" } = useParams();
@@ -280,39 +281,7 @@ const PublicMenu = () => {
             )}
           </main>
 
-          {/* Footer */}
-          <footer className="mt-auto p-4 text-center">
-            {(restaurant.phone || restaurant.address || restaurant.website) && (
-              <div className="mb-4 space-y-2 text-xs text-gray-500">
-                {restaurant.phone && (
-                  <div className="flex items-center justify-center space-x-2">
-                    <Phone className="h-4 w-4" />
-                    <span>{restaurant.phone}</span>
-                  </div>
-                )}
-                {restaurant.address && (
-                  <div className="flex items-center justify-center space-x-2">
-                    <MapPin className="h-4 w-4" />
-                    <span>{restaurant.address}</span>
-                  </div>
-                )}
-                {restaurant.website && (
-                  <div className="flex items-center justify-center space-x-2">
-                    <Globe className="h-4 w-4" />
-                    <a
-                      href={restaurant.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-700 flex items-center space-x-1"
-                    >
-                      <span>Visitar sitio web</span>
-                    </a>
-                  </div>
-                )}
-              </div>
-            )}
-            <p className="text-xs text-gray-400">Menú digital por MenuApp</p>
-          </footer>
+          <Footer />
         </div>
       </div>
 

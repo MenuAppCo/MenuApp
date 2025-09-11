@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router";
 import { useState } from "react";
 import { useRestaurantInfo } from "../hooks/usePublicMenu";
 import { usePageTitle } from "../hooks/usePageTitle";
-import { Phone, MapPin, Calendar, ThumbsUp } from "lucide-react";
+import { Phone, MapPin, Calendar, ThumbsUp, Globe } from "lucide-react";
 import ImageWithFallback from "../components/image-with-fallback/imageWithFallback";
 import MobileMenuContainer from "../components/mobile-menu-container/mobileMenuContainer";
 import Footer from "~/components/footer/footer";
@@ -172,6 +172,38 @@ const PublicRestaurant = () => {
           </main>
 
           <SocialNetworks restaurant={restaurant} />
+
+          <footer className="mt-auto p-4 text-center">
+            {(restaurant.phone || restaurant.address || restaurant.website) && (
+              <div className="mb-4 space-y-2 text-xs text-gray-500">
+                {restaurant.phone && (
+                  <div className="flex items-center justify-center space-x-2">
+                    <Phone className="h-4 w-4" />
+                    <span>{restaurant.phone}</span>
+                  </div>
+                )}
+                {restaurant.address && (
+                  <div className="flex items-center justify-center space-x-2">
+                    <MapPin className="h-4 w-4" />
+                    <span>{restaurant.address}</span>
+                  </div>
+                )}
+                {restaurant.website && (
+                  <div className="flex items-center justify-center space-x-2">
+                    <Globe className="h-4 w-4" />
+                    <a
+                      href={restaurant.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-700 flex items-center space-x-1"
+                    >
+                      <span>Visitar sitio web</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+          </footer>
           <Footer />
         </div>
       </div>
