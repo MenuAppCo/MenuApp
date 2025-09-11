@@ -6,7 +6,7 @@ export default function CategoryHeader({
   category: { name: string; description?: string; imageUrl?: string };
 }) {
   return (
-    <div className="bg-white my-2">
+    <div className="">
       {category.imageUrl ? (
         <div className="flex justify-center">
           <ImageWithFallback
@@ -17,7 +17,7 @@ export default function CategoryHeader({
           />
         </div>
       ) : (
-        <div className="px-6 py-6 mb-4">
+        <div className="px-6 py-6 my-4 bg-white">
           <h2 className="text-xl font-bold text-gray-900 text-center">
             {category.name}
           </h2>
