@@ -8,6 +8,7 @@ import ProductViewModal from "../components/product-view-modal/productViewModal"
 import MobileMenuContainer from "../components/mobile-menu-container/mobileMenuContainer";
 import Header from "~/components/header/header";
 import Footer from "~/components/footer/footer";
+import CategoryHeader from "~/components/category-header/categoryHeader";
 
 const PublicMenu = () => {
   const { slug, menuType = "food" } = useParams();
@@ -193,29 +194,13 @@ const PublicMenu = () => {
                     ref={(el) => (categoryRefs.current[category.id] = el)}
                     className="border-b border-gray-100"
                   >
-                    {/* Header de la categoría */}
-                    <div className="px-6 py-6 bg-white">
-                      <div className="mb-4">
-                        <h2 className="text-xl font-bold text-gray-900 text-center">
-                          {category.name}
-                        </h2>
-                        {category.description && (
-                          <p className="text-gray-600 text-sm mt-1 text-center">
-                            {category.description}
-                          </p>
-                        )}
-                      </div>
-                      {category.imageUrl && (
-                        <div className="flex justify-center mb-2">
-                          <ImageWithFallback
-                            src={category.imageUrl}
-                            alt={category.name}
-                            className="h-32 w-full max-w-xs object-cover"
-                            size="original"
-                          />
-                        </div>
-                      )}
-                    </div>
+                    <CategoryHeader
+                      category={{
+                        name: category.name,
+                        description: category.description,
+                        imageUrl: category.imageUrl,
+                      }}
+                    />
 
                     {/* Productos de la categoría - Lista vertical centrada */}
                     <div className="divide-y divide-gray-50">
