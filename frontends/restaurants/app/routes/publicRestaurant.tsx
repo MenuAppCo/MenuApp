@@ -2,17 +2,11 @@ import { useParams, useNavigate } from "react-router";
 import { useState } from "react";
 import { useRestaurantInfo } from "../hooks/usePublicMenu";
 import { usePageTitle } from "../hooks/usePageTitle";
-import {
-  Phone,
-  MapPin,
-  Calendar,
-  ThumbsUp,
-  Instagram,
-  Facebook,
-  ExternalLink,
-} from "lucide-react";
+import { Phone, MapPin, Calendar, ThumbsUp } from "lucide-react";
 import ImageWithFallback from "../components/image-with-fallback/imageWithFallback";
 import MobileMenuContainer from "../components/mobile-menu-container/mobileMenuContainer";
+import Footer from "~/components/footer/footer";
+import SocialNetworks from "~/components/social-networks/socialNetworks";
 
 const PublicRestaurant = () => {
   const { slug } = useParams();
@@ -110,92 +104,10 @@ const PublicRestaurant = () => {
     }
   };
 
-  // Función para manejar clics en redes sociales
-  const handleSocialMediaClick = (
-    platform: string,
-    url: string | undefined,
-  ) => {
-    if (url) {
-      window.open(url, "_blank");
-    }
-  };
-
-  // Obtener redes sociales activas con validación mejorada (excluyendo Tripadvisor)
-  const activeSocialMediaList = (() => {
-    try {
-      if (
-        !restaurant.socialMedia ||
-        typeof restaurant.socialMedia !== "object"
-      ) {
-        console.log("🔍 No hay socialMedia o no es un objeto");
-        return [];
-      }
-
-      const entries = Object.entries(restaurant.socialMedia);
-      console.log("🔍 Entries de socialMedia:", entries);
-
-      const filtered = entries
-        .filter(([platform, config]) => {
-          // Excluir Tripadvisor de las redes sociales
-          if (platform === "tripadvisor") {
-            return false;
-          }
-
-          const isValid =
-            config &&
-            typeof config === "object" &&
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore TODO fix
-            (config.active === true || config.isActive === true) &&
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore TODO fix
-            config.url &&
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore TODO fix
-            config.url.trim() !== "";
-          console.log(`🔍 ${platform}:`, { config, isValid });
-          return isValid;
-        })
-        .map(([platform, config]) => ({
-          platform,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore TODO fix
-          url: config.url,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore TODO fix
-          active: config.active || config.isActive,
-        }));
-
-      console.log("🔍 Redes sociales filtradas:", filtered);
-      return filtered;
-    } catch (error) {
-      console.error("🔍 Error procesando redes sociales:", error);
-      return [];
-    }
-  })();
-
   return (
     <MobileMenuContainer>
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-md mx-auto bg-white min-h-screen flex flex-col">
-          {/* Header del restaurante */}
-          <header className="bg-white border-b border-gray-200 flex-shrink-0">
-            <div className="px-4 py-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex-1 text-center">
-                  <h1 className="text-xl font-bold text-gray-900">
-                    {restaurant.name}
-                  </h1>
-                  {restaurant.description && (
-                    <p className="text-gray-600 text-sm mt-1">
-                      {restaurant.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </header>
-
           {/* Logo grande centrado */}
           {restaurant.logoUrl && (
             <div className="flex justify-center mb-6 mt-6">
@@ -259,41 +171,8 @@ const PublicRestaurant = () => {
             </div>
           </main>
 
-          {/* Redes sociales */}
-          {activeSocialMediaList.length > 0 && (
-            <div className="rounded-lg p-4">
-              <div className="flex justify-center space-x-4">
-                {activeSocialMediaList.map(({ platform, url }) => (
-                  <button
-                    key={platform}
-                    onClick={() => handleSocialMediaClick(platform, url)}
-                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
-                    title={`Síguenos en ${platform}`}
-                  >
-                    {platform === "instagram" && (
-                      <Instagram className="h-5 w-5 text-pink-600" />
-                    )}
-                    {platform === "facebook" && (
-                      <Facebook className="h-5 w-5 text-blue-600" />
-                    )}
-                    {platform === "tiktok" && (
-                      <span className="text-black font-bold text-sm">
-                        TikTok
-                      </span>
-                    )}
-                    {!["instagram", "facebook", "tiktok"].includes(
-                      platform,
-                    ) && <ExternalLink className="h-5 w-5 text-gray-600" />}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Footer */}
-          <footer className="mt-auto p-4 text-center flex-shrink-0">
-            <p className="text-xs text-gray-400">Menú digital por MenuApp</p>
-          </footer>
+          <SocialNetworks restaurant={restaurant} />
+          <Footer />
         </div>
       </div>
 

@@ -1,11 +1,12 @@
-import { Link, useParams } from "react-router";
+import {  useParams } from "react-router";
 import { useState, useEffect, useRef } from "react";
 import { usePublicMenu } from "../hooks/usePublicMenu";
 import { usePageTitle } from "../hooks/usePageTitle";
-import { Phone, MapPin, Globe, Star, ArrowLeft } from "lucide-react";
+import { Phone, MapPin, Globe, Star} from "lucide-react";
 import ImageWithFallback from "../components/image-with-fallback/imageWithFallback";
 import ProductViewModal from "../components/product-view-modal/productViewModal";
 import MobileMenuContainer from "../components/mobile-menu-container/mobileMenuContainer";
+import Header from "~/components/header/header";
 
 const PublicMenu = () => {
   const { slug, menuType = "food" } = useParams();
@@ -138,37 +139,13 @@ const PublicMenu = () => {
           className="max-w-md mx-auto bg-white min-h-screen overflow-y-auto"
           style={{ height: "100vh" }}
         >
-          {/* Header del restaurante - Parte del scroll */}
-          <header className="bg-white border-b border-gray-200">
-            <div className="px-4 py-4">
-              <div className="flex items-center space-x-3">
-                <Link
-                  to={`/restaurants/${slug}/menus`}
-                  className="text-gray-600 hover:text-gray-900 p-2 -ml-2"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </Link>
-                <div className="flex-1 text-center">
-                  <h1 className="text-lg font-bold text-gray-900">
-                    {restaurant.name}
-                  </h1>
-                  {restaurant.description && (
-                    <p className="text-gray-500 text-xs mt-1">
-                      {restaurant.description}
-                    </p>
-                  )}
-                </div>
-                {restaurant.logoUrl && (
-                  <ImageWithFallback
-                    src={restaurant.logoUrl}
-                    alt={restaurant.name}
-                    className="h-12 w-12 rounded-full object-cover flex-shrink-0 ml-2"
-                    size="medium"
-                  />
-                )}
-              </div>
-            </div>
-          </header>
+          <Header
+            restaurant={{
+              name: restaurant.name,
+              logoUrl: restaurant.logoUrl,
+            }}
+            backTo={`/restaurants/${slug}/menus`}
+          />
 
           {/* Navegador horizontal de categorías - Parte del scroll */}
           <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
