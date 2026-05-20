@@ -36,9 +36,7 @@ export function SideBar({ isOpen, onClose, button}: SideBarProps) {
     
     <ul className="mt-6 space-y-6">
       <li>
-        <Link to="/#como_funciona" onClick={onClose}>
-          <a className="text-white transition hover:text-gray-500/75"> Demo </a>
-        </Link>   
+        <a href="https://menapp.co/restaurants/srojas-1754593120604" onClick={onClose} className="text-white transition hover:text-gray-500/75">Demo</a>
       </li>
       <li>
         <Link to="/#contactanos" onClick={onClose}>
@@ -46,9 +44,7 @@ export function SideBar({ isOpen, onClose, button}: SideBarProps) {
         </Link>   
       </li>
       <li>
-        <Link to="/#tarifas" onClick={onClose}>
-          <a className="text-white transition hover:text-gray-500/75"> Tarifas </a>
-        </Link>   
+        <a href="https://admin.menapp.co/" onClick={onClose} className="text-white transition hover:text-gray-500/75">Ingresar</a>
       </li>
       <div className="w-full" onClick={onClose}>
             {button === undefined ?  "" : button}
