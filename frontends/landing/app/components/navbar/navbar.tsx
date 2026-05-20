@@ -17,9 +17,7 @@ export function NavBar({button=undefined, className="", sticky=false}:{button?: 
           <nav aria-label="Global">
             <ul className="flex items-center gap-6 text-sm">
               <li>
-                <Link to="/#demo"> 
-                  <a className="text-white transition hover:text-gray-500/75"> Demo </a>
-                </Link>
+                <a href="https://menapp.co/restaurants/srojas-1754593120604" className="text-white transition hover:text-gray-500/75">Demo</a>
               </li>
               <li>
                 <Link to="/#preguntas_frecuentes"> 
@@ -27,9 +25,7 @@ export function NavBar({button=undefined, className="", sticky=false}:{button?: 
                 </Link>
               </li>
               <li>
-                <Link to="/#tarifas"> 
-                  <a className="text-white transition hover:text-gray-500/75"> Tarifas </a>
-                </Link>
+                <a href="https://admin.menapp.co/" className="text-white transition hover:text-gray-500/75">Ingresar</a>
               </li>
             </ul>
           </nav>
