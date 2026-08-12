@@ -3,6 +3,15 @@ const {  PutObjectCommand } = require("@aws-sdk/client-s3");
 
 class S3Service {
   static async uploadFile(buffer, key, contentType, metadata = {}) {
+    // Sin bucket, el SDK falla con un error opaco sobre el host. Es mas util
+    // decir cual es la variable que falta.
+    if (!S3_CONFIG.bucket) {
+      throw new Error(
+        'S3_IMAGES_BUCKET_NAME no está configurado: no se puede subir la imagen. ' +
+        'Revisa backend/.env (ver S3_SETUP.md).'
+      );
+    }
+
     try {
       const result = await s3.send( new PutObjectCommand({
         Bucket: S3_CONFIG.bucket,
@@ -11,9 +20,12 @@ class S3Service {
         ContentType: contentType,
         Metadata: metadata
       }));
-      
+
       return {
         key: key,
+        // uploadImageSizes lee result.url; sin esto quedaba undefined y el log
+        // de confirmacion imprimia "subido a S3: undefined".
+        url: getS3Url(key),
         etag: result.ETag,
         versionId: result.VersionId
       };

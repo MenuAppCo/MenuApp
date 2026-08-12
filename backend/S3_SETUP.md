@@ -9,14 +9,22 @@ Este proyecto soporta **exclusivamente** la subida de imágenes a Amazon S3 para
 ### Para Producción (Lambda)
 ```bash
 # AWS S3 Configuration
-AWS_REGION=us-east-1          # Valor por defecto si no se especifica
-S3_BUCKET_NAME=production-menapp-images  # Valor por defecto si no se especifica
+AWS_REGION=us-east-1
+S3_IMAGES_BUCKET_NAME=production-menapp-images
 # Las credenciales se obtienen automáticamente del rol IAM de Lambda
 ```
 
-**Nota:** Las variables `AWS_REGION` y `S3_BUCKET_NAME` tienen valores por defecto para producción. Si no se configuran en GitHub Secrets, se usarán automáticamente:
-- `AWS_REGION` → `us-east-1`
-- `S3_BUCKET_NAME` → `production-menapp-images`
+**Nota:** ninguna de las dos tiene valor por defecto en el código. `src/config/s3.js`
+las lee tal cual:
+
+```js
+const s3 = new S3Client({ region: process.env.AWS_REGION });
+const S3_CONFIG = { bucket: process.env.S3_IMAGES_BUCKET_NAME, ... };
+```
+
+Si faltan, el bucket queda `undefined` y las subidas fallan. En producción funciona
+porque Terraform las inyecta en la Lambda
+(`iac/backend/lambda/admin_api_lambda.tf`), no porque el código tenga un respaldo.
 
 ### Para Desarrollo Local
 ```bash
@@ -24,18 +32,29 @@ S3_BUCKET_NAME=production-menapp-images  # Valor por defecto si no se especifica
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
-S3_BUCKET_NAME=dev-menapp-images
+S3_IMAGES_BUCKET_NAME=dev-menapp-images
 ```
 
-## Configuración en GitHub Secrets
+## Configuración en Terraform
 
-### Variables Opcionales (con valores por defecto)
-```bash
-# Estas variables tienen valores por defecto para producción
-# Si no las configuras, se usarán automáticamente
-AWS_REGION=us-east-1
-S3_BUCKET_NAME=production-menapp-images
+El nombre del bucket llega a las Lambda desde Terraform, no desde GitHub Secrets:
+
+```hcl
+# iac/backend/lambda/admin_api_lambda.tf
+environment {
+  variables = {
+    S3_IMAGES_BUCKET_NAME = var.s3_images_bucket_name
+  }
+}
+
+# iac/backend/vars.tf
+variable "s3_images_bucket_name" {
+  default = "production-menapp-images"
+}
 ```
+
+Ese `default` de Terraform es el único valor por defecto que existe, y aplica al
+desplegar, no en tiempo de ejecución.
 
 ### Variables Requeridas para Desarrollo Local
 ```bash
@@ -44,7 +63,8 @@ AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 ```
 
-**Importante:** Para producción, solo necesitas configurar las credenciales si quieres usar valores diferentes a los predeterminados. El sistema funcionará automáticamente con los valores por defecto.
+**Importante:** en local hay que configurar las cuatro variables. No hay respaldo
+en el código y una subida sin ellas falla.
 
 ## Estructura del Bucket S3
 
@@ -115,16 +135,35 @@ Para desarrollo local **CON S3**:
 
 1. **Configura OBLIGATORIAMENTE** las variables de AWS
 2. Las imágenes se subirán a S3
-3. Las URLs serán absolutas: `https://bucket.s3.region.amazonaws.com/products/image.jpg`
-4. **No hay soporte para almacenamiento local**
+3. **No hay soporte para almacenamiento local**
 
 ## Producción
 
 En producción (Lambda):
 
 1. Las imágenes se suben automáticamente a S3
-2. Las URLs son absolutas: `https://bucket.s3.region.amazonaws.com/products/image.jpg`
-3. Se usan los permisos del rol IAM de Lambda
+2. Se usan los permisos del rol IAM de Lambda
+
+## Cómo se Sirven las Imágenes
+
+En la base de datos **no se guarda una URL**, sino la clave relativa dentro del
+bucket:
+
+```
+products/image-1756171897778-633541247-processed.webp
+```
+
+Los frontends le anteponen el host de `VITE_MEDIA_URL` (`media.menapp.co` por
+defecto) en `utils/imageUtils`. Ese host es una distribución de CloudFront
+definida en `iac/backend/cloudfront/media.tf`.
+
+El bucket es **privado**: su política solo permite leer a CloudFront, mediante
+Origin Access Control. Por eso `https://<bucket>.s3.<region>.amazonaws.com/<clave>`
+responde `403` y no sirve como enlace alternativo.
+
+`VITE_MEDIA_URL` se escribe **sin esquema**, porque el código construye
+`https://${VITE_MEDIA_URL}/${clave}`. Si se pone `https://...` la URL resultante
+queda con el esquema duplicado y no carga.
 
 ## Troubleshooting
 
@@ -132,8 +171,8 @@ En producción (Lambda):
 - Verifica que el rol IAM tenga los permisos correctos
 - Asegúrate de que el bucket policy permita acceso desde Lambda
 
-### Error: "Bucket not found"
-- Verifica que `S3_BUCKET_NAME` esté configurado correctamente
+### Error: "Bucket not found" o "S3_IMAGES_BUCKET_NAME no está configurado"
+- Verifica que `S3_IMAGES_BUCKET_NAME` esté configurado (ojo: no es `S3_BUCKET_NAME`)
 - Asegúrate de que el bucket exista en la región especificada
 
 ### Error: "Credentials not found"
@@ -150,20 +189,21 @@ Las operaciones S3 se registran con emojis para facilitar el debugging:
 - 🗑️ Eliminación de archivo
 - ⚠️ Advertencia
 
-## Valores por Defecto
+## Variables que Lee el Código
 
-El sistema incluye valores por defecto para las variables críticas de S3:
+| Variable | Dónde se lee | Por defecto |
+|----------|--------------|-------------|
+| `AWS_REGION` | `src/config/s3.js` | ninguno |
+| `S3_IMAGES_BUCKET_NAME` | `src/config/s3.js` | ninguno |
+| `AWS_ACCESS_KEY_ID` | SDK de AWS | ninguno (en Lambda: rol IAM) |
+| `AWS_SECRET_ACCESS_KEY` | SDK de AWS | ninguno (en Lambda: rol IAM) |
 
-| Variable | Valor por Defecto | Descripción |
-|----------|-------------------|-------------|
-| `AWS_REGION` | `us-east-1` | Región de AWS donde se encuentra el bucket |
-| `S3_BUCKET_NAME` | `production-menapp-images` | Nombre del bucket S3 para imágenes |
-
-Estos valores se usan automáticamente si las variables de entorno no están configuradas, lo que hace que el sistema sea más robusto y fácil de configurar.
+Ninguna tiene respaldo en el código. Si falta el bucket, `S3Service.uploadFile`
+corta con un error explícito en vez de intentar la subida contra `undefined`.
 
 ## Próximos Pasos
 
-- [ ] Implementar CDN (CloudFront) para mejor rendimiento
+- [x] Implementar CDN (CloudFront) para mejor rendimiento
 - [ ] Agregar compresión adicional de imágenes
 - [ ] Implementar backup automático de imágenes
 - [ ] Agregar métricas de uso de S3
