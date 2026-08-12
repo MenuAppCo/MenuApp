@@ -1,0 +1,152 @@
+# Entorno de DESARROLLO completo.
+#
+# La base de datos y la autenticacion son Supabase directamente: aqui no se
+# levanta ningun Postgres local. Las credenciales salen de backend/.env
+# (DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_KEY).
+#
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# Puertos publicados, identicos dentro y fuera del contenedor para que las
+# URLs sean las mismas se ejecute con Docker o con npm:
+#
+#   3000  API admin (privada, con auth de Supabase)
+#   3001  API publica (menus)
+#   5173  Panel de administracion
+#   5174  Menus publicos      -> http://localhost:5174/restaurants/<slug>
+#   5175  Landing
+
+name: menuapp-dev
+
+# Los tres frontends son SPA (ssr: false), asi que TODAS las llamadas a la API
+# las hace el navegador desde el host. Por eso VITE_API_URL apunta a
+# localhost:PUERTO y no al nombre del servicio: dentro del navegador
+# "backend-admin" no resuelve a nada.
+x-vite-watch: &vite-watch
+  # Los bind mounts de Windows no propagan eventos inotify: sin polling no
+  # hay hot reload. El chokidar que empaqueta Vite lee estas dos variables.
+  CHOKIDAR_USEPOLLING: "true"
+  CHOKIDAR_INTERVAL: "300"
+
+services:
+  backend-admin:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    image: menuapp-backend-dev
+    container_name: menuapp-backend-admin
+    command: npx nodemon -L src/admin-dev.js
+    env_file:
+      - ./backend/.env
+    environment:
+      PORT: "3000"
+      NODE_ENV: development
+      # Origen del panel, para la lista de CORS de apps/admin-api/index.js
+      ADMIN_FRONTEND_URL: http://localhost:5173
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      # Volumen anonimo: conserva el node_modules de linux de la imagen y
+      # evita que el bind mount lo tape con el de Windows del host, cuyos
+      # binarios nativos (sharp, prisma) no funcionan aqui.
+      - /app/node_modules
+    networks: [menuapp]
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3000/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  backend-public:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    image: menuapp-backend-dev
+    container_name: menuapp-backend-public
+    command: npx nodemon -L src/public-dev.js
+    env_file:
+      - ./backend/.env
+    environment:
+      PORT: "3001"
+      NODE_ENV: development
+      PUBLIC_FRONTEND_URL: http://localhost:5174
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks: [menuapp]
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3001/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  admin:
+    build:
+      context: ./frontends/admin
+      dockerfile: Dockerfile.dev
+    image: menuapp-admin-dev
+    container_name: menuapp-admin
+    env_file:
+      # Aporta VITE_SUPABASE_URL y VITE_SUPABASE_ANON, que son tuyas.
+      - path: ./frontends/admin/.env
+        required: false
+    environment:
+      <<: *vite-watch
+      VITE_API_URL: http://localhost:3000
+      VITE_PUBLIC_FRONTEND_URL: http://localhost:5174
+      VITE_MEDIA_URL: media.menapp.co
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontends/admin:/app
+      - /app/node_modules
+    networks: [menuapp]
+    depends_on:
+      backend-admin:
+        condition: service_started
+
+  restaurants:
+    build:
+      context: ./frontends/restaurants
+      dockerfile: Dockerfile.dev
+    image: menuapp-restaurants-dev
+    container_name: menuapp-restaurants
+    environment:
+      <<: *vite-watch
+      VITE_API_URL: http://localhost:3001
+      VITE_MEDIA_URL: media.menapp.co
+    ports:
+      - "5174:5174"
+    volumes:
+      - ./frontends/restaurants:/app
+      - /app/node_modules
+      # El directorio de tipos generados no debe salir del contenedor.
+      - /app/.react-router
+    networks: [menuapp]
+    depends_on:
+      backend-public:
+        condition: service_started
+
+  landing:
+    build:
+      context: ./frontends/landing
+      dockerfile: Dockerfile.dev
+    image: menuapp-landing-dev
+    container_name: menuapp-landing
+    environment:
+      <<: *vite-watch
+    ports:
+      - "5175:5175"
+    volumes:
+      - ./frontends/landing:/app
+      - /app/node_modules
+      - /app/.react-router
+    networks: [menuapp]
+
+networks:
+  menuapp:
+    driver: bridge

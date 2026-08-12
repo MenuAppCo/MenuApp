@@ -1,0 +1,15 @@
+# Panel de administracion (Vite + React) en modo desarrollo.
+FROM node:20-bookworm-slim
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+EXPOSE 5173
+
+# --host 0.0.0.0 es obligatorio: por defecto Vite solo escucha en localhost
+# dentro del contenedor y el puerto publicado quedaria sin nadie detras.
+CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "5173"]

@@ -1,0 +1,29 @@
+# Imagen de DESARROLLO del backend.
+# Los Dockerfile de apps/*/Dockerfile son de produccion (base Lambda) y no
+# levantan un servidor HTTP: sirven un handler. Esta si arranca src/*-dev.js.
+FROM node:20-bookworm-slim
+
+# openssl y ca-certificates los necesita el engine de Prisma para hablar
+# con Supabase por TLS.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Capa de dependencias: solo se reconstruye si cambian los manifiestos.
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# El cliente de Prisma se genera DENTRO del contenedor para que el engine
+# sea el de linux, no el de Windows del node_modules del host.
+COPY prisma ./prisma
+RUN npx prisma generate
+
+COPY . .
+
+# Se sobrescriben desde docker-compose.dev.yml (admin 3000 / public 3001).
+ENV PORT=3000
+EXPOSE 3000 3001
+
+CMD ["npx", "nodemon", "-L", "src/admin-dev.js"]
