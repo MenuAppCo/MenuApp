@@ -1,81 +1,123 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../services/supabaseClient';
-import api from '../services/api';
-import { setAuthToken } from '../services/api';
+import api, { setAuthToken } from '../services/api';
 import { AuthContext } from './AuthContextDef';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Usuario de Supabase (auth)
   const [userData, setUserData] = useState(null); // Usuario de la base de datos (perfil)
-  const [profileExists, setProfileExists] = useState(null); // null = no verificado, true/false = verificado
-  const [restaurantData, setRestaurantData] = useState(null); // Nuevo estado para los datos del restaurante
+  // null = todavía no se sabe. true/false solo cuando el backend responde de
+  // forma concluyente: 200 (existe) o 404 (no existe).
+  const [profileExists, setProfileExists] = useState(null);
+  // Se llena cuando NO se pudo determinar (red caída, 500, token rechazado).
+  // Es distinto de "no tiene perfil": con esto no hay que mandar a nadie al
+  // formulario de completar registro.
+  const [profileError, setProfileError] = useState(null);
+  const [restaurantData, setRestaurantData] = useState(null); // Restaurante del usuario
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const handleSession = async (session) => {
+  // Solo la consulta más reciente puede escribir en el estado. Sin esto, dos
+  // respuestas que llegan desordenadas dejan el perfil con el valor viejo.
+  const consultaActual = useRef(0);
+  // Id del usuario cuyo perfil ya se resolvió. Evita repetir la consulta en
+  // cada refresco de token, que también dispara onAuthStateChange.
+  const perfilResueltoPara = useRef(null);
+
+  const consultarPerfil = useCallback(async () => {
+    const id = ++consultaActual.current;
+    const vigente = () => id === consultaActual.current;
+
+    try {
+      const { data } = await api.get('/users/me/profile');
+      if (!vigente()) return;
+      setUserData(data);
+      setRestaurantData(data?.restaurants?.[0] ?? null);
+      setProfileExists(true);
+      setProfileError(null);
+    } catch (error) {
+      if (!vigente()) return;
+
+      if (error.response?.status === 404) {
+        // El backend confirma que no hay perfil: hay que completarlo.
+        setUserData(null);
+        setRestaurantData(null);
+        setProfileExists(false);
+        setProfileError(null);
+      } else {
+        // No se pudo determinar. Se deja en desconocido a propósito, para no
+        // enseñarle el formulario a alguien que sí tiene perfil.
+        console.error('[AuthContext] No se pudo verificar el perfil:', error);
+        setProfileError(error);
+        setProfileExists(null);
+        perfilResueltoPara.current = null; // permite reintentar
+      }
+    }
+  }, []);
+
+  const resolverSesion = useCallback(
+    async (session) => {
       setUser(session?.user ?? null);
       setAuthToken(session?.access_token ?? null);
 
-      let profileFound = false;
-      let currentRestaurantData = null;
-
-      if (session) {
-        // Pequeño delay para asegurar que el token esté configurado
-        await new Promise(resolve => setTimeout(resolve, 200));
-        
-        try {
-          const response = await api.get('/users/me/profile');
-          profileFound = true;
-          
-          // Guardar los datos del usuario de la base de datos
-          setUserData(response.data);
-          
-          // Asegurarse de que el restaurante exista y adjuntarlo
-          if (response.data && response.data.restaurants && response.data.restaurants.length > 0) {
-            currentRestaurantData = response.data.restaurants[0];
-          }
-        } catch (error) {
-          if (error.response?.status === 404) {
-            profileFound = false;
-          } else {
-            console.error('[AuthContext] Error al verificar el perfil:', error);
-            profileFound = false;
-          }
-        }
-      } else {
-        profileFound = false;
-        currentRestaurantData = null;
+      if (!session) {
+        consultaActual.current++; // descarta respuestas en vuelo
+        perfilResueltoPara.current = null;
+        setUserData(null);
+        setRestaurantData(null);
+        setProfileExists(null);
+        setProfileError(null);
+        setLoading(false);
+        return;
       }
 
-      setProfileExists(profileFound);
-      setRestaurantData(currentRestaurantData);
-      
-      // Delay adicional para asegurar que todos los componentes estén listos
-      setTimeout(() => {
+      // Ya sabemos el perfil de este usuario: un refresco de token no obliga a
+      // preguntar otra vez. Solo se actualiza la cabecera de axios, hecho arriba.
+      if (perfilResueltoPara.current === session.user.id) {
         setLoading(false);
-      }, 300);
-    };
+        return;
+      }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      handleSession(session);
+      // Se marca antes de consultar para que el evento duplicado del arranque
+      // (INITIAL_SESSION y getSession llegan casi a la vez) no dispare dos
+      // peticiones al backend.
+      perfilResueltoPara.current = session.user.id;
+      await consultarPerfil();
+      setLoading(false);
+    },
+    [consultarPerfil]
+  );
+
+  // Vuelve a preguntar por el perfil. Lo usa la pantalla de completar registro
+  // tras crearlo, y el reintento cuando la verificación falla.
+  const refreshProfile = useCallback(async () => {
+    perfilResueltoPara.current = null;
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) return;
+    setAuthToken(session.access_token);
+    perfilResueltoPara.current = session.user.id;
+    await consultarPerfil();
+  }, [consultarPerfil]);
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_evento, session) => {
+      resolverSesion(session);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        setProfileExists(null);
-        setUser(null);
-        setUserData(null); // Resetear datos del usuario de la base de datos
-        setRestaurantData(null); // Resetear datos del restaurante al cerrar sesión
-        setAuthToken(null);
-        setLoading(false);
-      }
-      handleSession(session);
+    // Red de seguridad por si no llegara el evento INITIAL_SESSION: sin esto la
+    // app se quedaría en "Cargando..." para siempre. El control de duplicados
+    // de resolverSesion hace que no se consulte el perfil dos veces.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      resolverSesion(session);
     });
 
     return () => {
       subscription?.unsubscribe();
     };
-  }, []);
+  }, [resolverSesion]);
 
   const value = {
     signIn: (data) => supabase.auth.signInWithPassword(data),
@@ -83,7 +125,9 @@ export const AuthProvider = ({ children }) => {
     user, // Usuario de Supabase (auth)
     userData, // Usuario de la base de datos (perfil)
     profileExists,
-    restaurantData, // Exponer los datos del restaurante
+    profileError,
+    refreshProfile,
+    restaurantData,
     loading,
   };
 
