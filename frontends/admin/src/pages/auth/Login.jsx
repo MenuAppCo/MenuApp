@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -17,6 +17,8 @@ const Login = () => {
   const [error, setError] = useState(null)
   const { signIn } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const passwordUpdated = location.state?.passwordUpdated === true
 
   const {
     register,
@@ -57,6 +59,12 @@ const Login = () => {
           </p>
         </div>
         
+        {passwordUpdated && !error && (
+          <div className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded" role="status">
+            Contraseña actualizada. Ya puedes iniciar sesión con ella.
+          </div>
+        )}
+
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
             <strong className="font-bold">Error: </strong>
@@ -115,6 +123,14 @@ const Login = () => {
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
               )}
+              <div className="mt-2 text-right">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                >
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
             </div>
           </div>
 
