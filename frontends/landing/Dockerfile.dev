@@ -1,0 +1,13 @@
+# Landing (React Router 7 en modo SPA) en desarrollo.
+FROM node:20-bookworm-slim
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+EXPOSE 5175
+
+CMD ["npx", "react-router", "dev", "--host", "0.0.0.0", "--port", "5175"]

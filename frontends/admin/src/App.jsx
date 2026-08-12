@@ -7,6 +7,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import ProfileChecker from './components/auth/ProfileChecker';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
 import CompleteProfile from './pages/auth/CompleteProfile';
 import Layout from './components/Layout';
 import Dashboard from './pages/dashboard/Dashboard';
@@ -30,6 +32,12 @@ function App() {
         <Routes>
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+          <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+
+          {/* Sin PublicRoute a proposito: al abrir el enlace de recuperacion
+              Supabase crea una sesion, con lo que PublicRoute redirigiria al
+              dashboard y nunca se llegaria a cambiar la contraseña. */}
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route element={<ProtectedRoute><ProfileChecker /></ProtectedRoute>}>
             <Route path="/*" element={<ThemeProvider><Layout /></ThemeProvider>}>
